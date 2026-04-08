@@ -33,6 +33,8 @@ class Book:
         self.spread = 0
         self.micro = 0.0
         self.imbalance = 0.0
+        self.depth_micro = 0.0
+        self.depth_imbalance = 0.0
 
         if order_depth is None:
             return
@@ -46,7 +48,6 @@ class Book:
             ((int(price), abs(int(volume))) for price, volume in order_depth.sell_orders.items()),
             key=lambda item: item[0],
         )
-
         if not self.buy_levels or not self.sell_levels:
             return
 
@@ -57,6 +58,7 @@ class Book:
 
         self.mid = (self.best_bid + self.best_ask) / 2.0
         self.spread = self.best_ask - self.best_bid
+
         total_top = self.best_bid_volume + self.best_ask_volume
         if total_top > 0:
             self.micro = (
@@ -66,6 +68,29 @@ class Book:
         else:
             self.micro = self.mid
             self.imbalance = 0.0
+
+        bid_weight = 0.0
+        bid_price = 0.0
+        ask_weight = 0.0
+        ask_price = 0.0
+        for index, (price, volume) in enumerate(self.buy_levels[:3]):
+            weight = float(volume) / (index + 1.0)
+            bid_weight += weight
+            bid_price += weight * float(price)
+        for index, (price, volume) in enumerate(self.sell_levels[:3]):
+            weight = float(volume) / (index + 1.0)
+            ask_weight += weight
+            ask_price += weight * float(price)
+
+        total_depth = bid_weight + ask_weight
+        if total_depth > 0:
+            bid_vwap = bid_price / max(1e-9, bid_weight)
+            ask_vwap = ask_price / max(1e-9, ask_weight)
+            self.depth_micro = (ask_vwap * bid_weight + bid_vwap * ask_weight) / total_depth
+            self.depth_imbalance = (bid_weight - ask_weight) / total_depth
+        else:
+            self.depth_micro = self.mid
+            self.depth_imbalance = 0.0
 
         self.valid = True
 
@@ -112,13 +137,11 @@ class EmeraldsBot:
     )
 
     def __init__(self, state: TradingState) -> None:
-        self.state = state
-        self.product = "EMERALDS"
-        self.book = Book(state.order_depths.get(self.product))
+        self.book = Book(state.order_depths.get("EMERALDS"))
         self.manager = OrderManager(
-            self.product,
-            int(state.position.get(self.product, 0)),
-            POSITION_LIMITS[self.product],
+            "EMERALDS",
+            int(state.position.get("EMERALDS", 0)),
+            POSITION_LIMITS["EMERALDS"],
         )
 
     def fair_value(self) -> float:
@@ -135,9 +158,6 @@ class EmeraldsBot:
         return size
 
     def take_orders(self, reservation: float) -> None:
-        if not self.book.valid:
-            return
-
         buy_edge = reservation - float(self.book.best_ask)
         buy_size = self.take_size(buy_edge)
         if buy_size > 0 and self.manager.buy_capacity > 0:
@@ -153,23 +173,14 @@ class EmeraldsBot:
             self.manager.add_sell(self.book.best_bid, min(self.book.best_bid_volume, sell_size))
 
     def clear_inventory(self, reservation: float) -> None:
-        if not self.book.valid:
-            return
-
         position = self.manager.projected_position()
         if position > 0 and self.book.best_bid >= math.ceil(reservation):
-            size = min(position, self.book.best_bid_volume, self.BASE_QUOTE_SIZE)
-            self.manager.add_sell(self.book.best_bid, size)
-
+            self.manager.add_sell(self.book.best_bid, min(position, self.book.best_bid_volume, self.BASE_QUOTE_SIZE))
         position = self.manager.projected_position()
         if position < 0 and self.book.best_ask <= math.floor(reservation):
-            size = min(abs(position), self.book.best_ask_volume, self.BASE_QUOTE_SIZE)
-            self.manager.add_buy(self.book.best_ask, size)
+            self.manager.add_buy(self.book.best_ask, min(abs(position), self.book.best_ask_volume, self.BASE_QUOTE_SIZE))
 
-    def passive_quotes(self, reservation: float) -> Tuple[Optional[int], Optional[int]]:
-        if not self.book.valid:
-            return None, None
-
+    def passive_quotes(self, reservation: float) -> Tuple[int, int]:
         buy_quote = int(round(reservation - self.DEFAULT_EDGE))
         sell_quote = int(round(reservation + self.DEFAULT_EDGE))
 
@@ -194,12 +205,10 @@ class EmeraldsBot:
         if self.book.spread > 2:
             buy_quote = max(buy_quote, self.book.best_bid + 1)
             sell_quote = min(sell_quote, self.book.best_ask - 1)
-
         if buy_quote >= self.book.best_ask:
             buy_quote = self.book.best_bid
         if sell_quote <= self.book.best_bid:
             sell_quote = self.book.best_ask
-
         if buy_quote >= sell_quote:
             return self.book.best_bid, self.book.best_ask
         return buy_quote, sell_quote
@@ -222,192 +231,182 @@ class EmeraldsBot:
     def run(self) -> List[Order]:
         if not self.book.valid:
             return []
-
         reservation = self.reservation()
         self.take_orders(reservation)
         self.clear_inventory(reservation)
         buy_quote, sell_quote = self.passive_quotes(self.reservation())
-
-        if buy_quote is not None and self.manager.buy_capacity > 0:
-            if self.manager.projected_position() < self.SOFT_LIMIT + self.BASE_QUOTE_SIZE:
-                self.manager.add_buy(buy_quote, self.passive_size("BUY"))
-
-        if sell_quote is not None and self.manager.sell_capacity > 0:
-            if self.manager.projected_position() > -(self.SOFT_LIMIT + self.BASE_QUOTE_SIZE):
-                self.manager.add_sell(sell_quote, self.passive_size("SELL"))
-
+        if self.manager.buy_capacity > 0 and self.manager.projected_position() < self.SOFT_LIMIT + self.BASE_QUOTE_SIZE:
+            self.manager.add_buy(buy_quote, self.passive_size("BUY"))
+        if self.manager.sell_capacity > 0 and self.manager.projected_position() > -(self.SOFT_LIMIT + self.BASE_QUOTE_SIZE):
+            self.manager.add_sell(sell_quote, self.passive_size("SELL"))
         return self.manager.orders
 
 
-class TomatoesBot:
-    WALL_EMA_ALPHA = 0.25
-    MID_EMA_ALPHA = 0.18
-    VOL_EMA_ALPHA = 0.22
-    TREND_EMA_ALPHA = 0.28
+class PhysicsTomatoesBot:
+    EQ_ALPHA = 0.05
+    VEL_ALPHA = 0.32
+    ACC_ALPHA = 0.36
+    FLOW_ALPHA = 0.28
+    PRESSURE_ALPHA = 0.24
+    VOL_ALPHA = 0.20
 
-    FAIR_WALL_WEIGHT = 0.55
-    FAIR_MID_WEIGHT = 0.15
-    FAIR_MICRO_WEIGHT = 0.20
-    FAIR_FLOW_WEIGHT = 0.10
+    SPRING_K = 0.42
+    DAMP_K = 0.58
+    FLOW_K = 1.15
+    PRESSURE_K = 0.65
+    ACC_K = 0.25
+    DRIVE_CAP = 3.2
 
-    INVENTORY_SKEW = 0.045
-    BASE_QUOTE_EDGE = 2.2
-    BASE_TAKE_EDGE = 0.9
-    MAX_TAKE_SIZE = 10
+    BASE_QUOTE_EDGE = 2.30
+    BASE_TAKE_EDGE = 0.84
     PASSIVE_SIZE = 8
+    MAX_TAKE_SIZE = 10
     SOFT_LIMIT = 26
-    ALIGNED_TAKE_BOOST = 0.08
-    STRONG_ALIGNED_TAKE_BOOST = 0.12
-    NEAR_FLAT_PASSIVE_BONUS = 1
-    CALM_JOIN_EDGE_BONUS = 0.08
-
-    TREND_SCORE = 0.70
-    STRONG_SCORE = 1.50
+    INVENTORY_SKEW = 0.045
+    POSITION_BIAS_DIV = 14.0
+    TREND_SIGNAL = 0.90
+    STRONG_SIGNAL = 1.65
     TOXIC_SPREAD = 12
-    TOXIC_VOL = 2.8
+    TOXIC_VOL = 3.0
 
     def __init__(self, state: TradingState, memory: Dict[str, object]) -> None:
         self.state = state
-        self.product = "TOMATOES"
-        self.book = Book(state.order_depths.get(self.product))
-        self.manager = OrderManager(
-            self.product,
-            int(state.position.get(self.product, 0)),
-            POSITION_LIMITS[self.product],
-        )
         self.memory = memory
-        self.product_state = self.load_product_state()
+        self.book = Book(state.order_depths.get("TOMATOES"))
+        self.manager = OrderManager(
+            "TOMATOES",
+            int(state.position.get("TOMATOES", 0)),
+            POSITION_LIMITS["TOMATOES"],
+        )
+        self.product_state = self.load_state()
 
-    def load_product_state(self) -> Dict[str, float]:
-        raw = self.memory.get("tomatoes", {})
+    def load_state(self) -> Dict[str, float]:
+        raw = self.memory.get("tomatoes_physics", {})
         if not isinstance(raw, dict):
             raw = {}
         return {
-            "wall_fair_ema": float(raw.get("wall_fair_ema", 0.0)),
-            "mid_ema": float(raw.get("mid_ema", 0.0)),
-            "vol_ema": float(raw.get("vol_ema", 1.5)),
-            "trend_ema": float(raw.get("trend_ema", 0.0)),
-            "last_mid": float(raw.get("last_mid", 0.0)),
             "initialized": 1.0 if raw.get("initialized") else 0.0,
+            "rest_ema": float(raw.get("rest_ema", 0.0)),
+            "vel_ema": float(raw.get("vel_ema", 0.0)),
+            "acc_ema": float(raw.get("acc_ema", 0.0)),
+            "flow_ema": float(raw.get("flow_ema", 0.0)),
+            "pressure_ema": float(raw.get("pressure_ema", 0.0)),
+            "vol_ema": float(raw.get("vol_ema", 1.5)),
+            "last_mid": float(raw.get("last_mid", 0.0)),
         }
 
-    def save_product_state(self) -> None:
-        self.memory["tomatoes"] = {
-            "wall_fair_ema": self.product_state["wall_fair_ema"],
-            "mid_ema": self.product_state["mid_ema"],
-            "vol_ema": self.product_state["vol_ema"],
-            "trend_ema": self.product_state["trend_ema"],
-            "last_mid": self.product_state["last_mid"],
+    def save_state(self) -> None:
+        self.memory["tomatoes_physics"] = {
             "initialized": 1,
+            "rest_ema": float(self.product_state["rest_ema"]),
+            "vel_ema": float(self.product_state["vel_ema"]),
+            "acc_ema": float(self.product_state["acc_ema"]),
+            "flow_ema": float(self.product_state["flow_ema"]),
+            "pressure_ema": float(self.product_state["pressure_ema"]),
+            "vol_ema": float(self.product_state["vol_ema"]),
+            "last_mid": float(self.product_state["last_mid"]),
         }
-
-    def wall_price(self, levels: List[Tuple[int, int]]) -> Optional[float]:
-        if not levels:
-            return None
-        top = levels[:3]
-        max_volume = max(volume for _, volume in top)
-        strong = [(price, volume) for price, volume in top if volume >= 0.60 * max_volume]
-        total = sum(volume for _, volume in strong)
-        if total <= 0:
-            return None
-        return sum(price * volume for price, volume in strong) / total
-
-    def current_wall_fair(self) -> float:
-        wall_bid = self.wall_price(self.book.buy_levels)
-        wall_ask = self.wall_price(self.book.sell_levels)
-        if wall_bid is not None and wall_ask is not None and wall_bid < wall_ask:
-            return (wall_bid + wall_ask) / 2.0
-        return self.book.mid
 
     def update_state(self) -> None:
-        if not self.book.valid:
-            return
-
-        current_mid = self.book.mid
-        current_wall = self.current_wall_fair()
-        current_flow = self.book.imbalance * max(1.0, self.book.spread / 2.0)
+        mid = self.book.mid
+        half_spread = max(1.0, float(self.book.spread) / 2.0)
+        equilibrium_input = 0.65 * mid + 0.35 * self.book.depth_micro
+        flow_raw = (self.book.micro - mid) / half_spread + 0.90 * self.book.imbalance
+        pressure_raw = 0.55 * self.book.depth_imbalance + 0.45 * ((self.book.depth_micro - mid) / half_spread)
 
         if self.product_state["initialized"] <= 0.0:
-            self.product_state["wall_fair_ema"] = current_wall
-            self.product_state["mid_ema"] = current_mid
-            self.product_state["vol_ema"] = max(1.0, self.book.spread / 2.0)
-            self.product_state["trend_ema"] = current_flow
-            self.product_state["last_mid"] = current_mid
             self.product_state["initialized"] = 1.0
+            self.product_state["rest_ema"] = equilibrium_input
+            self.product_state["vel_ema"] = 0.0
+            self.product_state["acc_ema"] = 0.0
+            self.product_state["flow_ema"] = flow_raw
+            self.product_state["pressure_ema"] = pressure_raw
+            self.product_state["vol_ema"] = half_spread
+            self.product_state["last_mid"] = mid
             return
 
-        ret = current_mid - self.product_state["last_mid"]
-        self.product_state["wall_fair_ema"] = ema(
-            self.product_state["wall_fair_ema"], current_wall, self.WALL_EMA_ALPHA
-        )
-        self.product_state["mid_ema"] = ema(
-            self.product_state["mid_ema"], current_mid, self.MID_EMA_ALPHA
-        )
-        self.product_state["vol_ema"] = ema(
-            self.product_state["vol_ema"], abs(ret), self.VOL_EMA_ALPHA
-        )
+        previous_vel = float(self.product_state["vel_ema"])
+        delta_mid = mid - float(self.product_state["last_mid"])
+        velocity = ema(previous_vel, delta_mid, self.VEL_ALPHA)
+        acceleration = ema(float(self.product_state["acc_ema"]), velocity - previous_vel, self.ACC_ALPHA)
+        self.product_state["rest_ema"] = ema(float(self.product_state["rest_ema"]), equilibrium_input, self.EQ_ALPHA)
+        self.product_state["vel_ema"] = velocity
+        self.product_state["acc_ema"] = acceleration
+        self.product_state["flow_ema"] = ema(float(self.product_state["flow_ema"]), flow_raw, self.FLOW_ALPHA)
+        self.product_state["pressure_ema"] = ema(float(self.product_state["pressure_ema"]), pressure_raw, self.PRESSURE_ALPHA)
+        self.product_state["vol_ema"] = ema(float(self.product_state["vol_ema"]), abs(delta_mid), self.VOL_ALPHA)
+        self.product_state["last_mid"] = mid
 
-        trend_raw = (
-            self.product_state["wall_fair_ema"] - self.product_state["mid_ema"]
-            + 0.60 * (self.book.micro - self.book.mid)
-            + 0.80 * current_flow
-        )
-        self.product_state["trend_ema"] = ema(
-            self.product_state["trend_ema"], trend_raw, self.TREND_EMA_ALPHA
-        )
-        self.product_state["last_mid"] = current_mid
+    def physics_signal(self) -> Dict[str, float]:
+        half_spread = max(1.0, float(self.book.spread) / 2.0)
+        displacement = (self.book.mid - float(self.product_state["rest_ema"])) / half_spread
+        velocity = float(self.product_state["vel_ema"]) / half_spread
+        acceleration = float(self.product_state["acc_ema"]) / half_spread
+        flow = float(self.product_state["flow_ema"])
+        pressure = float(self.product_state["pressure_ema"])
 
-    def fair_value(self) -> float:
-        half_spread = max(1.0, self.book.spread / 2.0)
-        flow_fair = self.book.mid + self.book.imbalance * half_spread
-        fair = (
-            self.FAIR_WALL_WEIGHT * self.product_state["wall_fair_ema"]
-            + self.FAIR_MID_WEIGHT * self.book.mid
-            + self.FAIR_MICRO_WEIGHT * self.book.micro
-            + self.FAIR_FLOW_WEIGHT * flow_fair
-        )
+        spring = -self.SPRING_K * displacement
+        damping = -self.DAMP_K * velocity
+        driving = self.FLOW_K * flow + self.PRESSURE_K * pressure + self.ACC_K * acceleration
+        net = clamp(spring + damping + driving, -self.DRIVE_CAP, self.DRIVE_CAP)
+        energy = 0.5 * self.SPRING_K * displacement * displacement + 0.5 * velocity * velocity
+        return {
+            "displacement": displacement,
+            "velocity": velocity,
+            "acceleration": acceleration,
+            "flow": flow,
+            "pressure": pressure,
+            "spring": spring,
+            "damping": damping,
+            "driving": driving,
+            "net": net,
+            "energy": energy,
+        }
 
-        trend = self.product_state["trend_ema"]
-        if trend > self.TREND_SCORE:
-            fair += 0.20 * min(2.0, trend)
-        elif trend < -self.TREND_SCORE:
-            fair -= 0.20 * min(2.0, abs(trend))
-        return fair
-
-    def regime(self) -> str:
-        trend = self.product_state["trend_ema"]
-        vol = self.product_state["vol_ema"]
-        if self.book.spread >= self.TOXIC_SPREAD and vol >= self.TOXIC_VOL:
+    def classify_regime(self, signal: Dict[str, float]) -> str:
+        if self.book.spread >= self.TOXIC_SPREAD or float(self.product_state["vol_ema"]) >= self.TOXIC_VOL:
             return "toxic"
-        if trend >= self.STRONG_SCORE and self.book.imbalance > 0.03:
+        if (
+            signal["net"] >= self.STRONG_SIGNAL
+            and signal["driving"] > 0.40
+            and signal["velocity"] > -0.10
+        ):
             return "strong_up"
-        if trend <= -self.STRONG_SCORE and self.book.imbalance < -0.03:
+        if (
+            signal["net"] <= -self.STRONG_SIGNAL
+            and signal["driving"] < -0.40
+            and signal["velocity"] < 0.10
+        ):
             return "strong_down"
-        if trend >= self.TREND_SCORE:
+        if signal["net"] >= self.TREND_SIGNAL and signal["driving"] > 0.15:
             return "trend_up"
-        if trend <= -self.TREND_SCORE:
+        if signal["net"] <= -self.TREND_SIGNAL and signal["driving"] < -0.15:
             return "trend_down"
-        if self.book.spread <= 8 and vol <= 1.8:
-            return "stable"
         return "range"
 
-    def target_position(self, regime: str, fair: float) -> int:
-        alpha = fair - self.book.mid
-        conviction = clamp(abs(alpha) / max(1.0, self.book.spread / 2.0), 0.0, 1.0)
+    def target_position(self, signal: Dict[str, float], regime: str) -> int:
+        conviction = clamp(abs(signal["net"]) / (1.0 + 0.25 * abs(signal["velocity"])), 0.0, 1.0)
         if regime == "strong_up":
-            return int(round((self.SOFT_LIMIT + 8) * conviction))
+            return int(round((self.SOFT_LIMIT + 10) * conviction))
         if regime == "strong_down":
-            return -int(round((self.SOFT_LIMIT + 8) * conviction))
+            return -int(round((self.SOFT_LIMIT + 10) * conviction))
         if regime == "trend_up":
-            return int(round(self.SOFT_LIMIT * conviction))
+            return int(round((self.SOFT_LIMIT + 4) * conviction))
         if regime == "trend_down":
-            return -int(round(self.SOFT_LIMIT * conviction))
+            return -int(round((self.SOFT_LIMIT + 4) * conviction))
         if regime == "toxic":
             return 0
+        return int(round(clamp(signal["spring"] * 10.0, -12.0, 12.0)))
 
-        residual = self.book.mid - self.product_state["wall_fair_ema"]
-        normalized = residual / max(2.0, self.product_state["vol_ema"] * 2.0)
-        return int(round(-0.25 * self.SOFT_LIMIT * clamp(normalized, -1.0, 1.0)))
+    def fair_value(self, signal: Dict[str, float], regime: str, target: int) -> float:
+        half_spread = max(1.0, float(self.book.spread) / 2.0)
+        position_bias = (target - self.manager.projected_position()) / self.POSITION_BIAS_DIV
+        fair = self.book.mid + half_spread * signal["net"] + half_spread * 0.35 * signal["velocity"] + position_bias
+        if regime == "range":
+            fair += half_spread * 0.25 * signal["spring"]
+        else:
+            fair += half_spread * 0.18 * signal["driving"]
+        return fair
 
     def reservation(self, fair: float, target: int) -> float:
         pressure = self.manager.projected_position() - target
@@ -419,52 +418,25 @@ class TomatoesBot:
     def desired_sell_qty(self, target: int) -> int:
         return max(0, self.manager.projected_position() - target)
 
-    def aligned_side(self, regime: str) -> Optional[str]:
-        if regime in {"trend_up", "strong_up"}:
-            return "BUY"
-        if regime in {"trend_down", "strong_down"}:
-            return "SELL"
-        return None
-
-    def inventory_pressure(self, target: int) -> float:
-        return clamp(
-            abs(self.manager.projected_position() - target) / max(1.0, float(self.SOFT_LIMIT)),
-            0.0,
-            1.0,
-        )
-
-    def take_threshold(self, side: str, regime: str, target: int) -> float:
-        threshold = self.BASE_TAKE_EDGE + 0.10 * min(3.0, self.product_state["vol_ema"])
+    def take_threshold(self, side: str, regime: str, signal: Dict[str, float], target: int) -> float:
+        threshold = self.BASE_TAKE_EDGE + 0.08 * min(3.0, float(self.product_state["vol_ema"]))
         position = self.manager.projected_position()
-
-        if regime == "stable":
-            threshold += 0.05
-        elif regime == "range":
-            threshold += 0.00
-        elif regime == "trend_up":
-            threshold += -0.35 if side == "BUY" else 0.50
-        elif regime == "trend_down":
-            threshold += -0.35 if side == "SELL" else 0.50
-        elif regime == "strong_up":
-            threshold += -0.50 if side == "BUY" else 0.70
-        elif regime == "strong_down":
-            threshold += -0.50 if side == "SELL" else 0.70
-        else:
-            threshold += 0.65
-
+        aligned = (side == "BUY" and regime in {"trend_up", "strong_up"}) or (side == "SELL" and regime in {"trend_down", "strong_down"})
+        if aligned:
+            threshold -= 0.28 if regime.startswith("trend") else 0.40
+        elif regime in {"trend_up", "strong_up", "trend_down", "strong_down"}:
+            threshold += 0.55
         if side == "BUY" and position < target:
             threshold -= 0.10
         if side == "SELL" and position > target:
             threshold -= 0.10
-
-        aligned = self.aligned_side(regime)
-        if aligned == side:
-            desired = self.desired_buy_qty(target) if side == "BUY" else self.desired_sell_qty(target)
-            if desired > 0:
-                if regime in {"strong_up", "strong_down"}:
-                    threshold -= self.STRONG_ALIGNED_TAKE_BOOST
-                else:
-                    threshold -= self.ALIGNED_TAKE_BOOST
+        if regime == "range":
+            if side == "BUY" and signal["spring"] > 0:
+                threshold -= 0.08
+            if side == "SELL" and signal["spring"] < 0:
+                threshold -= 0.08
+        if regime == "toxic":
+            threshold += 0.70
         return max(0.25, threshold)
 
     def take_size(self, side: str, regime: str, target: int) -> int:
@@ -472,28 +444,15 @@ class TomatoesBot:
         size = min(self.MAX_TAKE_SIZE, max(2, desired))
         if regime in {"strong_up", "strong_down"}:
             size += 2
-        if self.book.spread <= 8 and abs(self.manager.projected_position()) <= 8:
-            size += 1
         if side == "BUY" and target < self.manager.projected_position():
             size = max(2, size - 3)
         if side == "SELL" and target > self.manager.projected_position():
             size = max(2, size - 3)
         return min(self.MAX_TAKE_SIZE, size)
 
-    def clear_inventory(self, reservation: float) -> None:
-        position = self.manager.projected_position()
-        if position > 0 and self.book.best_bid >= math.floor(reservation):
-            size = min(position, self.book.best_bid_volume, self.PASSIVE_SIZE)
-            self.manager.add_sell(self.book.best_bid, size)
-
-        position = self.manager.projected_position()
-        if position < 0 and self.book.best_ask <= math.ceil(reservation):
-            size = min(abs(position), self.book.best_ask_volume, self.PASSIVE_SIZE)
-            self.manager.add_buy(self.book.best_ask, size)
-
-    def take_orders(self, reservation: float, regime: str, target: int) -> None:
-        buy_threshold = self.take_threshold("BUY", regime, target)
-        sell_threshold = self.take_threshold("SELL", regime, target)
+    def take_orders(self, reservation: float, regime: str, signal: Dict[str, float], target: int) -> None:
+        buy_threshold = self.take_threshold("BUY", regime, signal, target)
+        sell_threshold = self.take_threshold("SELL", regime, signal, target)
 
         for price, volume in self.book.sell_levels[:2]:
             if self.manager.buy_capacity <= 0:
@@ -502,7 +461,7 @@ class TomatoesBot:
             if edge < buy_threshold:
                 break
             size = min(volume, self.manager.buy_capacity, self.take_size("BUY", regime, target))
-            if regime in {"trend_up", "strong_up"}:
+            if regime != "range":
                 desired = self.desired_buy_qty(target)
                 if desired <= 0:
                     continue
@@ -517,7 +476,7 @@ class TomatoesBot:
             if edge < sell_threshold:
                 break
             size = min(volume, self.manager.sell_capacity, self.take_size("SELL", regime, target))
-            if regime in {"trend_down", "strong_down"}:
+            if regime != "range":
                 desired = self.desired_sell_qty(target)
                 if desired <= 0:
                     continue
@@ -526,119 +485,91 @@ class TomatoesBot:
                 self.manager.add_sell(price, size)
 
     def quote_edge(self, side: str, regime: str, target: int) -> float:
-        edge = self.BASE_QUOTE_EDGE + 0.20 * min(4.0, self.product_state["vol_ema"])
-        edge += 0.08 * max(0, self.book.spread - 6)
+        edge = self.BASE_QUOTE_EDGE + 0.16 * min(4.0, float(self.product_state["vol_ema"]))
         pressure = self.manager.projected_position() - target
-
-        if regime == "stable":
-            edge -= 0.40
-        elif regime == "range":
-            edge += 0.00
-        elif regime in {"trend_up", "trend_down"}:
-            edge += 0.15
+        if regime == "range":
+            edge -= 0.18
         elif regime in {"strong_up", "strong_down"}:
-            edge += 0.10
-        else:
-            edge += 0.85
-
+            edge += 0.12
+        elif regime == "toxic":
+            edge += 0.90
         if side == "BUY":
             if pressure > 0:
-                edge += 0.90 * clamp(pressure / self.SOFT_LIMIT, 0.0, 1.0)
+                edge += 0.75 * clamp(pressure / self.SOFT_LIMIT, 0.0, 1.0)
             elif pressure < 0:
-                edge -= 0.25 * clamp(abs(pressure) / self.SOFT_LIMIT, 0.0, 1.0)
+                edge -= 0.18 * clamp(abs(pressure) / self.SOFT_LIMIT, 0.0, 1.0)
         else:
             if pressure < 0:
-                edge += 0.90 * clamp(abs(pressure) / self.SOFT_LIMIT, 0.0, 1.0)
+                edge += 0.75 * clamp(abs(pressure) / self.SOFT_LIMIT, 0.0, 1.0)
             elif pressure > 0:
-                edge -= 0.25 * clamp(pressure / self.SOFT_LIMIT, 0.0, 1.0)
-
-        if regime in {"stable", "range"} and self.book.spread <= 8 and abs(pressure) <= 6:
-            edge -= self.CALM_JOIN_EDGE_BONUS
+                edge -= 0.18 * clamp(pressure / self.SOFT_LIMIT, 0.0, 1.0)
         return max(1.2, edge)
 
-    def passive_size(self, side: str, regime: str, target: int) -> int:
-        size = self.PASSIVE_SIZE
-        if regime == "stable":
-            size += 1
-        elif regime == "toxic":
-            size = max(2, size - 3)
-
-        pressure = self.manager.projected_position() - target
-        if side == "BUY":
-            if pressure < 0:
-                size += 2
-            elif pressure > 0:
-                size = max(2, size - 3)
-        else:
-            if pressure > 0:
-                size += 2
-            elif pressure < 0:
-                size = max(2, size - 3)
-
-        aligned = self.aligned_side(regime)
-        if aligned == side and abs(self.manager.projected_position()) <= 10:
-            desired = self.desired_buy_qty(target) if side == "BUY" else self.desired_sell_qty(target)
-            if desired > 0:
-                size += self.NEAR_FLAT_PASSIVE_BONUS
-        return size
-
-    def allow_passive(self, side: str, regime: str, target: int) -> bool:
-        position = self.manager.projected_position()
-        if side == "BUY" and position >= POSITION_LIMITS[self.product]:
-            return False
-        if side == "SELL" and position <= -POSITION_LIMITS[self.product]:
-            return False
-        if regime == "toxic" and abs(position) <= 4:
-            return False
-        if regime == "strong_up" and side == "SELL" and position <= max(4, target // 4):
-            return False
-        if regime == "trend_up" and side == "SELL" and position <= 4:
-            return False
-        if regime == "strong_down" and side == "BUY" and position >= min(-4, target // 4):
-            return False
-        if regime == "trend_down" and side == "BUY" and position >= -4:
-            return False
-        return True
-
-    def passive_quotes(self, reservation: float, regime: str, target: int) -> Tuple[Optional[int], Optional[int]]:
-        buy_edge = self.quote_edge("BUY", regime, target)
-        sell_edge = self.quote_edge("SELL", regime, target)
-        buy_quote = math.floor(reservation - buy_edge)
-        sell_quote = math.ceil(reservation + sell_edge)
-
+    def passive_quotes(self, reservation: float, regime: str, target: int) -> Tuple[int, int]:
+        buy_quote = math.floor(reservation - self.quote_edge("BUY", regime, target))
+        sell_quote = math.ceil(reservation + self.quote_edge("SELL", regime, target))
+        if regime in {"trend_up", "strong_up"} and self.manager.projected_position() < target:
+            buy_quote = max(buy_quote, self.book.best_bid + 1)
+        if regime in {"trend_down", "strong_down"} and self.manager.projected_position() > target:
+            sell_quote = min(sell_quote, self.book.best_ask - 1)
+        buy_quote = max(buy_quote, self.book.best_bid)
+        sell_quote = min(sell_quote, self.book.best_ask)
         if buy_quote >= self.book.best_ask:
             buy_quote = self.book.best_bid
         if sell_quote <= self.book.best_bid:
             sell_quote = self.book.best_ask
-
         if buy_quote >= sell_quote:
-            buy_quote = self.book.best_bid
-            sell_quote = self.book.best_ask
+            return self.book.best_bid, self.book.best_ask
         return buy_quote, sell_quote
+
+    def passive_size(self, side: str, regime: str, target: int) -> int:
+        size = self.PASSIVE_SIZE
+        pressure = self.manager.projected_position() - target
+        if regime == "range":
+            size += 1
+        elif regime == "toxic":
+            size = max(2, size - 3)
+        if side == "BUY":
+            if pressure < 0:
+                size += 2
+            elif pressure > 0:
+                size = max(2, size - 3)
+        else:
+            if pressure > 0:
+                size += 2
+            elif pressure < 0:
+                size = max(2, size - 3)
+        return size
+
+    def allow_passive(self, side: str, regime: str) -> bool:
+        position = self.manager.projected_position()
+        if regime == "toxic" and abs(position) <= 4:
+            return False
+        if side == "BUY" and position >= POSITION_LIMITS["TOMATOES"]:
+            return False
+        if side == "SELL" and position <= -POSITION_LIMITS["TOMATOES"]:
+            return False
+        return True
 
     def run(self) -> Tuple[List[Order], Dict[str, object]]:
         if not self.book.valid:
-            self.save_product_state()
+            self.save_state()
             return [], self.memory
 
         self.update_state()
-        fair = self.fair_value()
-        regime = self.regime()
-        target = self.target_position(regime, fair)
+        signal = self.physics_signal()
+        regime = self.classify_regime(signal)
+        target = self.target_position(signal, regime)
+        fair = self.fair_value(signal, regime, target)
         reservation = self.reservation(fair, target)
 
-        self.take_orders(reservation, regime, target)
-        self.clear_inventory(self.reservation(fair, target))
+        self.take_orders(reservation, regime, signal, target)
         reservation = self.reservation(fair, target)
         buy_quote, sell_quote = self.passive_quotes(reservation, regime, target)
 
-        if (
-            buy_quote is not None
-            and self.manager.buy_capacity > 0
-            and self.allow_passive("BUY", regime, target)
-        ):
+        if self.allow_passive("BUY", regime) and self.manager.buy_capacity > 0:
             size = min(self.passive_size("BUY", regime, target), self.manager.buy_capacity)
-            if regime in {"trend_up", "strong_up"}:
+            if regime != "range":
                 desired = self.desired_buy_qty(target)
                 if desired <= 0:
                     size = 0
@@ -647,13 +578,9 @@ class TomatoesBot:
             if size > 0:
                 self.manager.add_buy(buy_quote, size)
 
-        if (
-            sell_quote is not None
-            and self.manager.sell_capacity > 0
-            and self.allow_passive("SELL", regime, target)
-        ):
+        if self.allow_passive("SELL", regime) and self.manager.sell_capacity > 0:
             size = min(self.passive_size("SELL", regime, target), self.manager.sell_capacity)
-            if regime in {"trend_down", "strong_down"}:
+            if regime != "range":
                 desired = self.desired_sell_qty(target)
                 if desired <= 0:
                     size = 0
@@ -662,7 +589,7 @@ class TomatoesBot:
             if size > 0:
                 self.manager.add_sell(sell_quote, size)
 
-        self.save_product_state()
+        self.save_state()
         return self.manager.orders, self.memory
 
 
@@ -683,11 +610,8 @@ class Trader:
         memory = self.load_memory(state.traderData)
         result: Dict[str, List[Order]] = {}
 
-        emeralds = EmeraldsBot(state)
-        result["EMERALDS"] = emeralds.run()
-
-        tomatoes = TomatoesBot(state, memory)
-        tomato_orders, updated_memory = tomatoes.run()
+        result["EMERALDS"] = EmeraldsBot(state).run()
+        tomato_orders, updated_memory = PhysicsTomatoesBot(state, memory).run()
         result["TOMATOES"] = tomato_orders
 
         for product in state.order_depths:
