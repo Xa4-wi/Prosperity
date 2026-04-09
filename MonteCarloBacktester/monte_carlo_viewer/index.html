@@ -6,22 +6,23 @@
   <title>Monte Carlo Result Viewer</title>
   <style>
     :root {
-      --bg: #f4f0e8;
-      --bg-soft: #fbf8f2;
-      --panel: rgba(255, 253, 248, 0.92);
-      --line: #d9cfbf;
-      --text: #25211d;
-      --muted: #6f675d;
-      --accent: #b84c32;
-      --accent-soft: #f3ddd6;
-      --good: #2d7d4f;
-      --good-soft: #d7f0e1;
-      --warn: #a16a26;
-      --shadow: 0 14px 36px rgba(77, 53, 26, 0.08);
-      --radius: 18px;
-      --radius-sm: 14px;
+      --bg: #030915;
+      --bg-soft: rgba(8, 18, 36, 0.88);
+      --panel: linear-gradient(180deg, rgba(9, 28, 53, 0.92) 0%, rgba(5, 14, 30, 0.92) 100%);
+      --line: rgba(151, 182, 222, 0.24);
+      --text: #edf5ff;
+      --muted: #94a9c8;
+      --accent: #79a8ff;
+      --accent-soft: rgba(121, 168, 255, 0.16);
+      --good: #74f4d0;
+      --good-soft: rgba(116, 244, 208, 0.14);
+      --warn: #f2c775;
+      --shadow: 0 20px 48px rgba(0, 0, 0, 0.42);
+      --radius: 28px;
+      --radius-sm: 20px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      --sans: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+      --sans: Inter, "Segoe UI", Helvetica, Arial, sans-serif;
+      --display: "Arial Narrow", "Helvetica Neue Condensed", "Franklin Gothic Medium", Arial, sans-serif;
     }
 
     * { box-sizing: border-box; }
@@ -31,9 +32,38 @@
       font-family: var(--sans);
       color: var(--text);
       background:
-        radial-gradient(circle at top left, rgba(184, 76, 50, 0.12), transparent 28rem),
-        radial-gradient(circle at top right, rgba(45, 125, 79, 0.08), transparent 24rem),
-        linear-gradient(180deg, #faf6ef 0%, var(--bg) 100%);
+        radial-gradient(circle at 20% 10%, rgba(61, 100, 188, 0.25), transparent 20rem),
+        radial-gradient(circle at 80% 20%, rgba(145, 104, 255, 0.15), transparent 22rem),
+        radial-gradient(circle at 15% 85%, rgba(31, 161, 137, 0.14), transparent 18rem),
+        linear-gradient(180deg, #040914 0%, #020611 100%);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    body::before {
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255,255,255,0.9) 0 1px, transparent 2px),
+        radial-gradient(circle at 28% 62%, rgba(255,255,255,0.5) 0 1px, transparent 2px),
+        radial-gradient(circle at 76% 32%, rgba(255,255,255,0.7) 0 1px, transparent 2px),
+        radial-gradient(circle at 88% 72%, rgba(255,255,255,0.55) 0 1px, transparent 2px),
+        radial-gradient(circle at 60% 12%, rgba(255,255,255,0.45) 0 1px, transparent 2px);
+      opacity: 0.65;
+    }
+
+    body::after {
+      background:
+        radial-gradient(circle at 50% -20%, rgba(121, 168, 255, 0.2), transparent 28rem),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.18));
     }
 
     body.sidebar-collapsed .app-shell {
@@ -62,9 +92,10 @@
       height: 100vh;
       overflow: auto;
       border-right: 1px solid var(--line);
-      background: rgba(255, 251, 244, 0.88);
-      backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(5, 16, 34, 0.92) 0%, rgba(3, 9, 23, 0.96) 100%);
+      backdrop-filter: blur(18px);
       padding: 18px 14px;
+      box-shadow: inset -1px 0 0 rgba(255,255,255,0.05);
     }
 
     .sidebar-header {
@@ -77,13 +108,16 @@
 
     .sidebar-title {
       margin: 0;
-      font-size: 1.45rem;
+      font-size: 1.18rem;
       line-height: 1.05;
+      font-family: var(--display);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
 
     .sidebar-copy {
       color: var(--muted);
-      font-size: 0.92rem;
+      font-size: 0.84rem;
       line-height: 1.35;
       margin: 0 0 14px;
     }
@@ -99,21 +133,23 @@
     .icon-button,
     button {
       border: 1px solid var(--line);
-      background: var(--panel);
-      border-radius: 12px;
+      background: rgba(8, 21, 43, 0.82);
+      border-radius: 16px;
       cursor: pointer;
-      transition: transform 120ms ease, border-color 120ms ease;
+      color: var(--text);
+      transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
     }
 
     .icon-button:hover,
     button:hover {
       transform: translateY(-1px);
       border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(121, 168, 255, 0.12);
     }
 
     .icon-button {
-      width: 42px;
-      height: 42px;
+      width: 50px;
+      height: 50px;
       font-size: 1rem;
     }
 
@@ -127,14 +163,19 @@
     select {
       width: 100%;
       padding: 11px 13px;
-      border-radius: 12px;
+      border-radius: 16px;
       border: 1px solid var(--line);
-      background: var(--panel);
+      background: rgba(5, 18, 37, 0.82);
+      color: var(--text);
       min-width: 0;
     }
 
+    input[type="search"]::placeholder {
+      color: rgba(148, 169, 200, 0.72);
+    }
+
     button.primary {
-      background: var(--accent);
+      background: linear-gradient(180deg, #4574ff 0%, #204dc4 100%);
       border-color: var(--accent);
       color: #fff;
       padding: 11px 14px;
@@ -147,8 +188,8 @@
 
     .test-card {
       border: 1px solid var(--line);
-      border-radius: 15px;
-      background: var(--panel);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(8, 22, 43, 0.92) 0%, rgba(5, 15, 30, 0.92) 100%);
       box-shadow: var(--shadow);
       padding: 12px;
       cursor: pointer;
@@ -156,7 +197,7 @@
 
     .test-card.active {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(184, 76, 50, 0.12), var(--shadow);
+      box-shadow: 0 0 0 3px rgba(121, 168, 255, 0.14), var(--shadow);
     }
 
     .test-card header {
@@ -199,29 +240,117 @@
 
     .main {
       min-width: 0;
-      padding: 24px;
+      padding: 24px 28px;
       display: grid;
       gap: 18px;
       align-content: start;
     }
 
     .topbar {
+      display: grid;
+      gap: 18px;
+    }
+
+    .top-nav {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 999px;
+      background: rgba(13, 28, 53, 0.72);
+      border: 1px solid rgba(151, 182, 222, 0.16);
+      backdrop-filter: blur(12px);
+      width: fit-content;
+    }
+
+    .nav-pill {
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font-family: var(--display);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.82rem;
+      border: 1px solid transparent;
+    }
+
+    .nav-pill.active {
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(48, 97, 170, 0.42), rgba(22, 41, 73, 0.32));
+      border-color: rgba(151, 182, 222, 0.28);
+      box-shadow: inset 0 -2px 0 rgba(255, 239, 176, 0.9);
+    }
+
+    .topbar-headline {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      gap: 16px;
+      align-items: flex-start;
+      gap: 20px;
       flex-wrap: wrap;
+      padding: 26px 28px;
+      border-radius: 36px;
+      background:
+        linear-gradient(180deg, rgba(37, 83, 138, 0.55) 0%, rgba(8, 22, 43, 0.96) 42%, rgba(4, 11, 24, 0.98) 100%);
+      border: 1px solid rgba(168, 201, 255, 0.24);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .topbar-headline::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 35%, transparent 65%),
+        radial-gradient(circle at 85% 18%, rgba(255,255,255,0.65) 0 2px, transparent 3px),
+        linear-gradient(120deg, transparent 54%, rgba(200, 223, 255, 0.24) 54.4%, rgba(200, 223, 255, 0.12) 65%, transparent 65.4%);
+      pointer-events: none;
+      opacity: 0.65;
     }
 
     .topbar h1 {
       margin: 0;
-      font-size: 2rem;
-      line-height: 1.05;
+      font-size: clamp(2.4rem, 5vw, 4.6rem);
+      line-height: 0.95;
+      font-family: var(--display);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #8db0ff;
     }
 
     .topbar p {
-      margin: 4px 0 0;
-      color: var(--muted);
+      max-width: 560px;
+      margin: 10px 0 0;
+      color: #c4d5ef;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    .status-stack {
+      display: grid;
+      gap: 8px;
+      justify-items: end;
+      text-align: right;
+      position: relative;
+      z-index: 1;
+    }
+
+    .status-label {
+      color: #9db4da;
+      font-family: var(--display);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 0.76rem;
+    }
+
+    .status-value {
+      font-family: var(--display);
+      font-size: 1.85rem;
+      letter-spacing: 0.12em;
+      color: #edf5ff;
     }
 
     .panel {
@@ -229,8 +358,21 @@
       border: 1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 20px;
+      padding: 22px;
       min-width: 0;
+      backdrop-filter: blur(18px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+      opacity: 0.9;
+      pointer-events: none;
     }
 
     .panel-header {
@@ -244,7 +386,10 @@
 
     .panel-header h2 {
       margin: 0;
-      font-size: 1.2rem;
+      font-size: 1.05rem;
+      font-family: var(--display);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
 
     .muted {
@@ -281,7 +426,7 @@
     .hero-card {
       border: 1px solid var(--line);
       border-radius: var(--radius-sm);
-      background: var(--bg-soft);
+      background: linear-gradient(180deg, rgba(7, 22, 44, 0.86) 0%, rgba(6, 17, 34, 0.9) 100%);
       padding: 14px;
       min-width: 0;
     }
@@ -314,6 +459,9 @@
       font-size: 1.9rem;
       line-height: 1.08;
       word-break: break-word;
+      font-family: var(--display);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .hero-card code {
@@ -336,9 +484,10 @@
       align-items: center;
       padding: 5px 10px;
       border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
+      background: rgba(121, 168, 255, 0.14);
+      color: #bcd4ff;
       font-size: 0.8rem;
+      border: 1px solid rgba(121, 168, 255, 0.16);
     }
 
     .panel-controls {
@@ -359,11 +508,14 @@
     .chart-frame {
       width: 100%;
       border: 1px solid var(--line);
-      border-radius: 16px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(247, 240, 228, 0.95));
+      border-radius: 24px;
+      background:
+        linear-gradient(180deg, rgba(4, 15, 31, 0.95), rgba(3, 10, 23, 0.98)),
+        linear-gradient(90deg, rgba(121,168,255,0.04), transparent);
       padding: 12px;
       min-height: 300px;
       overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
     }
 
     .chart-caption {
@@ -407,21 +559,22 @@
       margin-top: 10px;
       height: 12px;
       border-radius: 999px;
-      background: #ece3d5;
+      background: rgba(255,255,255,0.08);
       overflow: hidden;
     }
 
     .score-bar span {
       position: absolute;
       inset: 0 auto 0 0;
-      background: linear-gradient(90deg, #d88d77 0%, #b84c32 100%);
+      background: linear-gradient(90deg, #5be6ff 0%, #79a8ff 55%, #91beff 100%);
       border-radius: inherit;
+      box-shadow: 0 0 18px rgba(91, 230, 255, 0.45);
     }
 
     .empty {
       border: 1px dashed var(--line);
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.45);
+      border-radius: 24px;
+      background: rgba(7, 17, 33, 0.65);
       padding: 28px 18px;
       text-align: center;
       color: var(--muted);
@@ -461,6 +614,15 @@
       .main {
         padding: 18px;
       }
+
+      .topbar-headline {
+        padding: 20px;
+      }
+
+      .status-stack {
+        justify-items: start;
+        text-align: left;
+      }
     }
   </style>
 </head>
@@ -485,9 +647,21 @@
 
     <main class="main">
       <section class="topbar">
-        <div>
-          <h1>Monte Carlo Dashboard</h1>
-          <p>Compact stats, curves, and side-by-side comparisons without the sideways scrolling.</p>
+        <div class="top-nav">
+          <span class="nav-pill">Overview</span>
+          <span class="nav-pill">Challenge</span>
+          <span class="nav-pill">Upload & Log</span>
+          <span class="nav-pill active">Performance</span>
+        </div>
+        <div class="topbar-headline">
+          <div>
+            <h1>Performance</h1>
+            <p>Browse your saved Monte Carlo runs in a cleaner mission-control view, switch products and curve types, and compare the strongest dashboards without leaving the page.</p>
+          </div>
+          <div class="status-stack">
+            <span class="status-label">Saved Test Files</span>
+            <span id="testCount" class="status-value">0</span>
+          </div>
         </div>
       </section>
 
@@ -681,9 +855,9 @@
         <div class="chart-frame">
           <svg class="chart-svg" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="Monte Carlo curve chart">
             <rect x="0" y="0" width="${width}" height="${height}" fill="transparent"></rect>
-            <path d="${area3}" fill="rgba(184, 76, 50, 0.14)"></path>
-            <path d="${area1}" fill="rgba(184, 76, 50, 0.28)"></path>
-            <path d="${line}" fill="none" stroke="#8b311e" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"></path>
+            <path d="${area3}" fill="rgba(121, 168, 255, 0.12)"></path>
+            <path d="${area1}" fill="rgba(121, 168, 255, 0.26)"></path>
+            <path d="${line}" fill="none" stroke="#8ddfff" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"></path>
           </svg>
           <div class="chart-caption">
             <span>Start ${formatNumber(series.mean[0])}</span>
@@ -694,7 +868,7 @@
       `;
     }
 
-    function tinySparkline(values, color = "#b84c32") {
+    function tinySparkline(values, color = "#8ddfff") {
       if (!values || values.length < 2) return "";
       const width = 280;
       const height = 58;
@@ -711,6 +885,7 @@
     async function loadTests() {
       const payload = await fetchJson("/api/tests");
       state.tests = payload.tests || [];
+      document.getElementById("testCount").textContent = String(state.tests.length);
       if (!state.activeName && state.tests.length) {
         state.activeName = state.tests[0].name;
       }
@@ -960,7 +1135,7 @@
             <div class="session-grid">
               ${sessions.map((session) => {
                 const curve = [session.totalPnl, session.emeraldPnl, session.tomatoPnl];
-                const color = tone === "good" ? "#2d7d4f" : "#b84c32";
+                const color = tone === "good" ? "#74f4d0" : "#8ddfff";
                 return `
                   <article class="session-card">
                     <div style="display:flex; justify-content:space-between; gap:12px;">
