@@ -254,7 +254,7 @@ class TomatoesBot:
     ALPHA_MICRO_WEIGHT = 0.22
     ALPHA_FLOW_WEIGHT = 0.10
     ALPHA_CAP = 2.2
-    ALPHA_BLEND_WEIGHT = 0.28
+    ALPHA_BLEND_WEIGHT = 0.2667628572
     RANGE_ALPHA_DAMP = 0.65
     CONFLICT_ALPHA_DAMP = 0.72
     MOMENTUM_ALPHA_DAMP = 0.82
@@ -266,24 +266,30 @@ class TomatoesBot:
     FAIR_MICRO_WEIGHT = 0.20
     FAIR_FLOW_WEIGHT = 0.08
     FAIR_REGRESSION_WEIGHT = 0.10
-    FAIR_ALPHA_WEIGHT = 0.34
+    FAIR_ALPHA_WEIGHT = 0.3325609293
     POSITION_BIAS_DIVISOR = 16.0
     RANGE_REVERT_WEIGHT = 0.18
     TREND_BONUS_WEIGHT = 0.10
 
-    INVENTORY_SKEW = 0.045
-    BASE_QUOTE_EDGE = 2.05
-    BASE_TAKE_EDGE = 0.82
+    INVENTORY_SKEW = 0.0451458697
+    BASE_QUOTE_EDGE = 2.0660764381
+    BASE_TAKE_EDGE = 0.8322715145
     MAX_TAKE_SIZE = 10
-    PASSIVE_SIZE = 8
+    PASSIVE_SIZE = 9
     SOFT_LIMIT = 26
 
-    TREND_EDGE_THRESHOLD = 0.95
+    TREND_EDGE_THRESHOLD = 0.9566826427
     STRONG_TREND_EDGE = 1.70
-    FIT_THRESHOLD = 0.42
+    FIT_THRESHOLD = 0.4237696448
     TOXIC_SPREAD = 12
     TOXIC_VOL = 2.8
     WALL_PERSISTENCE_FLOOR = 0.22
+    QUEUE_ALPHA_WEIGHT = 0.08
+    QUEUE_FAIR_WEIGHT = 0.08
+    QUEUE_TAKE_SHIFT = 0.10
+    QUEUE_QUOTE_SHIFT = 0.10
+    QUEUE_SIZE_BONUS = 1
+    QUEUE_SIGNAL_ALPHA = 0.30
 
     def __init__(self, state: TradingState, memory: Dict[str, object]) -> None:
         self.state = state
@@ -310,7 +316,14 @@ class TomatoesBot:
             "wall_strength_ema": float(raw.get("wall_strength_ema", 0.0)),
             "vol_ema": float(raw.get("vol_ema", 1.5)),
             "flow_ema": float(raw.get("flow_ema", 0.0)),
+            "queue_bias_ema": float(raw.get("queue_bias_ema", 0.0)),
+            "queue_activity_ema": float(raw.get("queue_activity_ema", 0.0)),
             "last_mid": float(raw.get("last_mid", 0.0)),
+            "prev_best_bid": float(raw.get("prev_best_bid", 0.0)),
+            "prev_best_ask": float(raw.get("prev_best_ask", 0.0)),
+            "prev_bid_volume": float(raw.get("prev_bid_volume", 0.0)),
+            "prev_ask_volume": float(raw.get("prev_ask_volume", 0.0)),
+            "prev_spread": float(raw.get("prev_spread", 0.0)),
             "mid_history": history,
             "initialized": 1.0 if raw.get("initialized") else 0.0,
         }
@@ -321,7 +334,14 @@ class TomatoesBot:
             "wall_strength_ema": float(self.product_state["wall_strength_ema"]),
             "vol_ema": float(self.product_state["vol_ema"]),
             "flow_ema": float(self.product_state["flow_ema"]),
+            "queue_bias_ema": float(self.product_state["queue_bias_ema"]),
+            "queue_activity_ema": float(self.product_state["queue_activity_ema"]),
             "last_mid": float(self.product_state["last_mid"]),
+            "prev_best_bid": float(self.product_state["prev_best_bid"]),
+            "prev_best_ask": float(self.product_state["prev_best_ask"]),
+            "prev_bid_volume": float(self.product_state["prev_bid_volume"]),
+            "prev_ask_volume": float(self.product_state["prev_ask_volume"]),
+            "prev_spread": float(self.product_state["prev_spread"]),
             "mid_history": list(self.product_state["mid_history"])[-self.HISTORY_LENGTH :],
             "initialized": 1,
         }
@@ -379,7 +399,14 @@ class TomatoesBot:
             self.product_state["wall_strength_ema"] = current_wall_strength
             self.product_state["vol_ema"] = max(1.0, self.book.spread / 2.0)
             self.product_state["flow_ema"] = current_flow
+            self.product_state["queue_bias_ema"] = 0.0
+            self.product_state["queue_activity_ema"] = 0.0
             self.product_state["last_mid"] = current_mid
+            self.product_state["prev_best_bid"] = float(self.book.best_bid)
+            self.product_state["prev_best_ask"] = float(self.book.best_ask)
+            self.product_state["prev_bid_volume"] = float(self.book.best_bid_volume)
+            self.product_state["prev_ask_volume"] = float(self.book.best_ask_volume)
+            self.product_state["prev_spread"] = float(self.book.spread)
             self.product_state["mid_history"] = [current_mid]
             self.product_state["initialized"] = 1.0
             return
@@ -401,6 +428,69 @@ class TomatoesBot:
         history.append(current_mid)
         self.product_state["mid_history"] = history[-self.HISTORY_LENGTH :]
         self.product_state["last_mid"] = current_mid
+        self.update_queue_state()
+        self.product_state["prev_best_bid"] = float(self.book.best_bid)
+        self.product_state["prev_best_ask"] = float(self.book.best_ask)
+        self.product_state["prev_bid_volume"] = float(self.book.best_bid_volume)
+        self.product_state["prev_ask_volume"] = float(self.book.best_ask_volume)
+        self.product_state["prev_spread"] = float(self.book.spread)
+
+    def trade_pressure(self) -> float:
+        trades = self.state.market_trades.get(self.product, [])
+        if not trades:
+            return 0.0
+        total = 0.0
+        signed = 0.0
+        midpoint = float(self.book.mid)
+        for trade in trades[-8:]:
+            quantity = abs(float(trade.quantity))
+            if quantity <= 0.0:
+                continue
+            direction = 1.0 if float(trade.price) >= midpoint else -1.0
+            signed += direction * quantity
+            total += quantity
+        return 0.0 if total <= 1e-9 else signed / total
+
+    def update_queue_state(self) -> None:
+        prev_bid = float(self.product_state["prev_best_bid"])
+        prev_ask = float(self.product_state["prev_best_ask"])
+        prev_bid_volume = max(1.0, float(self.product_state["prev_bid_volume"]))
+        prev_ask_volume = max(1.0, float(self.product_state["prev_ask_volume"]))
+        prev_spread = max(1.0, float(self.product_state["prev_spread"]))
+        scale = max(1.0, float(self.book.spread) / 2.0, prev_spread / 2.0)
+
+        bid_up = max(0.0, float(self.book.best_bid) - prev_bid) / scale
+        bid_down = max(0.0, prev_bid - float(self.book.best_bid)) / scale
+        ask_up = max(0.0, float(self.book.best_ask) - prev_ask) / scale
+        ask_down = max(0.0, prev_ask - float(self.book.best_ask)) / scale
+
+        bid_depletion = 0.0
+        bid_refill = 0.0
+        if float(self.book.best_bid) == prev_bid:
+            bid_depletion = max(0.0, prev_bid_volume - float(self.book.best_bid_volume)) / prev_bid_volume
+            bid_refill = max(0.0, float(self.book.best_bid_volume) - prev_bid_volume) / prev_bid_volume
+
+        ask_depletion = 0.0
+        ask_refill = 0.0
+        if float(self.book.best_ask) == prev_ask:
+            ask_depletion = max(0.0, prev_ask_volume - float(self.book.best_ask_volume)) / prev_ask_volume
+            ask_refill = max(0.0, float(self.book.best_ask_volume) - prev_ask_volume) / prev_ask_volume
+
+        bid_depth = sum(max(0.0, float(volume)) / (index + 1.0) for index, (_price, volume) in enumerate(self.book.buy_levels[:3]))
+        ask_depth = sum(max(0.0, float(volume)) / (index + 1.0) for index, (_price, volume) in enumerate(self.book.sell_levels[:3]))
+        depth_skew = 0.0 if bid_depth + ask_depth <= 1e-9 else (bid_depth - ask_depth) / (bid_depth + ask_depth)
+        trade_pressure = self.trade_pressure()
+
+        buy_pressure = 0.45 * (bid_up + ask_up) + 0.35 * ask_depletion + 0.20 * bid_refill
+        sell_pressure = 0.45 * (bid_down + ask_down) + 0.35 * bid_depletion + 0.20 * ask_refill
+        raw_bias = (buy_pressure - sell_pressure) + (0.35 * depth_skew) + (0.25 * trade_pressure)
+        raw_activity = buy_pressure + sell_pressure + abs(depth_skew) + abs(trade_pressure)
+        alpha = self.QUEUE_SIGNAL_ALPHA
+        self.product_state["queue_bias_ema"] = ema(float(self.product_state["queue_bias_ema"]), raw_bias, alpha)
+        self.product_state["queue_activity_ema"] = ema(float(self.product_state["queue_activity_ema"]), raw_activity, alpha)
+
+    def queue_signal(self) -> Tuple[float, float]:
+        return float(self.product_state["queue_bias_ema"]), float(self.product_state["queue_activity_ema"])
 
     def recent_average(self) -> float:
         history = self.product_state["mid_history"]
@@ -446,11 +536,13 @@ class TomatoesBot:
             reference_price += 0.20 * wall_strength * (float(self.product_state["wall_fair_ema"]) - reference_price)
         half_spread = max(1.0, float(self.book.spread) / 2.0)
         flow_fair = float(self.book.mid) + self.book.imbalance * half_spread
+        queue_bias, _queue_activity = self.queue_signal()
         hybrid_fair = (
             self.ALPHA_REFERENCE_WEIGHT * reference_price
             + self.ALPHA_MID_WEIGHT * float(self.book.mid)
             + self.ALPHA_MICRO_WEIGHT * float(self.book.micro)
             + self.ALPHA_FLOW_WEIGHT * flow_fair
+            + self.QUEUE_ALPHA_WEIGHT * half_spread * queue_bias
         )
         return clamp(hybrid_fair - float(self.book.mid), -self.ALPHA_CAP, self.ALPHA_CAP)
 
@@ -543,6 +635,7 @@ class TomatoesBot:
         flow_fair = self.book.mid + self.book.imbalance * half_spread
         wall_strength = clamp(float(self.product_state["wall_strength_ema"]), 0.0, 1.0)
         wall_fair = float(self.product_state["wall_fair_ema"])
+        queue_bias, _queue_activity = self.queue_signal()
 
         fair = (
             self.FAIR_WALL_WEIGHT * wall_fair
@@ -550,6 +643,7 @@ class TomatoesBot:
             + self.FAIR_MICRO_WEIGHT * self.book.micro
             + self.FAIR_FLOW_WEIGHT * flow_fair
             + self.FAIR_REGRESSION_WEIGHT * predicted_next
+            + self.QUEUE_FAIR_WEIGHT * half_spread * queue_bias
         )
         fair += self.FAIR_ALPHA_WEIGHT * guarded_alpha
         fair += (target - self.manager.projected_position()) / self.POSITION_BIAS_DIVISOR
@@ -584,6 +678,7 @@ class TomatoesBot:
         volatility: float,
     ) -> float:
         threshold = self.BASE_TAKE_EDGE + 0.08 * min(3.0, volatility)
+        queue_bias, _queue_activity = self.queue_signal()
         position = self.manager.projected_position()
 
         if regime == "stable":
@@ -615,6 +710,12 @@ class TomatoesBot:
             threshold += 0.10
         if regime in {"strong_up", "strong_down"} and fit_quality < 0.65:
             threshold += 0.10
+        if side == "BUY":
+            threshold -= self.QUEUE_TAKE_SHIFT * max(0.0, queue_bias)
+            threshold += self.QUEUE_TAKE_SHIFT * max(0.0, -queue_bias)
+        else:
+            threshold -= self.QUEUE_TAKE_SHIFT * max(0.0, -queue_bias)
+            threshold += self.QUEUE_TAKE_SHIFT * max(0.0, queue_bias)
         return max(0.25, threshold)
 
     def take_size(self, side: str, regime: str, target: int) -> int:
@@ -696,6 +797,7 @@ class TomatoesBot:
 
     def quote_edge(self, side: str, regime: str, target: int, volatility: float, fit_quality: float) -> float:
         edge = self.BASE_QUOTE_EDGE + 0.18 * min(4.0, volatility)
+        queue_bias, _queue_activity = self.queue_signal()
         edge += 0.08 * max(0, self.book.spread - 6)
         pressure = self.manager.projected_position() - target
 
@@ -720,6 +822,12 @@ class TomatoesBot:
                 edge += 0.85 * clamp(abs(pressure) / self.SOFT_LIMIT, 0.0, 1.0)
             elif pressure > 0:
                 edge -= 0.22 * clamp(pressure / self.SOFT_LIMIT, 0.0, 1.0)
+        if side == "BUY":
+            edge -= self.QUEUE_QUOTE_SHIFT * max(0.0, queue_bias)
+            edge += 0.08 * max(0.0, -queue_bias)
+        else:
+            edge -= self.QUEUE_QUOTE_SHIFT * max(0.0, -queue_bias)
+            edge += 0.08 * max(0.0, queue_bias)
         return max(1.2, edge)
 
     def passive_size(
@@ -731,6 +839,7 @@ class TomatoesBot:
         fit_quality: float,
     ) -> int:
         size = self.PASSIVE_SIZE
+        queue_bias, _queue_activity = self.queue_signal()
         if regime == "stable":
             size += 1
         elif regime == "toxic":
@@ -753,6 +862,10 @@ class TomatoesBot:
             size = max(2, size - 1)
         if regime in {"strong_up", "strong_down"} and fit_quality < 0.55:
             size = max(2, size - 1)
+        if side == "BUY" and queue_bias > 0:
+            size += self.QUEUE_SIZE_BONUS
+        elif side == "SELL" and queue_bias < 0:
+            size += self.QUEUE_SIZE_BONUS
         return size
 
     def allow_passive(self, side: str, regime: str, target: int) -> bool:

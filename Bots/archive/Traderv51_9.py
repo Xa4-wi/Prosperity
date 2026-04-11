@@ -254,7 +254,7 @@ class TomatoesBot:
     ALPHA_MICRO_WEIGHT = 0.22
     ALPHA_FLOW_WEIGHT = 0.10
     ALPHA_CAP = 2.2
-    ALPHA_BLEND_WEIGHT = 0.28
+    ALPHA_BLEND_WEIGHT = 0.2667628572
     RANGE_ALPHA_DAMP = 0.65
     CONFLICT_ALPHA_DAMP = 0.72
     MOMENTUM_ALPHA_DAMP = 0.82
@@ -266,21 +266,28 @@ class TomatoesBot:
     FAIR_MICRO_WEIGHT = 0.20
     FAIR_FLOW_WEIGHT = 0.08
     FAIR_REGRESSION_WEIGHT = 0.10
-    FAIR_ALPHA_WEIGHT = 0.34
+    FAIR_ALPHA_WEIGHT = 0.3325609293
     POSITION_BIAS_DIVISOR = 16.0
     RANGE_REVERT_WEIGHT = 0.18
     TREND_BONUS_WEIGHT = 0.10
+    HAWKES_ALPHA_WEIGHT = 0.08
+    HAWKES_FAIR_WEIGHT = 0.08
+    HAWKES_EDGE_WEIGHT = 0.16
+    HAWKES_TAKE_SHIFT = 0.10
+    HAWKES_QUOTE_SHIFT = 0.12
+    HAWKES_SIZE_BONUS = 1
+    HAWKES_SIGNAL_ALPHA = 0.30
 
-    INVENTORY_SKEW = 0.045
-    BASE_QUOTE_EDGE = 2.05
-    BASE_TAKE_EDGE = 0.82
+    INVENTORY_SKEW = 0.0451458697
+    BASE_QUOTE_EDGE = 2.0660764381
+    BASE_TAKE_EDGE = 0.8322715145
     MAX_TAKE_SIZE = 10
-    PASSIVE_SIZE = 8
+    PASSIVE_SIZE = 9
     SOFT_LIMIT = 26
 
-    TREND_EDGE_THRESHOLD = 0.95
+    TREND_EDGE_THRESHOLD = 0.9566826427
     STRONG_TREND_EDGE = 1.70
-    FIT_THRESHOLD = 0.42
+    FIT_THRESHOLD = 0.4237696448
     TOXIC_SPREAD = 12
     TOXIC_VOL = 2.8
     WALL_PERSISTENCE_FLOOR = 0.22
@@ -310,6 +317,12 @@ class TomatoesBot:
             "wall_strength_ema": float(raw.get("wall_strength_ema", 0.0)),
             "vol_ema": float(raw.get("vol_ema", 1.5)),
             "flow_ema": float(raw.get("flow_ema", 0.0)),
+            "hawkes_bias_ema": float(raw.get("hawkes_bias_ema", 0.0)),
+            "hawkes_activity_ema": float(raw.get("hawkes_activity_ema", 0.0)),
+            "prev_best_bid": float(raw.get("prev_best_bid", 0.0)),
+            "prev_best_ask": float(raw.get("prev_best_ask", 0.0)),
+            "prev_bid_volume": float(raw.get("prev_bid_volume", 0.0)),
+            "prev_ask_volume": float(raw.get("prev_ask_volume", 0.0)),
             "last_mid": float(raw.get("last_mid", 0.0)),
             "mid_history": history,
             "initialized": 1.0 if raw.get("initialized") else 0.0,
@@ -321,10 +334,77 @@ class TomatoesBot:
             "wall_strength_ema": float(self.product_state["wall_strength_ema"]),
             "vol_ema": float(self.product_state["vol_ema"]),
             "flow_ema": float(self.product_state["flow_ema"]),
+            "hawkes_bias_ema": float(self.product_state["hawkes_bias_ema"]),
+            "hawkes_activity_ema": float(self.product_state["hawkes_activity_ema"]),
+            "prev_best_bid": float(self.product_state["prev_best_bid"]),
+            "prev_best_ask": float(self.product_state["prev_best_ask"]),
+            "prev_bid_volume": float(self.product_state["prev_bid_volume"]),
+            "prev_ask_volume": float(self.product_state["prev_ask_volume"]),
             "last_mid": float(self.product_state["last_mid"]),
             "mid_history": list(self.product_state["mid_history"])[-self.HISTORY_LENGTH :],
             "initialized": 1,
         }
+
+    def trade_pressure(self) -> Tuple[float, float]:
+        buy_pressure = 0.0
+        sell_pressure = 0.0
+        half_spread = max(1.0, float(self.book.spread) / 2.0)
+        for trade in self.state.market_trades.get(self.product, []):
+            price = float(trade.price)
+            quantity = abs(int(trade.quantity))
+            if quantity <= 0:
+                continue
+            if price >= float(self.book.mid):
+                buy_pressure += quantity
+                buy_pressure += 0.4 * max(0.0, (price - float(self.book.mid)) / half_spread)
+            else:
+                sell_pressure += quantity
+                sell_pressure += 0.4 * max(0.0, (float(self.book.mid) - price) / half_spread)
+        return buy_pressure, sell_pressure
+
+    def update_hawkes_state(self) -> None:
+        buy_trades, sell_trades = self.trade_pressure()
+        buy_impulse = 0.55 * buy_trades
+        sell_impulse = 0.55 * sell_trades
+
+        prev_bid = float(self.product_state["prev_best_bid"])
+        prev_ask = float(self.product_state["prev_best_ask"])
+        prev_bid_vol = float(self.product_state["prev_bid_volume"])
+        prev_ask_vol = float(self.product_state["prev_ask_volume"])
+        if prev_bid > 0.0 and prev_ask > 0.0:
+            scale = max(1.0, prev_bid_vol + prev_ask_vol)
+            if float(self.book.best_bid) > prev_bid:
+                buy_impulse += 1.10
+            elif float(self.book.best_bid) < prev_bid:
+                sell_impulse += 0.75
+            else:
+                bid_depletion = max(0.0, prev_bid_vol - float(self.book.best_bid_volume)) / scale
+                bid_refill = max(0.0, float(self.book.best_bid_volume) - prev_bid_vol) / scale
+                sell_impulse += 0.90 * bid_depletion
+                buy_impulse += 0.35 * bid_refill
+
+            if float(self.book.best_ask) < prev_ask:
+                buy_impulse += 1.10
+            elif float(self.book.best_ask) > prev_ask:
+                sell_impulse += 0.75
+            else:
+                ask_depletion = max(0.0, prev_ask_vol - float(self.book.best_ask_volume)) / scale
+                ask_refill = max(0.0, float(self.book.best_ask_volume) - prev_ask_vol) / scale
+                buy_impulse += 0.90 * ask_depletion
+                sell_impulse += 0.35 * ask_refill
+
+        total = buy_impulse + sell_impulse
+        raw_bias = 0.0 if total <= 1e-9 else (buy_impulse - sell_impulse) / total
+        alpha = self.HAWKES_SIGNAL_ALPHA
+        self.product_state["hawkes_bias_ema"] = ema(float(self.product_state["hawkes_bias_ema"]), raw_bias, alpha)
+        self.product_state["hawkes_activity_ema"] = ema(
+            float(self.product_state["hawkes_activity_ema"]), min(2.0, total), alpha
+        )
+
+    def hawkes_signal(self) -> float:
+        return float(self.product_state["hawkes_bias_ema"]) * min(
+            1.6, float(self.product_state["hawkes_activity_ema"])
+        )
 
     def current_wall_fair(self) -> Tuple[float, float]:
         bid_levels = self.book.buy_levels[:3]
@@ -379,6 +459,12 @@ class TomatoesBot:
             self.product_state["wall_strength_ema"] = current_wall_strength
             self.product_state["vol_ema"] = max(1.0, self.book.spread / 2.0)
             self.product_state["flow_ema"] = current_flow
+            self.product_state["hawkes_bias_ema"] = 0.0
+            self.product_state["hawkes_activity_ema"] = 0.0
+            self.product_state["prev_best_bid"] = float(self.book.best_bid)
+            self.product_state["prev_best_ask"] = float(self.book.best_ask)
+            self.product_state["prev_bid_volume"] = float(self.book.best_bid_volume)
+            self.product_state["prev_ask_volume"] = float(self.book.best_ask_volume)
             self.product_state["last_mid"] = current_mid
             self.product_state["mid_history"] = [current_mid]
             self.product_state["initialized"] = 1.0
@@ -397,9 +483,14 @@ class TomatoesBot:
         self.product_state["flow_ema"] = ema(
             float(self.product_state["flow_ema"]), current_flow, self.FLOW_EMA_ALPHA
         )
+        self.update_hawkes_state()
         history = list(self.product_state["mid_history"])
         history.append(current_mid)
         self.product_state["mid_history"] = history[-self.HISTORY_LENGTH :]
+        self.product_state["prev_best_bid"] = float(self.book.best_bid)
+        self.product_state["prev_best_ask"] = float(self.book.best_ask)
+        self.product_state["prev_bid_volume"] = float(self.book.best_bid_volume)
+        self.product_state["prev_ask_volume"] = float(self.book.best_ask_volume)
         self.product_state["last_mid"] = current_mid
 
     def recent_average(self) -> float:
@@ -439,7 +530,7 @@ class TomatoesBot:
         volatility = sum(diffs) / len(diffs) if diffs else max(1.0, float(self.product_state["vol_ema"]))
         return predicted_now, predicted_next, fit_quality, max(1.0, volatility)
 
-    def hybrid_alpha(self) -> float:
+    def hybrid_alpha(self, hawkes_score: float) -> float:
         reference_price = self.recent_average()
         wall_strength = clamp(float(self.product_state["wall_strength_ema"]), 0.0, 1.0)
         if wall_strength >= self.WALL_PERSISTENCE_FLOOR:
@@ -452,6 +543,7 @@ class TomatoesBot:
             + self.ALPHA_MICRO_WEIGHT * float(self.book.micro)
             + self.ALPHA_FLOW_WEIGHT * flow_fair
         )
+        hybrid_fair += self.HAWKES_ALPHA_WEIGHT * half_spread * hawkes_score
         return clamp(hybrid_fair - float(self.book.mid), -self.ALPHA_CAP, self.ALPHA_CAP)
 
     def guarded_alpha(self, hybrid_alpha: float, regression_edge: float, regime: str) -> float:
@@ -538,6 +630,7 @@ class TomatoesBot:
         predicted_now: float,
         predicted_next: float,
         guarded_alpha: float,
+        hawkes_score: float,
     ) -> float:
         half_spread = max(1.0, self.book.spread / 2.0)
         flow_fair = self.book.mid + self.book.imbalance * half_spread
@@ -552,6 +645,7 @@ class TomatoesBot:
             + self.FAIR_REGRESSION_WEIGHT * predicted_next
         )
         fair += self.FAIR_ALPHA_WEIGHT * guarded_alpha
+        fair += self.HAWKES_FAIR_WEIGHT * half_spread * hawkes_score
         fair += (target - self.manager.projected_position()) / self.POSITION_BIAS_DIVISOR
 
         line_gap = predicted_now - self.book.mid
@@ -582,6 +676,7 @@ class TomatoesBot:
         predicted_edge: float,
         fit_quality: float,
         volatility: float,
+        hawkes_score: float,
     ) -> float:
         threshold = self.BASE_TAKE_EDGE + 0.08 * min(3.0, volatility)
         position = self.manager.projected_position()
@@ -615,6 +710,12 @@ class TomatoesBot:
             threshold += 0.10
         if regime in {"strong_up", "strong_down"} and fit_quality < 0.65:
             threshold += 0.10
+        if hawkes_score != 0.0:
+            aligned = (side == "BUY" and hawkes_score > 0) or (side == "SELL" and hawkes_score < 0)
+            if aligned:
+                threshold -= self.HAWKES_TAKE_SHIFT * min(1.0, abs(hawkes_score))
+            else:
+                threshold += 0.05 * min(1.0, abs(hawkes_score))
         return max(0.25, threshold)
 
     def take_size(self, side: str, regime: str, target: int) -> int:
@@ -656,9 +757,10 @@ class TomatoesBot:
         predicted_edge: float,
         fit_quality: float,
         volatility: float,
+        hawkes_score: float,
     ) -> None:
-        buy_threshold = self.take_threshold("BUY", regime, target, predicted_edge, fit_quality, volatility)
-        sell_threshold = self.take_threshold("SELL", regime, target, predicted_edge, fit_quality, volatility)
+        buy_threshold = self.take_threshold("BUY", regime, target, predicted_edge, fit_quality, volatility, hawkes_score)
+        sell_threshold = self.take_threshold("SELL", regime, target, predicted_edge, fit_quality, volatility, hawkes_score)
 
         for price, volume in self.book.sell_levels[:2]:
             if self.manager.buy_capacity <= 0:
@@ -694,7 +796,7 @@ class TomatoesBot:
             if size > 0:
                 self.manager.add_sell(price, size)
 
-    def quote_edge(self, side: str, regime: str, target: int, volatility: float, fit_quality: float) -> float:
+    def quote_edge(self, side: str, regime: str, target: int, volatility: float, fit_quality: float, hawkes_score: float) -> float:
         edge = self.BASE_QUOTE_EDGE + 0.18 * min(4.0, volatility)
         edge += 0.08 * max(0, self.book.spread - 6)
         pressure = self.manager.projected_position() - target
@@ -720,6 +822,8 @@ class TomatoesBot:
                 edge += 0.85 * clamp(abs(pressure) / self.SOFT_LIMIT, 0.0, 1.0)
             elif pressure > 0:
                 edge -= 0.22 * clamp(pressure / self.SOFT_LIMIT, 0.0, 1.0)
+        if hawkes_score != 0.0 and regime != "toxic":
+            edge -= self.HAWKES_QUOTE_SHIFT * min(1.0, abs(hawkes_score))
         return max(1.2, edge)
 
     def passive_size(
@@ -729,6 +833,7 @@ class TomatoesBot:
         target: int,
         volatility: float,
         fit_quality: float,
+        hawkes_score: float,
     ) -> int:
         size = self.PASSIVE_SIZE
         if regime == "stable":
@@ -753,6 +858,10 @@ class TomatoesBot:
             size = max(2, size - 1)
         if regime in {"strong_up", "strong_down"} and fit_quality < 0.55:
             size = max(2, size - 1)
+        if hawkes_score != 0.0:
+            aligned = (side == "BUY" and hawkes_score > 0) or (side == "SELL" and hawkes_score < 0)
+            if aligned:
+                size += int(self.HAWKES_SIZE_BONUS)
         return size
 
     def allow_passive(self, side: str, regime: str, target: int) -> bool:
@@ -777,9 +886,10 @@ class TomatoesBot:
         predicted_edge: float,
         fit_quality: float,
         volatility: float,
+        hawkes_score: float,
     ) -> Tuple[Optional[int], Optional[int]]:
-        buy_edge = self.quote_edge("BUY", regime, target, volatility, fit_quality)
-        sell_edge = self.quote_edge("SELL", regime, target, volatility, fit_quality)
+        buy_edge = self.quote_edge("BUY", regime, target, volatility, fit_quality, hawkes_score)
+        sell_edge = self.quote_edge("SELL", regime, target, volatility, fit_quality, hawkes_score)
         buy_quote = math.floor(reservation - buy_edge)
         sell_quote = math.ceil(reservation + sell_edge)
 
@@ -810,25 +920,27 @@ class TomatoesBot:
             return [], self.memory
 
         self.update_state()
+        hawkes_score = self.hawkes_signal()
         predicted_now, predicted_next, fit_quality, volatility = self.regression_metrics()
         regression_edge = predicted_next - float(self.book.mid)
         provisional_regime = self.classify_regime(regression_edge, fit_quality, volatility)
-        hybrid_alpha = self.hybrid_alpha()
+        hybrid_alpha = self.hybrid_alpha(hawkes_score)
         guarded_alpha = self.guarded_alpha(hybrid_alpha, regression_edge, provisional_regime)
         predicted_edge = (
             (1.0 - self.ALPHA_BLEND_WEIGHT) * regression_edge
             + self.ALPHA_BLEND_WEIGHT * guarded_alpha
         )
+        predicted_edge += self.HAWKES_EDGE_WEIGHT * hawkes_score
         regime = self.classify_regime(predicted_edge, fit_quality, volatility)
         target = self.target_position(regime, predicted_edge, fit_quality)
-        fair = self.fair_value(regime, target, predicted_now, predicted_next, guarded_alpha)
+        fair = self.fair_value(regime, target, predicted_now, predicted_next, guarded_alpha, hawkes_score)
         reservation = self.reservation(fair, target)
 
-        self.take_orders(reservation, regime, target, predicted_edge, fit_quality, volatility)
+        self.take_orders(reservation, regime, target, predicted_edge, fit_quality, volatility, hawkes_score)
         self.clear_inventory(self.reservation(fair, target), regime, target)
         reservation = self.reservation(fair, target)
         buy_quote, sell_quote = self.passive_quotes(
-            reservation, regime, target, predicted_edge, fit_quality, volatility
+            reservation, regime, target, predicted_edge, fit_quality, volatility, hawkes_score
         )
 
         if (
@@ -837,7 +949,7 @@ class TomatoesBot:
             and self.allow_passive("BUY", regime, target)
         ):
             size = min(
-                self.passive_size("BUY", regime, target, volatility, fit_quality),
+                self.passive_size("BUY", regime, target, volatility, fit_quality, hawkes_score),
                 self.manager.buy_capacity,
             )
             if regime != "range":
@@ -855,7 +967,7 @@ class TomatoesBot:
             and self.allow_passive("SELL", regime, target)
         ):
             size = min(
-                self.passive_size("SELL", regime, target, volatility, fit_quality),
+                self.passive_size("SELL", regime, target, volatility, fit_quality, hawkes_score),
                 self.manager.sell_capacity,
             )
             if regime != "range":
