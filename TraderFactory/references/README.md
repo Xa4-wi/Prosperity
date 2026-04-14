@@ -6,8 +6,8 @@ It exists so that `TraderFactory` does not depend entirely on chat memory or on 
 
 Start with:
 
-- [SOURCE_MAP.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/references/SOURCE_MAP.md)
-- [Strategies.txt](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/references/Strategies.txt)
-- [PUBLIC_STRATEGY_RESEARCH.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/references/PUBLIC_STRATEGY_RESEARCH.md)
-- [execution_probes/DISCOVERIES.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/references/execution_probes/DISCOVERIES.md)
-- [execution_probes/RESEARCH_HANDOFF.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/references/execution_probes/RESEARCH_HANDOFF.md)
+- [SOURCE_MAP.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/references/SOURCE_MAP.md)
+- [Strategies.txt](/Users/xavierwinkelmann/Prosperity/TraderFactory/references/Strategies.txt)
+- [PUBLIC_STRATEGY_RESEARCH.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/references/PUBLIC_STRATEGY_RESEARCH.md)
+- [execution_probes/DISCOVERIES.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/references/execution_probes/DISCOVERIES.md)
+- [execution_probes/RESEARCH_HANDOFF.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/references/execution_probes/RESEARCH_HANDOFF.md)

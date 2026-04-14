@@ -1,0 +1,149 @@
+{
+  "name": "TradervR1_17 Round 1 Pepper Execution CMA-ES",
+  "source_bot": "../../../Bots/Round1/TradervR1_17.py",
+  "baselines": {
+    "-2": 94833.0,
+    "-1": 95520.0,
+    "0": 94199.0
+  },
+  "search": {
+    "max_iter": 3,
+    "population": 5,
+    "parents": 2,
+    "sigma0": 0.045,
+    "seed": 216,
+    "timeout_seconds": 120
+  },
+  "penalties": {
+    "regression": 6.0,
+    "imbalance": 1.2,
+    "drift": 90.0
+  },
+  "output_prefix": "round1_tradervr1_17_cmaes_execution",
+  "output_dir": "../../../Analysis/output/round1_tradervr1_17_cmaes_execution",
+  "data_root": "../../../Data/ROUND_1",
+  "dataset_tag": "round_1",
+  "engine": "rust",
+  "parameters": [
+    {
+      "name": "IPR_RESIDUAL_ALPHA",
+      "lower": 0.07,
+      "upper": 0.14,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "RESIDUAL_ALPHA"
+      }
+    },
+    {
+      "name": "IPR_SHORT_MID_ALPHA",
+      "lower": 0.14,
+      "upper": 0.24,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "SHORT_MID_ALPHA"
+      }
+    },
+    {
+      "name": "IPR_LONG_MID_ALPHA",
+      "lower": 0.03,
+      "upper": 0.08,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "LONG_MID_ALPHA"
+      }
+    },
+    {
+      "name": "IPR_LOOKAHEAD_BONUS",
+      "lower": 3.8,
+      "upper": 6.2,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "LOOKAHEAD_BONUS"
+      }
+    },
+    {
+      "name": "IPR_ZSCORE_BUY_BONUS",
+      "lower": 7.0,
+      "upper": 14.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "ZSCORE_BUY_BONUS"
+      }
+    },
+    {
+      "name": "IPR_ZSCORE_SELL_PENALTY",
+      "lower": 4.0,
+      "upper": 8.5,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "ZSCORE_SELL_PENALTY"
+      }
+    },
+    {
+      "name": "IPR_INVENTORY_SKEW",
+      "lower": 0.055,
+      "upper": 0.095,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "INVENTORY_SKEW"
+      }
+    },
+    {
+      "name": "IPR_BASE_QUOTE_EDGE",
+      "lower": 4.2,
+      "upper": 5.8,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "BASE_QUOTE_EDGE"
+      }
+    },
+    {
+      "name": "IPR_PASSIVE_FRONT_SIZE",
+      "lower": 7.0,
+      "upper": 12.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "PASSIVE_FRONT_SIZE"
+      }
+    },
+    {
+      "name": "IPR_PASSIVE_SELL_BUFFER",
+      "lower": 4.0,
+      "upper": 10.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "PASSIVE_SELL_BUFFER"
+      }
+    },
+    {
+      "name": "IPR_OVEREXTENSION_Z",
+      "lower": 0.90,
+      "upper": 1.25,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "OVEREXTENSION_Z"
+      }
+    },
+    {
+      "name": "IPR_BULLISH_IMBALANCE",
+      "lower": 0.02,
+      "upper": 0.08,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "BULLISH_IMBALANCE"
+      }
+    }
+  ]
+}

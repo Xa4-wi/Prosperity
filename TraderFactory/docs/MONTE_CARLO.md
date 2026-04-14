@@ -4,7 +4,7 @@
 
 Entry point:
 
-- [trader_factory/simulation/monte_carlo.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/simulation/monte_carlo.py)
+- [trader_factory/simulation/monte_carlo.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/simulation/monte_carlo.py)
 
 CLI:
 
@@ -97,7 +97,7 @@ What is already local to `TraderFactory`:
 
 The browser viewer is now local too:
 
-- [docs/VIEWER.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/VIEWER.md)
+- [docs/VIEWER.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/VIEWER.md)
 
 What is still not migrated:
 

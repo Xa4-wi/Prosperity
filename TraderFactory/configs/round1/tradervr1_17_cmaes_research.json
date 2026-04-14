@@ -1,0 +1,179 @@
+{
+  "name": "TradervR1_17 Round 1 Pepper Research CMA-ES",
+  "source_bot": "../../../Bots/Round1/TradervR1_17.py",
+  "baselines": {
+    "-2": 94833.0,
+    "-1": 95520.0,
+    "0": 94199.0
+  },
+  "search": {
+    "max_iter": 3,
+    "population": 5,
+    "parents": 2,
+    "sigma0": 0.04,
+    "seed": 215,
+    "timeout_seconds": 120
+  },
+  "penalties": {
+    "regression": 6.0,
+    "imbalance": 1.2,
+    "drift": 90.0
+  },
+  "output_prefix": "round1_tradervr1_17_cmaes_research",
+  "output_dir": "../../../Analysis/output/round1_tradervr1_17_cmaes_research",
+  "data_root": "../../../Data/ROUND_1",
+  "dataset_tag": "round_1",
+  "engine": "rust",
+  "parameters": [
+    {
+      "name": "IPR_CORE_TARGET_MID",
+      "lower": 46.0,
+      "upper": 54.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CORE_TARGET_MID"
+      }
+    },
+    {
+      "name": "IPR_CORE_TARGET_LATE",
+      "lower": 40.0,
+      "upper": 48.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CORE_TARGET_LATE"
+      }
+    },
+    {
+      "name": "IPR_STRONG_TARGET_BONUS",
+      "lower": 10.0,
+      "upper": 18.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "STRONG_TARGET_BONUS"
+      }
+    },
+    {
+      "name": "IPR_NOISY_TARGET_CAP",
+      "lower": 3.0,
+      "upper": 7.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "NOISY_TARGET_CAP"
+      }
+    },
+    {
+      "name": "IPR_LATE_UNWIND_START",
+      "lower": 0.90,
+      "upper": 0.97,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "LATE_UNWIND_START"
+      }
+    },
+    {
+      "name": "IPR_LATE_UNWIND_Z",
+      "lower": 1.20,
+      "upper": 1.45,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "LATE_UNWIND_Z"
+      }
+    },
+    {
+      "name": "IPR_STATE_STRONG_MEAN_BONUS",
+      "lower": 0.60,
+      "upper": 1.30,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "STATE_STRONG_MEAN_BONUS"
+      }
+    },
+    {
+      "name": "IPR_STATE_NOISY_MEAN_SCALE",
+      "lower": 0.20,
+      "upper": 0.55,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "STATE_NOISY_MEAN_SCALE"
+      }
+    },
+    {
+      "name": "IPR_STATE_STEADY_SIGMA",
+      "lower": 1.80,
+      "upper": 3.20,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "STATE_STEADY_SIGMA"
+      }
+    },
+    {
+      "name": "IPR_STATE_STRONG_SIGMA",
+      "lower": 2.60,
+      "upper": 4.60,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "STATE_STRONG_SIGMA"
+      }
+    },
+    {
+      "name": "IPR_STATE_NOISY_SIGMA",
+      "lower": 5.00,
+      "upper": 8.00,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "STATE_NOISY_SIGMA"
+      }
+    },
+    {
+      "name": "IPR_AGGRESSIVE_BUY_EDGE",
+      "lower": 1.90,
+      "upper": 2.80,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "AGGRESSIVE_BUY_EDGE"
+      }
+    },
+    {
+      "name": "IPR_OVERLAY_SELL_EDGE",
+      "lower": 2.80,
+      "upper": 4.10,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "OVERLAY_SELL_EDGE"
+      }
+    },
+    {
+      "name": "IPR_BASE_QUOTE_EDGE",
+      "lower": 4.40,
+      "upper": 5.60,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "BASE_QUOTE_EDGE"
+      }
+    },
+    {
+      "name": "IPR_RELOAD_COOLDOWN",
+      "lower": 0.80,
+      "upper": 2.40,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "RELOAD_COOLDOWN"
+      }
+    }
+  ]
+}

@@ -4,7 +4,7 @@
 
 Entry point:
 
-- [trader_factory/generation/project.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/generation/project.py)
+- [trader_factory/generation/project.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/generation/project.py)
 
 CLI:
 

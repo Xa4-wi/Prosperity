@@ -1,0 +1,169 @@
+{
+  "name": "TradervR1_8 Round 1 Focused CMA-ES",
+  "source_bot": "../../../Bots/Round1/TradervR1_8.py",
+  "baselines": {
+    "-2": 89067.0,
+    "-1": 90939.0,
+    "0": 89637.0
+  },
+  "search": {
+    "max_iter": 3,
+    "population": 5,
+    "parents": 2,
+    "sigma0": 0.05,
+    "seed": 208,
+    "timeout_seconds": 180
+  },
+  "penalties": {
+    "regression": 6.0,
+    "imbalance": 0.9,
+    "drift": 100.0
+  },
+  "output_prefix": "round1_tradervr1_8_cmaes",
+  "output_dir": "../../../Analysis/output/round1_tradervr1_8_cmaes",
+  "data_root": "../../../Data/ROUND_1",
+  "dataset_tag": "round_1",
+  "engine": "rust",
+  "parameters": [
+    {
+      "name": "ASH_BASE_EDGE",
+      "lower": 6.6,
+      "upper": 7.6,
+      "location": {
+        "type": "class_constant",
+        "class_name": "AshCoatedOsmiumBot",
+        "key": "BASE_EDGE"
+      }
+    },
+    {
+      "name": "ASH_IMBALANCE_FAIR_WEIGHT",
+      "lower": 3.0,
+      "upper": 4.1,
+      "location": {
+        "type": "class_constant",
+        "class_name": "AshCoatedOsmiumBot",
+        "key": "IMBALANCE_FAIR_WEIGHT"
+      }
+    },
+    {
+      "name": "ASH_INVENTORY_SKEW",
+      "lower": 0.075,
+      "upper": 0.11,
+      "location": {
+        "type": "class_constant",
+        "class_name": "AshCoatedOsmiumBot",
+        "key": "INVENTORY_SKEW"
+      }
+    },
+    {
+      "name": "DRIFT_PER_TIMESTAMP",
+      "lower": 0.00095,
+      "upper": 0.00110,
+      "location": {
+        "type": "class_constant",
+        "class_name": "IntarianPepperRootBot",
+        "key": "DRIFT_PER_TIMESTAMP"
+      }
+    },
+    {
+      "name": "RESIDUAL_ALPHA",
+      "lower": 0.085,
+      "upper": 0.125,
+      "location": {
+        "type": "class_constant",
+        "class_name": "IntarianPepperRootBot",
+        "key": "RESIDUAL_ALPHA"
+      }
+    },
+    {
+      "name": "EARLY_LONG_BIAS",
+      "lower": 28.0,
+      "upper": 36.0,
+      "location": {
+        "type": "class_constant",
+        "class_name": "IntarianPepperRootBot",
+        "key": "EARLY_LONG_BIAS"
+      }
+    },
+    {
+      "name": "ZSCORE_SELL_PENALTY",
+      "lower": 7.5,
+      "upper": 10.5,
+      "location": {
+        "type": "class_constant",
+        "class_name": "IntarianPepperRootBot",
+        "key": "ZSCORE_SELL_PENALTY"
+      }
+    },
+    {
+      "name": "INVENTORY_SKEW",
+      "lower": 0.072,
+      "upper": 0.092,
+      "location": {
+        "type": "class_constant",
+        "class_name": "IntarianPepperRootBot",
+        "key": "INVENTORY_SKEW"
+      }
+    },
+    {
+      "name": "BASE_TAKE_EDGE",
+      "lower": 0.95,
+      "upper": 1.18,
+      "location": {
+        "type": "class_constant",
+        "class_name": "IntarianPepperRootBot",
+        "key": "BASE_TAKE_EDGE"
+      }
+    },
+    {
+      "name": "BASE_QUOTE_EDGE",
+      "lower": 2.20,
+      "upper": 2.70,
+      "location": {
+        "type": "class_constant",
+        "class_name": "IntarianPepperRootBot",
+        "key": "BASE_QUOTE_EDGE"
+      }
+    },
+    {
+      "name": "BULLISH_IMBALANCE",
+      "lower": 0.03,
+      "upper": 0.055,
+      "location": {
+        "type": "class_constant",
+        "class_name": "IntarianPepperRootBot",
+        "key": "BULLISH_IMBALANCE"
+      }
+    },
+    {
+      "name": "OVEREXTENSION_Z",
+      "lower": 1.00,
+      "upper": 1.28,
+      "location": {
+        "type": "class_constant",
+        "class_name": "IntarianPepperRootBot",
+        "key": "OVEREXTENSION_Z"
+      }
+    },
+    {
+      "name": "LOOKAHEAD_BONUS",
+      "lower": 3.2,
+      "upper": 4.6,
+      "location": {
+        "type": "class_constant",
+        "class_name": "IntarianPepperRootBot",
+        "key": "LOOKAHEAD_BONUS"
+      }
+    },
+    {
+      "name": "PASSIVE_SELL_BUFFER",
+      "lower": 6.0,
+      "upper": 9.5,
+      "location": {
+        "type": "class_constant",
+        "class_name": "IntarianPepperRootBot",
+        "key": "PASSIVE_SELL_BUFFER"
+      }
+    }
+  ]
+}

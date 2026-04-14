@@ -22,7 +22,7 @@ Evidence:
 
 - `v37` official score: `2627.875`
 - `v52` official score: `2636.171875`
-- source comparison: [reports/v37_vs_v52_official_trade_quality_report.md](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/reports/v37_vs_v52_official_trade_quality_report.md)
+- source comparison: [reports/v37_vs_v52_official_trade_quality_report.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v37_vs_v52_official_trade_quality_report.md)
 
 What this means:
 
@@ -38,7 +38,7 @@ Status:
 Evidence:
 
 - earlier overlays like `v53` and `v54` were officially dormant versus `v52`
-- supporting discussion preserved in [docs/execution_research_phase1.md](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/docs/execution_research_phase1.md)
+- supporting discussion preserved in [docs/execution_research_phase1.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/docs/execution_research_phase1.md)
 
 What this means:
 
@@ -53,8 +53,8 @@ Status:
 
 Evidence:
 
-- Probe 0 bot: [bots/Traderv55.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/bots/Traderv55.py)
-- Probe 0 summary: [reports/v55_boundary_probe_summary.txt](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/reports/v55_boundary_probe_summary.txt)
+- Probe 0 bot: [bots/Traderv55.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv55.py)
+- Probe 0 summary: [reports/v55_boundary_probe_summary.txt](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v55_boundary_probe_summary.txt)
 
 What was observed:
 
@@ -77,8 +77,8 @@ Status:
 
 Evidence:
 
-- Probe 1 bot: [bots/Traderv56.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/bots/Traderv56.py)
-- Probe 1 summary: [docs/probe_results.md](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/docs/probe_results.md)
+- Probe 1 bot: [bots/Traderv56.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv56.py)
+- Probe 1 summary: [docs/probe_results.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/docs/probe_results.md)
 
 What was observed:
 
@@ -99,8 +99,8 @@ Status:
 
 Evidence:
 
-- [reports/v37_vs_v52_official_trade_quality_report.md](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/reports/v37_vs_v52_official_trade_quality_report.md)
-- [docs/execution_research_phase1.md](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/docs/execution_research_phase1.md)
+- [reports/v37_vs_v52_official_trade_quality_report.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v37_vs_v52_official_trade_quality_report.md)
+- [docs/execution_research_phase1.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/docs/execution_research_phase1.md)
 
 What was observed:
 
@@ -120,9 +120,9 @@ Status:
 
 Evidence:
 
-- Probe 2 bot: [bots/Traderv57.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/bots/Traderv57.py)
-- Probe 2 summary: [reports/v57_aggressive_markout_probe_summary.txt](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/reports/v57_aggressive_markout_probe_summary.txt)
-- direct comparison to `v52`: [reports/v52_vs_v57_official_trade_quality_report.md](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/reports/v52_vs_v57_official_trade_quality_report.md)
+- Probe 2 bot: [bots/Traderv57.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv57.py)
+- Probe 2 summary: [reports/v57_aggressive_markout_probe_summary.txt](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v57_aggressive_markout_probe_summary.txt)
+- direct comparison to `v52`: [reports/v52_vs_v57_official_trade_quality_report.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v52_vs_v57_official_trade_quality_report.md)
 
 What was observed:
 
@@ -146,9 +146,9 @@ Status:
 
 Evidence:
 
-- Probe 2B bot: [bots/Traderv58.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/bots/Traderv58.py)
-- Probe 2B summary: [reports/v58_aggressive_markout_probe_summary.txt](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/reports/v58_aggressive_markout_probe_summary.txt)
-- direct comparison to `v52`: [reports/v52_vs_v58_official_trade_quality_report.md](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/reports/v52_vs_v58_official_trade_quality_report.md)
+- Probe 2B bot: [bots/Traderv58.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv58.py)
+- Probe 2B summary: [reports/v58_aggressive_markout_probe_summary.txt](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v58_aggressive_markout_probe_summary.txt)
+- direct comparison to `v52`: [reports/v52_vs_v58_official_trade_quality_report.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v52_vs_v58_official_trade_quality_report.md)
 
 What was observed:
 
@@ -172,9 +172,9 @@ Status:
 
 Evidence:
 
-- Probe 2C bot: [bots/Traderv59.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/bots/Traderv59.py)
-- Probe 2C summary: [reports/v59_aggressive_markout_probe_summary.txt](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/reports/v59_aggressive_markout_probe_summary.txt)
-- direct comparison to `v52`: [reports/v52_vs_v59_official_trade_quality_report.md](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/reports/v52_vs_v59_official_trade_quality_report.md)
+- Probe 2C bot: [bots/Traderv59.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv59.py)
+- Probe 2C summary: [reports/v59_aggressive_markout_probe_summary.txt](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v59_aggressive_markout_probe_summary.txt)
+- direct comparison to `v52`: [reports/v52_vs_v59_official_trade_quality_report.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v52_vs_v59_official_trade_quality_report.md)
 
 What was observed:
 
@@ -305,7 +305,7 @@ Current status:
 
 When a new probe result arrives:
 
-1. add the raw result to [docs/probe_results.md](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/docs/probe_results.md)
+1. add the raw result to [docs/probe_results.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/docs/probe_results.md)
 2. if it changes what we believe, add or update an entry here
 3. link the evidence source directly
 4. mark whether the claim is confirmed or only inferred

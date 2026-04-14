@@ -1,0 +1,169 @@
+{
+  "name": "TradervR1_12 Round 1 Osmium-Focused CMA-ES",
+  "source_bot": "../../../Bots/Round1/TradervR1_12.py",
+  "baselines": {
+    "-2": 95731.5,
+    "-1": 96456.0,
+    "0": 95297.0
+  },
+  "search": {
+    "max_iter": 3,
+    "population": 5,
+    "parents": 2,
+    "sigma0": 0.05,
+    "seed": 212,
+    "timeout_seconds": 180
+  },
+  "penalties": {
+    "regression": 6.0,
+    "imbalance": 1.1,
+    "drift": 95.0
+  },
+  "output_prefix": "round1_tradervr1_12_cmaes",
+  "output_dir": "../../../Analysis/output/round1_tradervr1_12_cmaes",
+  "data_root": "../../../Data/ROUND_1",
+  "dataset_tag": "round_1",
+  "engine": "rust",
+  "parameters": [
+    {
+      "name": "ASH_IMBALANCE_WEIGHT",
+      "lower": 0.85,
+      "upper": 1.20,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "IMBALANCE_WEIGHT"
+      }
+    },
+    {
+      "name": "ASH_INVENTORY_SKEW",
+      "lower": 0.10,
+      "upper": 0.13,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "INVENTORY_SKEW"
+      }
+    },
+    {
+      "name": "ASH_BASE_EDGE",
+      "lower": 1.75,
+      "upper": 2.25,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "BASE_EDGE"
+      }
+    },
+    {
+      "name": "ASH_FRONT_SIZE",
+      "lower": 14.0,
+      "upper": 18.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "FRONT_SIZE"
+      }
+    },
+    {
+      "name": "ASH_SOFT_LIMIT",
+      "lower": 62.0,
+      "upper": 76.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "SOFT_LIMIT"
+      }
+    },
+    {
+      "name": "ASH_ADVERSE_IMBALANCE",
+      "lower": 0.18,
+      "upper": 0.24,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "ADVERSE_IMBALANCE"
+      }
+    },
+    {
+      "name": "ASH_STRONG_IMBALANCE",
+      "lower": 0.13,
+      "upper": 0.19,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "STRONG_IMBALANCE"
+      }
+    },
+    {
+      "name": "ASH_TOXIC_RETREAT_SIZE",
+      "lower": 0.55,
+      "upper": 0.90,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "TOXIC_RETREAT_SIZE"
+      }
+    },
+    {
+      "name": "ASH_TOXIC_RETREAT_EDGE",
+      "lower": 0.20,
+      "upper": 0.85,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "TOXIC_RETREAT_EDGE"
+      }
+    },
+    {
+      "name": "ASH_DISLOCATION_EDGE",
+      "lower": 4.8,
+      "upper": 7.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "DISLOCATION_EDGE"
+      }
+    },
+    {
+      "name": "ASH_DISLOCATION_BONUS_SIZE",
+      "lower": 1.0,
+      "upper": 5.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "DISLOCATION_BONUS_SIZE"
+      }
+    },
+    {
+      "name": "IPR_BASE_CARRY",
+      "lower": 6.5,
+      "upper": 9.5,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "BASE_CARRY"
+      }
+    },
+    {
+      "name": "IPR_EARLY_LONG_BIAS",
+      "lower": 38.0,
+      "upper": 46.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "EARLY_LONG_BIAS"
+      }
+    },
+    {
+      "name": "IPR_PASSIVE_SELL_BUFFER",
+      "lower": 6.5,
+      "upper": 9.5,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "PASSIVE_SELL_BUFFER"
+      }
+    }
+  ]
+}

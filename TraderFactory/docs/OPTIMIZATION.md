@@ -4,18 +4,18 @@
 
 Current entry point:
 
-- [trader_factory/optimization/cmaes.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/optimization/cmaes.py)
+- [trader_factory/optimization/cmaes.py](../trader_factory/optimization/cmaes.py)
 
 CLI:
 
 ```bash
-python3 -m trader_factory.cli cmaes configs/examples/v52_tight_cmaes.json
+PYTHONPATH=TraderFactory .venv-traderfactory/bin/python -m trader_factory.cli cmaes TraderFactory/configs/examples/v52_tight_cmaes.json
 ```
 
 You can override the main search controls from the CLI:
 
 ```bash
-python3 -m trader_factory.cli cmaes configs/examples/v52_tight_cmaes.json \
+PYTHONPATH=TraderFactory .venv-traderfactory/bin/python -m trader_factory.cli cmaes TraderFactory/configs/examples/v52_tight_cmaes.json \
   --max-iter 1 \
   --population 4 \
   --parents 2 \
@@ -51,6 +51,9 @@ Top-level fields:
 - `search`: CMA-ES controls
 - `penalties`: objective penalty weights
 - `output_prefix`: artifact prefix
+- `data_root`: optional replay data directory override
+- `dataset_tag`: optional replay dataset tag override
+- `engine`: deterministic engine, usually `internal` or `rust`
 - `parameters`: list of tunable parameters
 
 ### Parameter Entry
@@ -110,6 +113,21 @@ Artifacts:
 - `<output_prefix>_best.json`
 - `<output_prefix>_report.md`
 - `bots/<source_stem>_best.py`
+
+## Round-Specific Usage
+
+For multi-round work, do not rely on implicit dataset discovery when the repo contains several replay groups.
+Prefer explicit config fields:
+
+```json
+{
+  "data_root": "../../../Data/ROUND_1",
+  "dataset_tag": "round_1",
+  "engine": "rust"
+}
+```
+
+That keeps the optimization tied to the intended replay set and avoids silently optimizing against the wrong data.
 
 ## Current Scope
 

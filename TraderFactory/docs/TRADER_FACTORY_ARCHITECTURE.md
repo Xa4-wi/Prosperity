@@ -4,14 +4,14 @@ This short document is the local architecture summary for the standalone repo.
 
 For the full version, read:
 
-- [docs/TRADER_FACTORY_ARCHITECTURE_FULL.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/TRADER_FACTORY_ARCHITECTURE_FULL.md)
+- [docs/TRADER_FACTORY_ARCHITECTURE_FULL.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/TRADER_FACTORY_ARCHITECTURE_FULL.md)
 
 Supporting local documents:
 
-- [README.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/README.md)
-- [docs/MVP_SCOPE.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/MVP_SCOPE.md)
-- [docs/MIGRATION_PLAN.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/MIGRATION_PLAN.md)
-- [docs/WORKFLOW.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/WORKFLOW.md)
+- [README.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/README.md)
+- [docs/MVP_SCOPE.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/MVP_SCOPE.md)
+- [docs/MIGRATION_PLAN.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/MIGRATION_PLAN.md)
+- [docs/WORKFLOW.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/WORKFLOW.md)
 
 The short version:
 

@@ -1,6 +1,6 @@
 # TraderFactory
 
-`TraderFactory` is meant to become the reusable development system behind future Prosperity rounds. Hello
+`TraderFactory` is meant to become the reusable development system behind future Prosperity rounds.
 
 Instead of rebuilding the entire workflow for each round by hand, this repo is intended to hold the reusable parts of the process:
 
@@ -22,10 +22,7 @@ The core design idea is simple:
 - optimize and diagnose from there
 
 This repo is not yet the finished factory.
-It is the first grounded scaffold built from the real work already done in:
-
-- [Prosperity](/Users/vasudravinarendran/Documents/Prosperity/Prosperity)
-- [MyProsperity](/Users/vasudravinarendran/Documents/Prosperity/MyProsperity)
+It is the first grounded scaffold built from the real work already done in earlier Prosperity repos.
 
 Those repos are provenance, not prerequisites.
 This repo is intended to stand on its own once you provide:
@@ -41,35 +38,42 @@ So the README is split into two parts:
 
 ## Current Status
 
+Important note:
+
+- some deeper historical docs and references in this repo still contain legacy absolute filesystem links from the migration source machine
+- those provenance links are documentation debt, not runtime dependencies
+- the actual runtime path resolution is handled dynamically in [trader_factory/core/paths.py](trader_factory/core/paths.py)
+- the optimization engine now also supports explicit `data_root`, `dataset_tag`, and `engine` config fields for round-specific searches
+
 The following pieces are already present in this repo scaffold:
 
-- a core spec schema in [trader_factory/core/specs.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/core/specs.py)
-- a strategy capability registry in [trader_factory/core/registry.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/core/registry.py)
-- a structured strategy-family taxonomy in [docs/STRATEGY_TAXONOMY.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/STRATEGY_TAXONOMY.md)
-- a baseline planning layer in [trader_factory/generation/bootstrap.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/generation/bootstrap.py)
-- a minimal CLI in [trader_factory/cli.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/cli.py)
-- a workflow definition in [trader_factory/workflows/modes.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/workflows/modes.py)
-- a local CMA-ES optimization engine in [trader_factory/optimization/cmaes.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/optimization/cmaes.py)
-- a local headless Monte Carlo robustness engine in [trader_factory/simulation/monte_carlo.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/simulation/monte_carlo.py)
-- a local Monte Carlo viewer in [trader_factory/viewer/monte_carlo.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/viewer/monte_carlo.py)
-- a first official submission automation path in [trader_factory/official/imc_prosperity.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/official/imc_prosperity.py)
-- a queue-aware official submission workflow in [trader_factory/official/workflow.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/official/workflow.py)
-- a development-mode decision pipeline in [trader_factory/workflows/imc_develop.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/workflows/imc_develop.py)
-- a persisted baseline-policy layer in [trader_factory/workflows/baselines.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/workflows/baselines.py)
-- a reusable execution-probe framework in [trader_factory/probes](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/probes)
-- a capability-aware project generator in [trader_factory/generation/project.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/generation/project.py)
+- a core spec schema in [trader_factory/core/specs.py](trader_factory/core/specs.py)
+- a strategy capability registry in [trader_factory/core/registry.py](trader_factory/core/registry.py)
+- a structured strategy-family taxonomy in [docs/STRATEGY_TAXONOMY.md](docs/STRATEGY_TAXONOMY.md)
+- a baseline planning layer in [trader_factory/generation/bootstrap.py](trader_factory/generation/bootstrap.py)
+- a minimal CLI in [trader_factory/cli.py](trader_factory/cli.py)
+- a workflow definition in [trader_factory/workflows/modes.py](trader_factory/workflows/modes.py)
+- a local CMA-ES optimization engine in [trader_factory/optimization/cmaes.py](trader_factory/optimization/cmaes.py)
+- a local headless Monte Carlo robustness engine in [trader_factory/simulation/monte_carlo.py](trader_factory/simulation/monte_carlo.py)
+- a local Monte Carlo viewer in [trader_factory/viewer/monte_carlo.py](trader_factory/viewer/monte_carlo.py)
+- a first official submission automation path in [trader_factory/official/imc_prosperity.py](trader_factory/official/imc_prosperity.py)
+- a queue-aware official submission workflow in [trader_factory/official/workflow.py](trader_factory/official/workflow.py)
+- a development-mode decision pipeline in [trader_factory/workflows/imc_develop.py](trader_factory/workflows/imc_develop.py)
+- a persisted baseline-policy layer in [trader_factory/workflows/baselines.py](trader_factory/workflows/baselines.py)
+- a reusable execution-probe framework in [trader_factory/probes](trader_factory/probes)
+- a capability-aware project generator in [trader_factory/generation/project.py](trader_factory/generation/project.py)
 - working deterministic replay and diagnostics engines in:
-  - [trader_factory/simulation/deterministic.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/simulation/deterministic.py)
-  - [trader_factory/simulation/internal_backtest.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/simulation/internal_backtest.py)
-  - [trader_factory/simulation/monte_carlo.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/simulation/monte_carlo.py)
-  - [trader_factory/diagnostics/official.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/diagnostics/official.py)
-  - [trader_factory/diagnostics/trade_quality.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/diagnostics/trade_quality.py)
-  - [trader_factory/diagnostics/boundary_probe.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/diagnostics/boundary_probe.py)
-  - [trader_factory/diagnostics/passive_ladder.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/diagnostics/passive_ladder.py)
-  - [trader_factory/diagnostics/aggressive_markout.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/diagnostics/aggressive_markout.py)
-- example competition config in [configs/examples/prosperity_round0.json](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/configs/examples/prosperity_round0.json)
-- a trader template in [templates/python_trader/Trader.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/templates/python_trader/Trader.py)
-- migration and workflow docs in [docs](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs)
+  - [trader_factory/simulation/deterministic.py](trader_factory/simulation/deterministic.py)
+  - [trader_factory/simulation/internal_backtest.py](trader_factory/simulation/internal_backtest.py)
+  - [trader_factory/simulation/monte_carlo.py](trader_factory/simulation/monte_carlo.py)
+  - [trader_factory/diagnostics/official.py](trader_factory/diagnostics/official.py)
+  - [trader_factory/diagnostics/trade_quality.py](trader_factory/diagnostics/trade_quality.py)
+  - [trader_factory/diagnostics/boundary_probe.py](trader_factory/diagnostics/boundary_probe.py)
+  - [trader_factory/diagnostics/passive_ladder.py](trader_factory/diagnostics/passive_ladder.py)
+  - [trader_factory/diagnostics/aggressive_markout.py](trader_factory/diagnostics/aggressive_markout.py)
+- example competition config in [configs/examples/prosperity_round0.json](configs/examples/prosperity_round0.json)
+- a trader template in [templates/python_trader/Trader.py](templates/python_trader/Trader.py)
+- migration and workflow docs in [docs](docs)
 
 The following major capabilities are not yet fully migrated into this repo, but are documented and intentionally planned:
 
@@ -81,21 +85,21 @@ The following major capabilities are not yet fully migrated into this repo, but 
 
 If you are a new teammate or a new coding agent, read these in order:
 
-1. [README.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/README.md)
-2. [docs/WORKFLOW.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/WORKFLOW.md)
-3. [docs/TRADER_FACTORY_ARCHITECTURE_FULL.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/TRADER_FACTORY_ARCHITECTURE_FULL.md)
-4. [docs/AUTONOMY_CHECKLIST.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/AUTONOMY_CHECKLIST.md)
-5. [references/SOURCE_MAP.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/references/SOURCE_MAP.md)
-6. [docs/STRATEGY_TAXONOMY.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/STRATEGY_TAXONOMY.md)
-7. [references/Strategies.txt](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/references/Strategies.txt)
-8. [references/PUBLIC_STRATEGY_RESEARCH.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/references/PUBLIC_STRATEGY_RESEARCH.md)
-9. [references/execution_probes/DISCOVERIES.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/references/execution_probes/DISCOVERIES.md)
-10. [docs/ENGINES.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/ENGINES.md)
-11. [docs/OPTIMIZATION.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/OPTIMIZATION.md)
-12. [docs/MONTE_CARLO.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/MONTE_CARLO.md)
-13. [docs/PROBES.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/PROBES.md)
-14. [docs/GENERATION.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/GENERATION.md)
-15. [docs/OFFICIAL_AUTOMATION.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/OFFICIAL_AUTOMATION.md)
+1. [README.md](README.md)
+2. [docs/WORKFLOW.md](docs/WORKFLOW.md)
+3. [docs/TRADER_FACTORY_ARCHITECTURE_FULL.md](docs/TRADER_FACTORY_ARCHITECTURE_FULL.md)
+4. [docs/AUTONOMY_CHECKLIST.md](docs/AUTONOMY_CHECKLIST.md)
+5. [references/SOURCE_MAP.md](references/SOURCE_MAP.md)
+6. [docs/STRATEGY_TAXONOMY.md](docs/STRATEGY_TAXONOMY.md)
+7. [references/Strategies.txt](references/Strategies.txt)
+8. [references/PUBLIC_STRATEGY_RESEARCH.md](references/PUBLIC_STRATEGY_RESEARCH.md)
+9. [references/execution_probes/DISCOVERIES.md](references/execution_probes/DISCOVERIES.md)
+10. [docs/ENGINES.md](docs/ENGINES.md)
+11. [docs/OPTIMIZATION.md](docs/OPTIMIZATION.md)
+12. [docs/MONTE_CARLO.md](docs/MONTE_CARLO.md)
+13. [docs/PROBES.md](docs/PROBES.md)
+14. [docs/GENERATION.md](docs/GENERATION.md)
+15. [docs/OFFICIAL_AUTOMATION.md](docs/OFFICIAL_AUTOMATION.md)
 
 If you only read one technical reference after this README, read the full architecture doc.
 
@@ -104,22 +108,30 @@ If you only read one technical reference after this README, read the full archit
 Minimum setup:
 
 1. Use Python `3.11+`.
-2. Install the package:
-
-From the merged `Prosperity` repo root:
+2. Create a local virtualenv from the merged `Prosperity` repo root:
 
 ```bash
-python3 -m pip install -e TraderFactory
+/opt/homebrew/bin/python3.12 -m venv .venv-traderfactory
 ```
 
-Or, if you `cd TraderFactory` first:
+3. Install the package into that virtualenv:
 
 ```bash
-python3 -m pip install -e .
+.venv-traderfactory/bin/python -m pip install -e TraderFactory
 ```
 
-3. Put replay datasets under [data/README.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/data/README.md), or plan to pass `--data-root`.
-4. Official submission automation now keeps each run self-contained under `Bots/Logs/official_runs/imc_prosperity/<submission_id>/`, with canonical `.log`, `.json`, and `.py` filenames plus any generated analysis.
+4. Put replay datasets under [data/README.md](data/README.md), or pass `--data-root`.
+5. Official submission automation keeps each run self-contained under `Bots/Logs/official_runs/imc_prosperity/<submission_id>/`, with canonical `.log`, `.json`, and `.py` filenames plus generated analysis.
+
+Quick smoke checks from the merged `Prosperity` repo root:
+
+```bash
+PYTHONPATH=TraderFactory .venv-traderfactory/bin/python -m trader_factory.cli deterministic Bots/Round1/TradervR1_9.py --day -1 --data-root Data/ROUND_1 --dataset-tag round_1 --engine rust
+```
+
+```bash
+PYTHONPATH=TraderFactory .venv-traderfactory/bin/python -m trader_factory.cli cmaes TraderFactory/configs/round1/tradervr1_8_cmaes.json
+```
 
 Input expectations by command:
 
@@ -277,7 +289,7 @@ That is the exact process this repo is meant to standardize.
 
 See:
 
-- [configs/examples/prosperity_round0.json](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/configs/examples/prosperity_round0.json)
+- [configs/examples/prosperity_round0.json](/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/examples/prosperity_round0.json)
 
 It describes a simple EMERALDS / TOMATOES style round using structured fields:
 
@@ -367,35 +379,35 @@ Important note:
 - the Monte Carlo viewer is local to TraderFactory
 - deterministic replay and Monte Carlo look in `TraderFactory/data/` first, then fall back to the legacy sibling `Prosperity/Data/` path
 - deterministic replay can also run through `ProsperityRustBacktester` with `--engine rust`
-- see [docs/ENGINES.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/ENGINES.md)
-- detailed Monte Carlo usage is documented in [docs/MONTE_CARLO.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/MONTE_CARLO.md)
-- viewer usage is documented in [docs/VIEWER.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/VIEWER.md)
-- the CMA-ES engine is local to TraderFactory and documented in [docs/OPTIMIZATION.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/OPTIMIZATION.md)
-- the probe framework is local to TraderFactory and documented in [docs/PROBES.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/PROBES.md)
-- the baseline project generator is documented in [docs/GENERATION.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/GENERATION.md)
+- see [docs/ENGINES.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/ENGINES.md)
+- detailed Monte Carlo usage is documented in [docs/MONTE_CARLO.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/MONTE_CARLO.md)
+- viewer usage is documented in [docs/VIEWER.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/VIEWER.md)
+- the CMA-ES engine is local to TraderFactory and documented in [docs/OPTIMIZATION.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/OPTIMIZATION.md)
+- the probe framework is local to TraderFactory and documented in [docs/PROBES.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/PROBES.md)
+- the baseline project generator is documented in [docs/GENERATION.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/GENERATION.md)
 
 ### 4. Read the workflow docs
 
 Start with:
 
-- [docs/WORKFLOW.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/WORKFLOW.md)
-- [docs/MVP_SCOPE.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/MVP_SCOPE.md)
-- [docs/MIGRATION_PLAN.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/MIGRATION_PLAN.md)
-- [docs/TRADER_FACTORY_ARCHITECTURE.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/TRADER_FACTORY_ARCHITECTURE.md)
-- [docs/OPTIMIZATION.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/OPTIMIZATION.md)
-- [docs/MONTE_CARLO.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/MONTE_CARLO.md)
-- [docs/VIEWER.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/VIEWER.md)
-- [docs/PROBES.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/PROBES.md)
-- [docs/GENERATION.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/GENERATION.md)
+- [docs/WORKFLOW.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/WORKFLOW.md)
+- [docs/MVP_SCOPE.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/MVP_SCOPE.md)
+- [docs/MIGRATION_PLAN.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/MIGRATION_PLAN.md)
+- [docs/TRADER_FACTORY_ARCHITECTURE.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/TRADER_FACTORY_ARCHITECTURE.md)
+- [docs/OPTIMIZATION.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/OPTIMIZATION.md)
+- [docs/MONTE_CARLO.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/MONTE_CARLO.md)
+- [docs/VIEWER.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/VIEWER.md)
+- [docs/PROBES.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/PROBES.md)
+- [docs/GENERATION.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/GENERATION.md)
 
 ### 5. Review the source references
 
 The initial scaffold is based on the current project’s real assets.
 See:
 
-- [references/SOURCE_MAP.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/references/SOURCE_MAP.md)
-- [references/Strategies.txt](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/references/Strategies.txt)
-- [references/PUBLIC_STRATEGY_RESEARCH.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/references/PUBLIC_STRATEGY_RESEARCH.md)
+- [references/SOURCE_MAP.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/references/SOURCE_MAP.md)
+- [references/Strategies.txt](/Users/xavierwinkelmann/Prosperity/TraderFactory/references/Strategies.txt)
+- [references/PUBLIC_STRATEGY_RESEARCH.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/references/PUBLIC_STRATEGY_RESEARCH.md)
 
 ## How To Work In This Repo
 
@@ -463,8 +475,8 @@ The agreed rule from the current project is:
 
 That workflow is already formalized in:
 
-- [trader_factory/workflows/modes.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/workflows/modes.py)
-- [docs/WORKFLOW.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/WORKFLOW.md)
+- [trader_factory/workflows/modes.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/workflows/modes.py)
+- [docs/WORKFLOW.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/WORKFLOW.md)
 
 ## How Another Agent Should Continue Work
 
@@ -489,7 +501,7 @@ Highest-priority remaining migrations:
 
 The recommended order is documented in:
 
-- [docs/MIGRATION_PLAN.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/MIGRATION_PLAN.md)
+- [docs/MIGRATION_PLAN.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/MIGRATION_PLAN.md)
 
 ## What This Repo Must Not Become
 

@@ -54,11 +54,11 @@ This prevents endless half-research, half-development branches.
 Development mode:
 
 ```bash
-python3 -m trader_factory.cli baseline-imc-set \
+PYTHONPATH=TraderFactory .venv-traderfactory/bin/python -m trader_factory.cli baseline-imc-set \
   --round-id 1 \
   --compare-bot /path/to/Baseline.py
 
-python3 -m trader_factory.cli develop-cycle-imc /path/to/Candidate.py \
+PYTHONPATH=TraderFactory .venv-traderfactory/bin/python -m trader_factory.cli develop-cycle-imc /path/to/Candidate.py \
   --round-id 1
 ```
 
@@ -75,14 +75,14 @@ The policy JSON lives under `configs/baselines/` and is treated as local machine
 For a safe local-only validation pass:
 
 ```bash
-python3 -m trader_factory.cli develop-cycle-imc /path/to/Candidate.py --round-id 1 --dry-run
+PYTHONPATH=TraderFactory .venv-traderfactory/bin/python -m trader_factory.cli develop-cycle-imc /path/to/Candidate.py --round-id 1 --dry-run
 ```
 
 Research mode:
 
 ```bash
-python3 -m trader_factory.cli probe-scaffold ...
-python3 -m trader_factory.cli boundary-probe ...
-python3 -m trader_factory.cli passive-ladder ...
-python3 -m trader_factory.cli aggressive-markout ...
+PYTHONPATH=TraderFactory .venv-traderfactory/bin/python -m trader_factory.cli probe-scaffold ...
+PYTHONPATH=TraderFactory .venv-traderfactory/bin/python -m trader_factory.cli boundary-probe ...
+PYTHONPATH=TraderFactory .venv-traderfactory/bin/python -m trader_factory.cli passive-ladder ...
+PYTHONPATH=TraderFactory .venv-traderfactory/bin/python -m trader_factory.cli aggressive-markout ...
 ```

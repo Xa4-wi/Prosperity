@@ -33,7 +33,7 @@ Replay data resolution order:
 
 An explicit `--data-root` override always wins.
 
-The legacy sibling path is only a fallback for convenience. The intended standalone home for replay data is [data/README.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/data/README.md).
+The legacy sibling path is only a fallback for convenience. The intended standalone home for replay data is [data/README.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/data/README.md).
 
 So the current local engine stack covers:
 
@@ -47,9 +47,9 @@ So the current local engine stack covers:
 
 Engine entry points:
 
-- [trader_factory/simulation/deterministic.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/simulation/deterministic.py)
-- [trader_factory/simulation/internal_backtest.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/simulation/internal_backtest.py)
-- [trader_factory/core/datamodel.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/core/datamodel.py)
+- [trader_factory/simulation/deterministic.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/simulation/deterministic.py)
+- [trader_factory/simulation/internal_backtest.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/simulation/internal_backtest.py)
+- [trader_factory/core/datamodel.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/core/datamodel.py)
 
 Current CLI:
 
@@ -72,7 +72,7 @@ When `--engine rust` is selected, TraderFactory runs through `ProsperityRustBack
 
 What was validated:
 
-- replay through [Traderv52.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Bots/Traderv52.py)
+- replay through [Traderv52.py](/Users/xavierwinkelmann/Prosperity/Bots/Traderv52.py)
 - final total PnL parsed successfully as `15081.0` on day `-1`
 
 Important behavior note from the current local engine:
@@ -88,7 +88,7 @@ Working implication:
 
 Engine entry points:
 
-- [trader_factory/optimization/cmaes.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/optimization/cmaes.py)
+- [trader_factory/optimization/cmaes.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/optimization/cmaes.py)
 
 Current CLI:
 
@@ -118,7 +118,7 @@ Important scope note:
 
 Engine entry points:
 
-- [trader_factory/simulation/monte_carlo.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/simulation/monte_carlo.py)
+- [trader_factory/simulation/monte_carlo.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/simulation/monte_carlo.py)
 
 Current CLI:
 
@@ -136,7 +136,7 @@ Current status:
 
 What was validated:
 
-- a reduced paired run comparing [Traderv52.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Bots/Traderv52.py) vs [Traderv51.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Bots/Traderv51.py)
+- a reduced paired run comparing [Traderv52.py](/Users/xavierwinkelmann/Prosperity/Bots/Traderv52.py) vs [Traderv51.py](/Users/xavierwinkelmann/Prosperity/Bots/Traderv51.py)
 - output artifacts were written successfully to `/tmp`
 - the report schema matches the earlier research workflow shape
 
@@ -149,7 +149,7 @@ What is not yet migrated:
 
 Engine entry points:
 
-- [trader_factory/viewer/monte_carlo.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/viewer/monte_carlo.py)
+- [trader_factory/viewer/monte_carlo.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/viewer/monte_carlo.py)
 
 Current CLI:
 
@@ -174,11 +174,11 @@ Important scope note:
 
 Engine entry points:
 
-- [trader_factory/diagnostics/official.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/diagnostics/official.py)
-- [trader_factory/diagnostics/trade_quality.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/diagnostics/trade_quality.py)
-- [trader_factory/diagnostics/boundary_probe.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/diagnostics/boundary_probe.py)
-- [trader_factory/diagnostics/passive_ladder.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/diagnostics/passive_ladder.py)
-- [trader_factory/diagnostics/aggressive_markout.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/diagnostics/aggressive_markout.py)
+- [trader_factory/diagnostics/official.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/diagnostics/official.py)
+- [trader_factory/diagnostics/trade_quality.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/diagnostics/trade_quality.py)
+- [trader_factory/diagnostics/boundary_probe.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/diagnostics/boundary_probe.py)
+- [trader_factory/diagnostics/passive_ladder.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/diagnostics/passive_ladder.py)
+- [trader_factory/diagnostics/aggressive_markout.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/diagnostics/aggressive_markout.py)
 
 Current CLI:
 
@@ -202,9 +202,9 @@ They now write results under `TraderFactory/generated/reports/` instead of forci
 
 Engine entry points:
 
-- [trader_factory/probes/specs.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/probes/specs.py)
-- [trader_factory/probes/logging.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/probes/logging.py)
-- [trader_factory/probes/scaffold.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/probes/scaffold.py)
+- [trader_factory/probes/specs.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/probes/specs.py)
+- [trader_factory/probes/logging.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/probes/logging.py)
+- [trader_factory/probes/scaffold.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/probes/scaffold.py)
 
 Current CLI:
 
@@ -239,7 +239,7 @@ Important limitation:
 
 Engine entry points:
 
-- [trader_factory/generation/project.py](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/trader_factory/generation/project.py)
+- [trader_factory/generation/project.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/generation/project.py)
 
 Current CLI:
 

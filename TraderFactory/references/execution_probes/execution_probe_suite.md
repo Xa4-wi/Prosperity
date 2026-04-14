@@ -206,10 +206,10 @@ All probe bots should obey these rules:
 ## Minimum Tooling for Each Probe
 
 Use:
-- [Analysis/official_trade_quality_report.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Analysis/official_trade_quality_report.py)
-- [Analysis/official_diag_report.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Analysis/official_diag_report.py) when a probe emits `DIAG` events
-- [Analysis/v52_monte_carlo_robustness.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Analysis/v52_monte_carlo_robustness.py) for local robustness checks
-- [Analysis/monte_carlo_sensitivity_report.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Analysis/monte_carlo_sensitivity_report.py) for postmortem analysis
+- [Analysis/official_trade_quality_report.py](/Users/xavierwinkelmann/Prosperity/Analysis/official_trade_quality_report.py)
+- [Analysis/official_diag_report.py](/Users/xavierwinkelmann/Prosperity/Analysis/official_diag_report.py) when a probe emits `DIAG` events
+- [Analysis/v52_monte_carlo_robustness.py](/Users/xavierwinkelmann/Prosperity/Analysis/v52_monte_carlo_robustness.py) for local robustness checks
+- [Analysis/monte_carlo_sensitivity_report.py](/Users/xavierwinkelmann/Prosperity/Analysis/monte_carlo_sensitivity_report.py) for postmortem analysis
 
 ## Recommended Order
 

@@ -6,7 +6,7 @@ This file records the concrete outcomes of the official execution probes so the 
 
 Bot:
 
-- [Traderv55.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/bots/Traderv55.py)
+- [Traderv55.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv55.py)
 
 Goal:
 
@@ -35,7 +35,7 @@ Conclusion:
 
 Bot:
 
-- [Traderv56.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/bots/Traderv56.py)
+- [Traderv56.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv56.py)
 
 Goal:
 
@@ -58,7 +58,7 @@ Official outcome:
 Important implementation note:
 
 - the missing `lp_summary` is partly explained by a real bug:
-  [Traderv56.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/bots/Traderv56.py) used `PROBE_ROUND_LENGTH = 1_000_000.0`, so the end summary threshold never triggered in the official `0-199900` timestamp window
+  [Traderv56.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv56.py) used `PROBE_ROUND_LENGTH = 1_000_000.0`, so the end summary threshold never triggered in the official `0-199900` timestamp window
 
 Main research conclusion:
 
@@ -81,13 +81,13 @@ So the next useful probe should target:
 
 Files:
 
-- [Traderv57.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/bots/Traderv57.py)
-- [official_aggressive_markout_probe_report.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/tools/official_aggressive_markout_probe_report.py)
+- [Traderv57.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv57.py)
+- [official_aggressive_markout_probe_report.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/tools/official_aggressive_markout_probe_report.py)
 
 Official outcome:
 
-- [reports/v57_aggressive_markout_probe_summary.txt](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/reports/v57_aggressive_markout_probe_summary.txt)
-- [reports/v52_vs_v57_official_trade_quality_report.md](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/reports/v52_vs_v57_official_trade_quality_report.md)
+- [reports/v57_aggressive_markout_probe_summary.txt](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v57_aggressive_markout_probe_summary.txt)
+- [reports/v52_vs_v57_official_trade_quality_report.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v52_vs_v57_official_trade_quality_report.md)
 
 What happened officially:
 
@@ -115,13 +115,13 @@ Conclusion:
 
 Files:
 
-- [Traderv58.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/bots/Traderv58.py)
-- [official_aggressive_markout_probe_report.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/tools/official_aggressive_markout_probe_report.py)
+- [Traderv58.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv58.py)
+- [official_aggressive_markout_probe_report.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/tools/official_aggressive_markout_probe_report.py)
 
 Official outcome:
 
-- [reports/v58_aggressive_markout_probe_summary.txt](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/reports/v58_aggressive_markout_probe_summary.txt)
-- [reports/v52_vs_v58_official_trade_quality_report.md](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/reports/v52_vs_v58_official_trade_quality_report.md)
+- [reports/v58_aggressive_markout_probe_summary.txt](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v58_aggressive_markout_probe_summary.txt)
+- [reports/v52_vs_v58_official_trade_quality_report.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v52_vs_v58_official_trade_quality_report.md)
 
 What happened officially:
 
@@ -165,13 +165,13 @@ Implication for the next probe:
 
 Files:
 
-- [Traderv59.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/bots/Traderv59.py)
-- [official_aggressive_markout_probe_report.py](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/tools/official_aggressive_markout_probe_report.py)
+- [Traderv59.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv59.py)
+- [official_aggressive_markout_probe_report.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/tools/official_aggressive_markout_probe_report.py)
 
 Official outcome:
 
-- [reports/v59_aggressive_markout_probe_summary.txt](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/reports/v59_aggressive_markout_probe_summary.txt)
-- [reports/v52_vs_v59_official_trade_quality_report.md](/Users/vasudravinarendran/Documents/Prosperity/Prosperity/Research/execution_probes/reports/v52_vs_v59_official_trade_quality_report.md)
+- [reports/v59_aggressive_markout_probe_summary.txt](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v59_aggressive_markout_probe_summary.txt)
+- [reports/v52_vs_v59_official_trade_quality_report.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v52_vs_v59_official_trade_quality_report.md)
 
 What happened officially:
 
