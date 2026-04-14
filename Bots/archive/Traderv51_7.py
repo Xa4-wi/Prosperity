@@ -20,6 +20,10 @@ def ema(previous: Optional[float], current: float, alpha: float) -> float:
     return (1.0 - alpha) * previous + alpha * current
 
 
+def normal_cdf(value: float) -> float:
+    return 0.5 * (1.0 + math.erf(value / math.sqrt(2.0)))
+
+
 class Book:
     def __init__(self, order_depth: Optional[OrderDepth]) -> None:
         self.valid = False
@@ -254,7 +258,7 @@ class TomatoesBot:
     ALPHA_MICRO_WEIGHT = 0.22
     ALPHA_FLOW_WEIGHT = 0.10
     ALPHA_CAP = 2.2
-    ALPHA_BLEND_WEIGHT = 0.28
+    ALPHA_BLEND_WEIGHT = 0.2667628572
     RANGE_ALPHA_DAMP = 0.65
     CONFLICT_ALPHA_DAMP = 0.72
     MOMENTUM_ALPHA_DAMP = 0.82
@@ -265,22 +269,31 @@ class TomatoesBot:
     FAIR_MID_WEIGHT = 0.18
     FAIR_MICRO_WEIGHT = 0.20
     FAIR_FLOW_WEIGHT = 0.08
-    FAIR_REGRESSION_WEIGHT = 0.10
-    FAIR_ALPHA_WEIGHT = 0.34
+    FAIR_REGRESSION_WEIGHT = 0.06
+    FAIR_BLACK_SCHOLES_WEIGHT = 0.04
+    FAIR_ALPHA_WEIGHT = 0.3325609293
     POSITION_BIAS_DIVISOR = 16.0
     RANGE_REVERT_WEIGHT = 0.18
     TREND_BONUS_WEIGHT = 0.10
+    BS_STRIKE_WALL_WEIGHT = 0.60
+    BS_STRIKE_MEAN_WEIGHT = 0.40
+    BS_SIGMA_MULTIPLIER = 10.0
+    BS_SIGMA_FLOOR = 0.0015
+    BS_SIGMA_CEILING = 0.0120
+    BS_BIAS_SCALE = 2.0
+    BS_BIAS_CAP = 1.4
+    SESSION_END = 200000.0
 
-    INVENTORY_SKEW = 0.045
-    BASE_QUOTE_EDGE = 2.05
-    BASE_TAKE_EDGE = 0.82
+    INVENTORY_SKEW = 0.0451458697
+    BASE_QUOTE_EDGE = 2.0660764381
+    BASE_TAKE_EDGE = 0.8322715145
     MAX_TAKE_SIZE = 10
-    PASSIVE_SIZE = 8
+    PASSIVE_SIZE = 9
     SOFT_LIMIT = 26
 
-    TREND_EDGE_THRESHOLD = 0.95
+    TREND_EDGE_THRESHOLD = 0.9566826427
     STRONG_TREND_EDGE = 1.70
-    FIT_THRESHOLD = 0.42
+    FIT_THRESHOLD = 0.4237696448
     TOXIC_SPREAD = 12
     TOXIC_VOL = 2.8
     WALL_PERSISTENCE_FLOOR = 0.22
@@ -531,6 +544,33 @@ class TomatoesBot:
         normalized = residual / max(2.0, float(self.product_state["vol_ema"]) * 2.0)
         return int(round(-0.22 * self.SOFT_LIMIT * clamp(normalized, -1.0, 1.0)))
 
+    def black_scholes_fair(self) -> float:
+        wall_fair = float(self.product_state["wall_fair_ema"])
+        strike = (
+            self.BS_STRIKE_WALL_WEIGHT * wall_fair
+            + self.BS_STRIKE_MEAN_WEIGHT * self.recent_average()
+        )
+        spot = max(1.0, float(self.book.mid))
+        strike = max(1.0, strike)
+
+        sigma_points = max(1.0, float(self.product_state["vol_ema"]))
+        sigma = clamp(
+            (sigma_points / spot) * self.BS_SIGMA_MULTIPLIER,
+            self.BS_SIGMA_FLOOR,
+            self.BS_SIGMA_CEILING,
+        )
+        time_remaining = max(
+            0.06,
+            min(1.0, (self.SESSION_END - float(self.state.timestamp)) / self.SESSION_END),
+        )
+        root_time = math.sqrt(time_remaining)
+        denom = max(1e-9, sigma * root_time)
+        d1 = (math.log(spot / strike) + 0.5 * sigma * sigma * time_remaining) / denom
+        directional_probability = (2.0 * normal_cdf(d1)) - 1.0
+        bias_points = directional_probability * sigma_points * self.BS_BIAS_SCALE
+        bias_points = clamp(bias_points, -self.BS_BIAS_CAP, self.BS_BIAS_CAP)
+        return strike + bias_points
+
     def fair_value(
         self,
         regime: str,
@@ -543,6 +583,7 @@ class TomatoesBot:
         flow_fair = self.book.mid + self.book.imbalance * half_spread
         wall_strength = clamp(float(self.product_state["wall_strength_ema"]), 0.0, 1.0)
         wall_fair = float(self.product_state["wall_fair_ema"])
+        bs_fair = self.black_scholes_fair()
 
         fair = (
             self.FAIR_WALL_WEIGHT * wall_fair
@@ -550,6 +591,7 @@ class TomatoesBot:
             + self.FAIR_MICRO_WEIGHT * self.book.micro
             + self.FAIR_FLOW_WEIGHT * flow_fair
             + self.FAIR_REGRESSION_WEIGHT * predicted_next
+            + self.FAIR_BLACK_SCHOLES_WEIGHT * bs_fair
         )
         fair += self.FAIR_ALPHA_WEIGHT * guarded_alpha
         fair += (target - self.manager.projected_position()) / self.POSITION_BIAS_DIVISOR

@@ -92,6 +92,8 @@ class CmaesConfig:
     output_prefix: str
     output_dir: Path | None = None
     data_root: Path | None = None
+    dataset_tag: str | None = None
+    engine: str = "internal"
     default_dict_block: str | None = None
 
     @property
@@ -164,6 +166,8 @@ class CmaesConfig:
             data_root=_resolve_existing_path(payload["data_root"], base=base)
             if payload.get("data_root")
             else None,
+            dataset_tag=payload.get("dataset_tag"),
+            engine=str(payload.get("engine", "internal")),
             default_dict_block=default_dict_block,
         )
 
@@ -348,6 +352,9 @@ def _run_scores_for_params(
                 bot_path,
                 day=day,
                 output_dir=run_dir,
+                data_root=config.data_root,
+                dataset_tag=config.dataset_tag,
+                engine=config.engine,
                 timeout_seconds=config.search.timeout_seconds,
                 check=True,
             )

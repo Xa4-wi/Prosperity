@@ -46,7 +46,7 @@ These are the highest scores reached so far. The best single-product peak does n
 | TOMATOES PnL | `1'590.875` | `V39.4` |
 
 # Current Parameter Map:
-Based on [Traderv39_4.py](/Users/xavierwinkelmann/Prosperity/Bots/Traderv39_4.py), which is the current best official bot.
+Based on [Traderv39_4.py](/Users/xavierwinkelmann/Prosperity/Bots/TutorialRound/Traderv39_4.py), which is the current best official bot.
 
 | Product | Fair Value | Inventory Skew | Take Logic | Quote Logic | Size Logic | Target / Bias |
 | --- | --- | --- | --- | --- | --- | --- |

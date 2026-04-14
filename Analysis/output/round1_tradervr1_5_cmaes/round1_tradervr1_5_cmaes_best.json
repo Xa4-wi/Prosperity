@@ -1,0 +1,79 @@
+{
+  "config_name": "TradervR1_5 Round 1 Focused CMA-ES",
+  "config_path": "/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_5_cmaes.json",
+  "source_bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_5.py",
+  "best_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_5_cmaes/bots/TradervR1_5_best.py",
+  "parameters": {
+    "ASH_BASE_EDGE": 7.093184610517301,
+    "ASH_IMBALANCE_FAIR_WEIGHT": 3.4866713732667933,
+    "ASH_INVENTORY_SKEW": 0.09402707280456833,
+    "DRIFT_PER_TIMESTAMP": 0.0010233620234569563,
+    "RESIDUAL_ALPHA": 0.1050571779118872,
+    "BASE_CARRY": 12.290586011615789,
+    "EARLY_LONG_BIAS": 31.99557620280861,
+    "EDGE_TARGET_SCALE": 11.92823771443657,
+    "ZSCORE_SELL_PENALTY": 9.033857483407488,
+    "INVENTORY_SKEW": 0.08303894994193817,
+    "BASE_TAKE_EDGE": 1.0724192580068626,
+    "BASE_QUOTE_EDGE": 2.4242585979702955,
+    "BULLISH_IMBALANCE": 0.03732968412097508,
+    "OVEREXTENSION_Z": 1.1650841493352775,
+    "LOOKAHEAD_BONUS": 4.052067587082764,
+    "PASSIVE_SELL_BUFFER": 7.825291959391047
+  },
+  "baseline_scores": {
+    "-2": 81809.5,
+    "-1": 84382.0,
+    "0": 82635.0
+  },
+  "best_scores": {
+    "-2": 89067.0,
+    "-1": 90939.0,
+    "0": 89637.0
+  },
+  "average": 89881.0,
+  "objective": 89319.40019185549,
+  "regression_penalty": 0.0,
+  "imbalance_penalty": 560.4,
+  "drift_penalty": 1.199808144524739,
+  "search": {
+    "max_iter": 3,
+    "population": 5,
+    "parents": 2,
+    "sigma0": 0.07,
+    "seed": 205,
+    "timeout_seconds": 180.0
+  },
+  "penalties": {
+    "regression": 5.0,
+    "imbalance": 0.8,
+    "drift": 85.0
+  },
+  "total_evaluations": 16,
+  "history": [
+    {
+      "generation": 1,
+      "sigma": 0.06661120052629053,
+      "generation_best_objective": 88390.12039677605,
+      "generation_best_average": 89268.66666666667,
+      "global_best_objective": 88390.12039677605,
+      "global_best_average": 89268.66666666667
+    },
+    {
+      "generation": 2,
+      "sigma": 0.06519808303415044,
+      "generation_best_objective": 89075.8615659757,
+      "generation_best_average": 89648.83333333333,
+      "global_best_objective": 89075.8615659757,
+      "global_best_average": 89648.83333333333
+    },
+    {
+      "generation": 3,
+      "sigma": 0.06527312540622096,
+      "generation_best_objective": 89319.40019185549,
+      "generation_best_average": 89881.0,
+      "global_best_objective": 89319.40019185549,
+      "global_best_average": 89881.0
+    }
+  ]
+}
