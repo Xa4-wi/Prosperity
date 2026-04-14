@@ -19,7 +19,8 @@ Examples:
 Current engine expectations:
 
 - deterministic replay and Monte Carlo look in `TraderFactory/data/` first
-- if nothing is present there, they fall back to the legacy sibling path `../Prosperity/Data/`
+- if nothing is present there, they next try the merged-repo path `Prosperity/Data/`
+- if that is not available, they fall back to the legacy sibling path `../Prosperity/Data/`
 - you can override the source explicitly with `--data-root`
 - if a directory contains multiple datasets, pass `--dataset-tag`
 

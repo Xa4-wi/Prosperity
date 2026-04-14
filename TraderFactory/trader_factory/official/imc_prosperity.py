@@ -2,19 +2,19 @@ from __future__ import annotations
 
 import base64
 import json
+import re
 import shutil
 import subprocess
 import sys
 import tempfile
 import time
-import urllib.parse
 import uuid
 import zipfile
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
-from trader_factory.core.paths import ensure_dir, generated_root
+from trader_factory.core.paths import ensure_dir, official_run_archives_root
 from trader_factory.diagnostics import DiagnosticRunResult, run_official_trade_quality
 
 
@@ -60,6 +60,9 @@ class ImcProsperityRunResult:
     log_path: Path | None
     json_path: Path | None
     python_path: Path | None
+    bundle_log_path: Path | None
+    bundle_json_path: Path | None
+    bundle_python_path: Path | None
     download_url: str
     session_page_url: str
     auth_mode: str
@@ -67,12 +70,31 @@ class ImcProsperityRunResult:
     analysis_result: DiagnosticRunResult | None = None
 
 
+@dataclass(slots=True)
+class ImcProsperitySmokeTestResult:
+    page_url: str
+    auth_mode: str
+    round_id: int
+    submission_count: int
+    active_submission_id: int | None
+    active_submission_status: str | None
+
+
+@dataclass(slots=True)
+class OfficialBundleArtifacts:
+    extracted_files: list[Path]
+    log_path: Path | None
+    json_path: Path | None
+    python_path: Path | None
+    archive_members: list[str] = field(default_factory=list)
+
+
 class OfficialAutomationError(RuntimeError):
     """Raised when official automation cannot proceed."""
 
 
 def _default_output_dir(submission_id: int) -> Path:
-    return ensure_dir(generated_root() / "official_runs" / "imc_prosperity" / str(submission_id))
+    return ensure_dir(official_run_archives_root() / str(submission_id))
 
 
 def _run_subprocess(command: list[str], *, input_text: str | None = None, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -470,20 +492,137 @@ def _download_url(url: str, target_path: Path) -> Path:
     return target_path
 
 
-def _extract_zip(zip_path: Path, output_dir: Path) -> list[Path]:
-    extracted: list[Path] = []
-    with zipfile.ZipFile(zip_path) as archive:
-        archive.extractall(output_dir)
-        for name in archive.namelist():
-            extracted.append((output_dir / name).resolve())
-    return extracted
-
-
 def _first_suffix(paths: list[Path], suffix: str) -> Path | None:
     for path in paths:
         if path.suffix == suffix:
             return path
     return None
+
+
+def _safe_name_fragment(value: str) -> str:
+    cleaned = re.sub(r"^\d+[-_]+", "", value.strip())
+    cleaned = re.sub(r"[^A-Za-z0-9._-]+", "_", cleaned)
+    cleaned = cleaned.strip("._-")
+    return cleaned or "artifact"
+
+
+def _submission_artifact_prefix(submission_id: int, uploaded_filename: str | None) -> str:
+    label = _safe_name_fragment(Path(uploaded_filename).stem if uploaded_filename else "")
+    return f"submission_{submission_id}_{label}"
+
+
+def _same_file_contents(left: Path, right: Path) -> bool:
+    if left.resolve() == right.resolve():
+        return True
+    if not left.exists() or not right.exists():
+        return False
+    if left.stat().st_size != right.stat().st_size:
+        return False
+    return left.read_bytes() == right.read_bytes()
+
+
+def _bundle_target_path(output_dir: Path, *, prefix: str, member_name: str) -> Path:
+    member = Path(member_name)
+    if member.suffix in {".log", ".json", ".py"}:
+        return output_dir / f"{prefix}{member.suffix}"
+    member_label = _safe_name_fragment(member.stem or member.name)
+    suffix = member.suffix
+    if suffix:
+        return output_dir / f"{prefix}_{member_label}{suffix}"
+    return output_dir / f"{prefix}_{member_label}"
+
+
+def _bundle_move_target(source_path: Path, target_path: Path) -> Path:
+    if not target_path.exists() or _same_file_contents(source_path, target_path):
+        return target_path
+    suffix = target_path.suffix
+    stem = target_path.stem
+    counter = 2
+    while True:
+        candidate = target_path.with_name(f"{stem}_{counter}{suffix}")
+        if not candidate.exists() or _same_file_contents(source_path, candidate):
+            return candidate
+        counter += 1
+
+
+def _extract_submission_bundle(
+    zip_path: Path,
+    output_dir: Path,
+    *,
+    submission_id: int,
+    uploaded_filename: str | None,
+) -> OfficialBundleArtifacts:
+    out = ensure_dir(output_dir)
+    staging_dir = Path(tempfile.mkdtemp(prefix="official_bundle_", dir=out))
+    archive_members: list[str] = []
+    extracted: list[Path] = []
+    prefix = _submission_artifact_prefix(submission_id, uploaded_filename)
+    extracted_successfully = False
+    try:
+        with zipfile.ZipFile(zip_path) as archive:
+            archive_members = archive.namelist()
+            archive.extractall(staging_dir)
+
+        for member_name in archive_members:
+            source_path = (staging_dir / member_name).resolve()
+            if not source_path.exists() or source_path.is_dir():
+                continue
+            target_path = _bundle_move_target(
+                source_path,
+                _bundle_target_path(out, prefix=prefix, member_name=member_name),
+            )
+            if target_path.exists() and _same_file_contents(source_path, target_path):
+                extracted.append(target_path.resolve())
+                continue
+            shutil.move(str(source_path), target_path)
+            extracted.append(target_path.resolve())
+
+        extracted_successfully = True
+        return OfficialBundleArtifacts(
+            extracted_files=extracted,
+            log_path=_first_suffix(extracted, ".log"),
+            json_path=_first_suffix(extracted, ".json"),
+            python_path=_first_suffix(extracted, ".py"),
+            archive_members=archive_members,
+        )
+    finally:
+        shutil.rmtree(staging_dir, ignore_errors=True)
+        if extracted_successfully:
+            zip_path.unlink(missing_ok=True)
+
+
+def run_imc_prosperity_smoke_test(
+    *,
+    round_id: int = 1,
+    chrome_app: str = DEFAULT_CHROME_APP,
+    chrome_profile_dir: str = DEFAULT_CHROME_PROFILE_DIR,
+    game_url: str = DEFAULT_GAME_URL,
+    api_root: str = DEFAULT_API_ROOT,
+) -> ImcProsperitySmokeTestResult:
+    if not chrome_profile_dir:
+        raise OfficialAutomationError("chrome_profile_dir must not be empty.")
+
+    _open_or_focus_prosperity_tab(game_url=game_url, chrome_app=chrome_app)
+    time.sleep(2.0)
+    session = _read_session_bundle(chrome_app=chrome_app)
+    auth_mode, working_headers, payload = _find_working_headers(
+        session,
+        api_root=api_root,
+        round_id=round_id,
+        origin=DEFAULT_ORIGIN,
+        referer=DEFAULT_REFERER,
+    )
+    items = list(payload.get("data", {}).get("items", []))
+    records = [_normalize_submission(item) for item in items]
+    active = next((record for record in records if record.active), None)
+    return ImcProsperitySmokeTestResult(
+        page_url=session.page_url,
+        auth_mode=auth_mode,
+        round_id=round_id,
+        submission_count=len(records),
+        active_submission_id=active.id if active is not None else None,
+        active_submission_status=active.status if active is not None else None,
+    )
 
 
 def run_imc_prosperity_submission(
@@ -529,14 +668,23 @@ def run_imc_prosperity_submission(
         timeout_seconds=timeout_seconds,
     )
     zip_url = _fetch_zip_url(submission_id, api_root=api_root, headers=working_headers)
-    download_name = Path(urllib.parse.urlparse(zip_url).path).name or f"{submission_id}.zip"
+    download_name = f"{_submission_artifact_prefix(submission_id, record.filename)}.zip"
     out = Path(output_dir).expanduser().resolve() if output_dir else _default_output_dir(submission_id)
     ensure_dir(out)
     zip_path = _download_url(zip_url, out / download_name)
-    extracted = _extract_zip(zip_path, out)
-    log_path = _first_suffix(extracted, ".log")
-    json_path = _first_suffix(extracted, ".json")
-    python_path = _first_suffix(extracted, ".py")
+    bundle = _extract_submission_bundle(
+        zip_path,
+        out,
+        submission_id=submission_id,
+        uploaded_filename=record.filename,
+    )
+    extracted = bundle.extracted_files
+    bundle_log_path = bundle.log_path
+    bundle_json_path = bundle.json_path
+    bundle_python_path = bundle.python_path
+    log_path = bundle_log_path
+    json_path = bundle_json_path
+    python_path = bundle_python_path
 
     metadata = {
         "submission_id": submission_id,
@@ -551,6 +699,15 @@ def run_imc_prosperity_submission(
         "chrome_app": chrome_app,
         "chrome_profile_dir": chrome_profile_dir,
         "bot_path": str(bot),
+        "archive_members": bundle.archive_members,
+        "zip_removed_after_extract": True,
+        "zip_path": str(zip_path),
+        "log_path": str(log_path) if log_path else None,
+        "json_path": str(json_path) if json_path else None,
+        "python_path": str(python_path) if python_path else None,
+        "bundle_log_path": str(bundle_log_path) if bundle_log_path else None,
+        "bundle_json_path": str(bundle_json_path) if bundle_json_path else None,
+        "bundle_python_path": str(bundle_python_path) if bundle_python_path else None,
     }
     (out / "metadata.json").write_text(json.dumps(metadata, indent=2))
 
@@ -573,6 +730,9 @@ def run_imc_prosperity_submission(
         log_path=log_path,
         json_path=json_path,
         python_path=python_path,
+        bundle_log_path=bundle_log_path,
+        bundle_json_path=bundle_json_path,
+        bundle_python_path=bundle_python_path,
         download_url=zip_url,
         session_page_url=session.page_url,
         auth_mode=auth_mode,

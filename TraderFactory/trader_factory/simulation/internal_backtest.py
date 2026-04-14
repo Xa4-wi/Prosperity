@@ -23,9 +23,10 @@ import matplotlib.pyplot as plt
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-PROJECTS_ROOT = REPO_ROOT.parent
+WORKSPACE_ROOT = REPO_ROOT.parent
 LOCAL_DATA_DIR = REPO_ROOT / "data"
-LEGACY_DATA_DIR = PROJECTS_ROOT / "Prosperity" / "Data"
+MERGED_DATA_DIR = WORKSPACE_ROOT / "Data"
+LEGACY_DATA_DIR = WORKSPACE_ROOT / "Prosperity" / "Data"
 DATAMODEL_PATH = REPO_ROOT / "trader_factory" / "core" / "datamodel.py"
 DENOMINATION = "XIRECS"
 PRICE_FILE_RE = re.compile(r"^prices_(.+)_day_(-?\d+)\.csv$")
@@ -57,7 +58,7 @@ def parse_args() -> argparse.Namespace:
         help=(
             "Optional directory containing prices_<dataset_tag>_day_<day>.csv and "
             "trades_<dataset_tag>_day_<day>.csv. If omitted, TraderFactory tries repo-local "
-            "data/ first, then the legacy sibling Prosperity/Data path."
+            "data/ first, then Prosperity/Data in the merged repo, then the legacy sibling Prosperity/Data path."
         ),
     )
     parser.add_argument(
@@ -95,13 +96,13 @@ def resolve_data_dir(data_root: str | Path | None = None) -> Path:
             )
         return candidate
 
-    for candidate in (LOCAL_DATA_DIR, LEGACY_DATA_DIR):
+    for candidate in (LOCAL_DATA_DIR, MERGED_DATA_DIR, LEGACY_DATA_DIR):
         if candidate.exists() and _looks_like_data_dir(candidate):
             return candidate.resolve()
 
     raise FileNotFoundError(
         "Could not find replay data. Place Prosperity CSVs under TraderFactory/data/ "
-        "or pass --data-root explicitly."
+        "or Prosperity/Data, or pass --data-root explicitly."
     )
 
 
@@ -133,10 +134,12 @@ def resolve_bot_path(bot_argument: str) -> Path:
             [
                 Path.cwd() / candidate,
                 REPO_ROOT / candidate,
-                PROJECTS_ROOT / "Prosperity" / "Bots" / candidate,
-                PROJECTS_ROOT / "Prosperity" / "Bots" / "archive" / candidate,
-                PROJECTS_ROOT / "MyProsperity" / "Bots" / candidate,
-                PROJECTS_ROOT / "MyProsperity" / "Bots" / "archive" / candidate,
+                WORKSPACE_ROOT / "Bots" / candidate,
+                WORKSPACE_ROOT / "Bots" / "archive" / candidate,
+                WORKSPACE_ROOT / "Prosperity" / "Bots" / candidate,
+                WORKSPACE_ROOT / "Prosperity" / "Bots" / "archive" / candidate,
+                WORKSPACE_ROOT / "MyProsperity" / "Bots" / candidate,
+                WORKSPACE_ROOT / "MyProsperity" / "Bots" / "archive" / candidate,
             ]
         )
 

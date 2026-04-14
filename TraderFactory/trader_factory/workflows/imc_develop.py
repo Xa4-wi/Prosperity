@@ -84,6 +84,7 @@ def _run_deterministic_gate(
     output_dir: Path,
     data_root: Path | None,
     dataset_tag: str | None,
+    engine: str,
     min_required_delta: float | None,
 ) -> DeterministicGateResult:
     candidate_totals_by_day: dict[int, float | None] = {}
@@ -95,6 +96,7 @@ def _run_deterministic_gate(
             output_dir=output_dir / "candidate" / f"day_{day}",
             data_root=data_root,
             dataset_tag=dataset_tag,
+            engine=engine,
         )
         candidate_totals_by_day[day] = candidate_result.final_total_pnl
         if baseline_bot is not None:
@@ -104,6 +106,7 @@ def _run_deterministic_gate(
                 output_dir=output_dir / "baseline" / f"day_{day}",
                 data_root=data_root,
                 dataset_tag=dataset_tag,
+                engine=engine,
             )
             baseline_totals_by_day[day] = baseline_result.final_total_pnl
     if baseline_bot is None:
@@ -288,6 +291,7 @@ def run_imc_develop_cycle(
     output_dir: str | Path | None = None,
     data_root: str | Path | None = None,
     dataset_tag: str | None = None,
+    deterministic_engine: str = "internal",
     deterministic_days: list[int] | tuple[int, ...] = (-1, -2),
     skip_deterministic: bool = False,
     skip_monte_carlo: bool = False,
@@ -348,6 +352,7 @@ def run_imc_develop_cycle(
             output_dir=root / "deterministic",
             data_root=resolved_data_root,
             dataset_tag=dataset_tag,
+            engine=deterministic_engine,
             min_required_delta=(deterministic_min_total_delta if compare_bot is not None else None),
         )
 

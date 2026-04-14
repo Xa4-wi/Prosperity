@@ -104,17 +104,22 @@ If you only read one technical reference after this README, read the full archit
 Minimum setup:
 
 1. Use Python `3.11+`.
-2. Install the package from the repo root:
+2. Install the package:
+
+From the merged `Prosperity` repo root:
+
+```bash
+python3 -m pip install -e TraderFactory
+```
+
+Or, if you `cd TraderFactory` first:
 
 ```bash
 python3 -m pip install -e .
 ```
 
 3. Put replay datasets under [data/README.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/data/README.md), or plan to pass `--data-root`.
-4. Keep official submission outputs available for diagnostics:
-   - `.log`
-   - `.json`
-   - optionally the submitted `.py`
+4. Official submission automation now keeps each run self-contained under `Bots/Logs/official_runs/imc_prosperity/<submission_id>/`, with canonical `.log`, `.json`, and `.py` filenames plus any generated analysis.
 
 Input expectations by command:
 
@@ -308,6 +313,7 @@ Deterministic replay:
 ```bash
 python3 -m trader_factory.cli deterministic /absolute/path/to/Trader.py --day -1
 python3 -m trader_factory.cli deterministic /absolute/path/to/Trader.py --day -1 --data-root /absolute/path/to/data
+python3 -m trader_factory.cli deterministic /absolute/path/to/Trader.py --day -1 --engine rust
 ```
 
 Official trade quality:
@@ -360,6 +366,7 @@ Important note:
 - the headless Monte Carlo robustness engine is local to TraderFactory
 - the Monte Carlo viewer is local to TraderFactory
 - deterministic replay and Monte Carlo look in `TraderFactory/data/` first, then fall back to the legacy sibling `Prosperity/Data/` path
+- deterministic replay can also run through `ProsperityRustBacktester` with `--engine rust`
 - see [docs/ENGINES.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/ENGINES.md)
 - detailed Monte Carlo usage is documented in [docs/MONTE_CARLO.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/MONTE_CARLO.md)
 - viewer usage is documented in [docs/VIEWER.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/docs/VIEWER.md)

@@ -12,10 +12,10 @@ from trader_factory.diagnostics import (
 )
 from trader_factory.generation import render_markdown_plan, scaffold_trader_project
 from trader_factory.official import (
+    run_imc_prosperity_smoke_test,
     run_imc_prosperity_submission,
     run_imc_prosperity_workflow,
 )
-from trader_factory.optimization import run_cmaes
 from trader_factory.probes import PROBE_LIBRARY, scaffold_probe_workspace
 from trader_factory.viewer import run_viewer_server
 from trader_factory.workflows import (
@@ -41,6 +41,12 @@ def build_parser() -> argparse.ArgumentParser:
     deterministic.add_argument("--output", type=Path, default=None, help="Optional output directory.")
     deterministic.add_argument("--data-root", type=Path, default=None, help="Optional replay data directory override.")
     deterministic.add_argument("--dataset-tag", default=None, help="Optional replay dataset tag override.")
+    deterministic.add_argument(
+        "--engine",
+        choices=("internal", "rust"),
+        default="internal",
+        help="Deterministic replay engine. Use 'rust' to run through ProsperityRustBacktester.",
+    )
 
     monte = subparsers.add_parser("monte-carlo", help="Run TraderFactory headless Monte Carlo robustness.")
     monte.add_argument("bot", type=Path, help="Path to the trader Python file.")
@@ -129,6 +135,20 @@ def build_parser() -> argparse.ArgumentParser:
     official.add_argument("--baseline-json", type=Path, default=None, help="Optional baseline official .json for automatic comparison.")
     official.add_argument("--skip-analysis", action="store_true", help="Skip automatic official trade-quality analysis.")
 
+    official_smoke = subparsers.add_parser(
+        "official-smoke-imc",
+        help="Smoke-test the IMC Prosperity browser session and API auth without submitting a bot.",
+    )
+    official_smoke.add_argument("--round-id", type=int, default=1, help="Prosperity round id, default 1.")
+    official_smoke.add_argument("--chrome-app", default="Google Chrome", help="macOS application name for Chrome.")
+    official_smoke.add_argument("--chrome-profile-dir", default="Default", help="Chrome profile directory, default Default.")
+    official_smoke.add_argument("--game-url", default="https://prosperity.imc.com/game", help="Prosperity landing page.")
+    official_smoke.add_argument(
+        "--api-root",
+        default="https://3dzqiahkw1.execute-api.eu-west-1.amazonaws.com/prod",
+        help="Prosperity API root discovered from the HAR.",
+    )
+
     official_cycle = subparsers.add_parser(
         "official-cycle-imc",
         help="Queue-aware IMC Prosperity submission workflow with automatic baseline snapshot.",
@@ -181,6 +201,12 @@ def build_parser() -> argparse.ArgumentParser:
     develop_cycle.add_argument("--output-dir", type=Path, default=None, help="Optional output directory.")
     develop_cycle.add_argument("--data-root", type=Path, default=None, help="Optional replay data directory override.")
     develop_cycle.add_argument("--dataset-tag", default=None, help="Optional replay dataset tag override.")
+    develop_cycle.add_argument(
+        "--deterministic-engine",
+        choices=("internal", "rust"),
+        default="internal",
+        help="Deterministic replay engine for the local gate.",
+    )
     develop_cycle.add_argument("--deterministic-days", type=int, nargs="*", default=[-1, -2], help="Days for local deterministic gating.")
     develop_cycle.add_argument("--skip-deterministic", action="store_true", help="Skip deterministic gating.")
     develop_cycle.add_argument("--skip-monte-carlo", action="store_true", help="Skip Monte Carlo gating.")
@@ -267,9 +293,15 @@ def main() -> None:
             output_dir=args.output,
             data_root=args.data_root,
             dataset_tag=args.dataset_tag,
+            engine=args.engine,
         )
         print(f"Output dir: {result.output_dir}")
         print(f"Summary: {result.summary_path}")
+        print(f"Engine: {result.engine}")
+        if result.metrics_path:
+            print(f"Metrics: {result.metrics_path}")
+        if result.submission_log_path:
+            print(f"Submission log: {result.submission_log_path}")
         print(f"Final total PnL: {result.final_total_pnl}")
         return
 
@@ -330,6 +362,8 @@ def main() -> None:
         return
 
     if args.command == "cmaes":
+        from trader_factory.optimization import run_cmaes
+
         result = run_cmaes(
             args.config,
             output_dir=args.output_dir,
@@ -403,7 +437,10 @@ def main() -> None:
         print(f"Submission id: {result.submission_id}")
         print(f"Round id: {result.round_id}")
         print(f"Auth mode: {result.auth_mode}")
-        print(f"ZIP: {result.zip_path}")
+        if result.zip_path.exists():
+            print(f"ZIP: {result.zip_path}")
+        else:
+            print(f"ZIP removed after extraction: {result.zip_path}")
         if result.python_path:
             print(f"Bot copy: {result.python_path}")
         if result.json_path:
@@ -412,6 +449,24 @@ def main() -> None:
             print(f"LOG: {result.log_path}")
         if result.analysis_result and result.analysis_result.summary_path:
             print(f"Analysis summary: {result.analysis_result.summary_path}")
+        return
+
+    if args.command == "official-smoke-imc":
+        result = run_imc_prosperity_smoke_test(
+            round_id=args.round_id,
+            chrome_app=args.chrome_app,
+            chrome_profile_dir=args.chrome_profile_dir,
+            game_url=args.game_url,
+            api_root=args.api_root,
+        )
+        print(f"Page URL: {result.page_url}")
+        print(f"Auth mode: {result.auth_mode}")
+        print(f"Round id: {result.round_id}")
+        print(f"Submission count: {result.submission_count}")
+        if result.active_submission_id is not None:
+            print(f"Active submission id: {result.active_submission_id}")
+        if result.active_submission_status is not None:
+            print(f"Active submission status: {result.active_submission_status}")
         return
 
     if args.command == "official-cycle-imc":
@@ -454,6 +509,7 @@ def main() -> None:
             output_dir=args.output_dir,
             data_root=args.data_root,
             dataset_tag=args.dataset_tag,
+            deterministic_engine=args.deterministic_engine,
             deterministic_days=args.deterministic_days,
             skip_deterministic=args.skip_deterministic,
             skip_monte_carlo=args.skip_monte_carlo,

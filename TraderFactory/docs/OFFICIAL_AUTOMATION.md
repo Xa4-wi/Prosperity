@@ -28,8 +28,18 @@ does the following:
 4. uploads the bot to the official tutorial-round algorithm endpoint
 5. polls the official submission list until the run is `FINISHED`
 6. fetches the official signed ZIP download URL
-7. downloads and extracts the ZIP under `generated/official_runs/imc_prosperity/<submission_id>/`
-8. optionally runs the official trade-quality analyzer on the downloaded artifacts
+7. extracts the bundle into `Bots/Logs/official_runs/imc_prosperity/<submission_id>/`
+8. renames the unpacked `.py`, `.json`, and `.log` to canonical submission-based filenames
+9. deletes the temporary downloaded ZIP after extraction succeeds
+10. optionally runs the official trade-quality analyzer on the unpacked artifacts
+
+If you want to verify the browser session and API auth without consuming a submission slot, use:
+
+```bash
+python3 -m trader_factory.cli official-smoke-imc
+```
+
+That smoke test opens the Prosperity tab, reads the live session bundle, authenticates against the official API, and reports the current active submission metadata without uploading anything.
 
 The recommended higher-level command is now:
 
@@ -118,17 +128,18 @@ This is much more stable than trying to click the UI for every step.
 A successful run creates a directory like:
 
 ```text
-generated/official_runs/imc_prosperity/<submission_id>/
+Bots/Logs/official_runs/imc_prosperity/<submission_id>/
 ```
 
 Typical contents:
 
-- downloaded ZIP
-- extracted `.py`
-- extracted `.json`
-- extracted `.log`
+- canonical `submission_<id>_<bot>.py`
+- canonical `submission_<id>_<bot>.json`
+- canonical `submission_<id>_<bot>.log`
 - `metadata.json`
 - optional `analysis/` directory from the official trade-quality report
+
+Everything for an official run now stays inside that submission directory so `Bots/Logs/` itself does not fill up with extra mirrored files.
 
 ## CLI Options
 

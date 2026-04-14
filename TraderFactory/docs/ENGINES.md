@@ -28,8 +28,10 @@ What you need to run the engines:
 Replay data resolution order:
 
 1. `TraderFactory/data/`
-2. the legacy sibling path `../Prosperity/Data/`
-3. an explicit `--data-root` override always wins
+2. the merged-repo path `Prosperity/Data/`
+3. the legacy sibling path `../Prosperity/Data/`
+
+An explicit `--data-root` override always wins.
 
 The legacy sibling path is only a fallback for convenience. The intended standalone home for replay data is [data/README.md](/Users/vasudravinarendran/Documents/Prosperity/TraderFactory/data/README.md).
 
@@ -54,6 +56,7 @@ Current CLI:
 ```bash
 python3 -m trader_factory.cli deterministic /path/to/Trader.py --day -1
 python3 -m trader_factory.cli deterministic /path/to/Trader.py --day -1 --data-root /path/to/data --dataset-tag round_0
+python3 -m trader_factory.cli deterministic /path/to/Trader.py --day -1 --engine rust
 ```
 
 What it returns:
@@ -64,6 +67,8 @@ What it returns:
 - `fills.csv`
 - `product_log.csv`
 - parsed final total PnL
+
+When `--engine rust` is selected, TraderFactory runs through `ProsperityRustBacktester` instead of the internal Python replay engine. That path writes Rust-side artifacts such as `metrics.json` and `submission.log` into the selected output directory and still returns the parsed final total PnL through the same TraderFactory interface.
 
 What was validated:
 

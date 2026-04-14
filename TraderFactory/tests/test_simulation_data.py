@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 
+import trader_factory.simulation.internal_backtest as internal_backtest
 from trader_factory.simulation.internal_backtest import resolve_dataset_tag
 
 
@@ -35,3 +36,16 @@ def test_resolve_dataset_tag_rejects_unknown_tag(tmp_path: Path) -> None:
 
     with pytest.raises(FileNotFoundError):
         resolve_dataset_tag(tmp_path, "missing")
+
+
+def test_resolve_data_dir_prefers_merged_prosperity_data_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    local_root = tmp_path / "local_data"
+    merged_root = tmp_path / "merged_data"
+    legacy_root = tmp_path / "legacy_data"
+    write_dataset_files(merged_root, "round_0")
+
+    monkeypatch.setattr(internal_backtest, "LOCAL_DATA_DIR", local_root)
+    monkeypatch.setattr(internal_backtest, "MERGED_DATA_DIR", merged_root)
+    monkeypatch.setattr(internal_backtest, "LEGACY_DATA_DIR", legacy_root)
+
+    assert internal_backtest.resolve_data_dir() == merged_root.resolve()

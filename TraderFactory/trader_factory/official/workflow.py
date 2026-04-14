@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import urllib.parse
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -21,15 +20,15 @@ from trader_factory.official.imc_prosperity import (
     OfficialAutomationError,
     _default_output_dir,
     _download_url,
-    _extract_zip,
+    _extract_submission_bundle,
     _fetch_zip_url,
     _find_working_headers,
-    _first_suffix,
     _list_submissions,
     _normalize_submission,
     _open_or_focus_prosperity_tab,
     _poll_submission,
     _read_session_bundle,
+    _submission_artifact_prefix,
     _upload_submission,
 )
 
@@ -144,15 +143,20 @@ def _download_existing_submission(
 ) -> tuple[Path, list[Path], Path | None, Path | None, Path | None]:
     target_dir = ensure_dir(output_dir)
     zip_url = _fetch_zip_url(record.id, api_root=api_root, headers=headers)
-    download_name = Path(record.filename).with_suffix(".zip").name or f"{record.id}.zip"
+    download_name = f"{_submission_artifact_prefix(record.id, record.filename)}.zip"
     zip_path = _download_url(zip_url, target_dir / download_name)
-    extracted = _extract_zip(zip_path, target_dir)
+    bundle = _extract_submission_bundle(
+        zip_path,
+        target_dir,
+        submission_id=record.id,
+        uploaded_filename=record.filename,
+    )
     return (
         zip_path,
-        extracted,
-        _first_suffix(extracted, ".log"),
-        _first_suffix(extracted, ".json"),
-        _first_suffix(extracted, ".py"),
+        bundle.extracted_files,
+        bundle.log_path,
+        bundle.json_path,
+        bundle.python_path,
     )
 
 
@@ -323,12 +327,21 @@ def run_imc_prosperity_workflow(
         timeout_seconds=timeout_seconds,
     )
     zip_url = _fetch_zip_url(submission_id, api_root=api_root, headers=working_headers)
-    download_name = Path(urllib.parse.urlparse(zip_url).path).name or f"{submission_id}.zip"
+    download_name = f"{_submission_artifact_prefix(submission_id, record.filename)}.zip"
     zip_path = _download_url(zip_url, resolved_output_dir / download_name)
-    extracted = _extract_zip(zip_path, resolved_output_dir)
-    log_path = _first_suffix(extracted, ".log")
-    json_path = _first_suffix(extracted, ".json")
-    python_path = _first_suffix(extracted, ".py")
+    bundle = _extract_submission_bundle(
+        zip_path,
+        resolved_output_dir,
+        submission_id=submission_id,
+        uploaded_filename=record.filename,
+    )
+    extracted = bundle.extracted_files
+    bundle_log_path = bundle.log_path
+    bundle_json_path = bundle.json_path
+    bundle_python_path = bundle.python_path
+    log_path = bundle_log_path
+    json_path = bundle_json_path
+    python_path = bundle_python_path
     analysis_result = None
     if run_analysis and log_path is not None:
         analysis_result = run_official_trade_quality(
@@ -347,6 +360,9 @@ def run_imc_prosperity_workflow(
         log_path=log_path,
         json_path=json_path,
         python_path=python_path,
+        bundle_log_path=bundle_log_path,
+        bundle_json_path=bundle_json_path,
+        bundle_python_path=bundle_python_path,
         download_url=zip_url,
         session_page_url=session.page_url,
         auth_mode=auth_mode,
@@ -368,6 +384,15 @@ def run_imc_prosperity_workflow(
                 "chrome_app": chrome_app,
                 "chrome_profile_dir": chrome_profile_dir,
                 "bot_path": str(bot),
+                "archive_members": bundle.archive_members,
+                "zip_removed_after_extract": True,
+                "zip_path": str(zip_path),
+                "log_path": str(log_path) if log_path else None,
+                "json_path": str(json_path) if json_path else None,
+                "python_path": str(python_path) if python_path else None,
+                "bundle_log_path": str(bundle_log_path) if bundle_log_path else None,
+                "bundle_json_path": str(bundle_json_path) if bundle_json_path else None,
+                "bundle_python_path": str(bundle_python_path) if bundle_python_path else None,
             },
             indent=2,
         )
