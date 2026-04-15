@@ -1066,3 +1066,72 @@ Practical takeaway:
 - the useful signal from `TradervR1_30.py` was real
 - Osmium does want some reduction in churn
 - but only lightly; once the reduction gets too strong, it gives up too much edge
+
+### `TradervR1_32.py` and `TradervR1_32_1.py`
+
+Idea:
+- test the hypothesis that `ASH_COATED_OSMIUM` behaves more like tutorial-round `TOMATOES`
+- rebuild Osmium as a small drift-style trader:
+  - short / long mid EMAs
+  - residual EMA
+  - regime-like logic (`trend_up`, `trend_down`, `mean_revert`, `toxic`)
+  - target-position style execution instead of a pure anchored market maker
+- keep `INTARIAN_PEPPER_ROOT` unchanged
+
+Verified local Rust replay:
+- `TradervR1_32.py`
+  - day `-2`: `87'111.5`
+  - day `-1`: `87'558.0`
+  - day `0`: `86'510.0`
+- `TradervR1_32_1.py`
+  - day `-2`: `87'018.0`
+  - day `-1`: `87'644.0`
+  - day `0`: `86'462.0`
+
+Read:
+- both are far below the trunk
+- Pepper stays intact
+- the entire loss is Osmium again
+- the lighter variant is a touch better, but still nowhere close
+
+Practical takeaway:
+- Osmium does not want to be treated as another TOMATOES-style drift asset
+- even the lighter adaptation under-monetizes Osmium badly
+- this strongly reinforces the anchored-MM view of the product
+
+### `TradervR1_33.py`
+
+Idea:
+- keep `INTARIAN_PEPPER_ROOT` unchanged from the strong production trunk
+- rebuild `ASH_COATED_OSMIUM` into a cleaner reusable local-fair market-maker base:
+  - fair from anchor + stable-book / wall-mid structure + micro + depth-aware imbalance
+  - nonlinear reservation / inventory pressure
+  - toxicity-aware passive quoting
+  - stricter stale-book taking
+  - simple fill-quality penalty gating
+  - gentle capacity-clearing when inventory is stretched and edge is near flat
+
+Verified local Rust replay:
+- day `-2`: `89'818.5`
+  - `ASH_COATED_OSMIUM`: `10'174.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `394`
+- day `-1`: `90'850.0`
+  - `ASH_COATED_OSMIUM`: `11'482.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `421`
+- day `0`: `90'353.0`
+  - `ASH_COATED_OSMIUM`: `10'956.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `435`
+
+Read:
+- the architecture is clean and reusable, and it matches the intended Osmium design much better
+- Pepper stayed stable, so the result is a pure Osmium read
+- but this base is still materially below the current trunk on all three days
+- the new engine is too conservative and gives up too much normal spread capture
+
+Practical takeaway:
+- this is a good research base for later Osmium tuning
+- but it is not a production upgrade over `TradervR1_25_2.py`
+- the main missing piece is not architecture anymore, it is restoring more of the trunk's day-to-day capture without reintroducing bad churn
