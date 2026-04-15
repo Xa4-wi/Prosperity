@@ -1,0 +1,207 @@
+{
+  "config": {
+    "seed": 52,
+    "days": [
+      -1,
+      -2
+    ],
+    "samples_per_family": 2,
+    "families": [
+      {
+        "name": "original_noise",
+        "description": "Original historical path with very mild execution-noise perturbations.",
+        "path_mode": "original",
+        "block_steps_min": 0,
+        "block_steps_max": 0,
+        "passive_fill_prob_range": [
+          0.94,
+          1.0
+        ],
+        "passive_qty_scale_range": [
+          0.96,
+          1.0
+        ],
+        "aggressive_slip_prob_range": [
+          0.0,
+          0.03
+        ],
+        "aggressive_slip_ticks_range": [
+          1,
+          1
+        ]
+      },
+      {
+        "name": "bootstrap_path",
+        "description": "Block-bootstrap of the historical path with no fill perturbation.",
+        "path_mode": "bootstrap",
+        "block_steps_min": 160,
+        "block_steps_max": 520,
+        "passive_fill_prob_range": [
+          1.0,
+          1.0
+        ],
+        "passive_qty_scale_range": [
+          1.0,
+          1.0
+        ],
+        "aggressive_slip_prob_range": [
+          0.0,
+          0.0
+        ],
+        "aggressive_slip_ticks_range": [
+          1,
+          1
+        ]
+      },
+      {
+        "name": "bootstrap_balanced",
+        "description": "Block-bootstrap with calibrated mild-to-moderate execution degradation.",
+        "path_mode": "bootstrap",
+        "block_steps_min": 140,
+        "block_steps_max": 420,
+        "passive_fill_prob_range": [
+          0.84,
+          0.97
+        ],
+        "passive_qty_scale_range": [
+          0.86,
+          0.97
+        ],
+        "aggressive_slip_prob_range": [
+          0.01,
+          0.08
+        ],
+        "aggressive_slip_ticks_range": [
+          1,
+          1
+        ]
+      }
+    ],
+    "bots": [
+      "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_34_1.py"
+    ]
+  },
+  "baseline": {
+    "TradervR1_34_1": {
+      "per_day": {
+        "-1": 95486.0,
+        "-2": 95526.5
+      },
+      "combined_total_pnl": 191012.5
+    }
+  },
+  "monte_carlo": {
+    "TradervR1_34_1": {
+      "overall": {
+        "count": 6,
+        "mean": 76335.4167,
+        "std": 84017.0367,
+        "min": -7096.5,
+        "p05": -4846.125,
+        "p10": -2595.75,
+        "p25": 4687.75,
+        "median": 41669.0,
+        "p75": 159705.75,
+        "p90": 189933.0,
+        "p95": 190146.0,
+        "max": 190359.0,
+        "cvar10": -7096.5
+      },
+      "profiles": {
+        "plausible": {
+          "count": 6,
+          "mean": 76335.4167,
+          "std": 84017.0367,
+          "min": -7096.5,
+          "p05": -4846.125,
+          "p10": -2595.75,
+          "p25": 4687.75,
+          "median": 41669.0,
+          "p75": 159705.75,
+          "p90": 189933.0,
+          "p95": 190146.0,
+          "max": 190359.0,
+          "cvar10": -7096.5
+        },
+        "stress": {
+          "count": 0,
+          "mean": 0.0,
+          "std": 0.0,
+          "min": 0.0,
+          "p05": 0.0,
+          "p10": 0.0,
+          "p25": 0.0,
+          "median": 0.0,
+          "p75": 0.0,
+          "p90": 0.0,
+          "p95": 0.0,
+          "max": 0.0,
+          "cvar10": 0.0
+        },
+        "all": {
+          "count": 6,
+          "mean": 76335.4167,
+          "std": 84017.0367,
+          "min": -7096.5,
+          "p05": -4846.125,
+          "p10": -2595.75,
+          "p25": 4687.75,
+          "median": 41669.0,
+          "p75": 159705.75,
+          "p90": 189933.0,
+          "p95": 190146.0,
+          "max": 190359.0,
+          "cvar10": -7096.5
+        }
+      },
+      "by_family": {
+        "original_noise": {
+          "count": 2,
+          "mean": 189933.0,
+          "std": 426.0,
+          "min": 189507.0,
+          "p05": 189549.6,
+          "p10": 189592.2,
+          "p25": 189720.0,
+          "median": 189933.0,
+          "p75": 190146.0,
+          "p90": 190273.8,
+          "p95": 190316.4,
+          "max": 190359.0,
+          "cvar10": 189507.0
+        },
+        "bootstrap_path": {
+          "count": 2,
+          "mean": 36103.5,
+          "std": 34198.5,
+          "min": 1905.0,
+          "p05": 5324.85,
+          "p10": 8744.7,
+          "p25": 19004.25,
+          "median": 36103.5,
+          "p75": 53202.75,
+          "p90": 63462.3,
+          "p95": 66882.15,
+          "max": 70302.0,
+          "cvar10": 1905.0
+        },
+        "bootstrap_balanced": {
+          "count": 2,
+          "mean": 2969.75,
+          "std": 10066.25,
+          "min": -7096.5,
+          "p05": -6089.875,
+          "p10": -5083.25,
+          "p25": -2063.375,
+          "median": 2969.75,
+          "p75": 8002.875,
+          "p90": 11022.75,
+          "p95": 12029.375,
+          "max": 13036.0,
+          "cvar10": -7096.5
+        }
+      }
+    }
+  },
+  "comparison": null
+}

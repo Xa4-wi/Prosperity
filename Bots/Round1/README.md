@@ -1817,3 +1817,327 @@ Practical takeaway:
   - deepen `P1` a bit on Pepper
   - deepen `O2` on Osmium
   - do **not** spend more cycles on `O1`, `O3`, or `O5` in their current form
+
+## `TradervR1_43.py`
+
+Idea:
+- build one evidence-based follow-up directly from the base
+- keep the exact `TradervR1_34_1.py` structure
+- import only the two Stage 1 survivors, but even more softly:
+  - Pepper:
+    - only suppress clearly positive-shock aggressive buys
+    - do not add extra complexity to fair or target logic
+  - Osmium:
+    - side-specific fill-quality memory
+    - soft quote widening / size-down on a side after bad recent passive fills
+    - hard veto only in clearly bad markout + adverse-imbalance cases
+
+Verified local Rust replay:
+- day `-2`: `96'129.5`
+  - `ASH_COATED_OSMIUM`: `16'485.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `730`
+- day `-1`: `96'217.0`
+  - `ASH_COATED_OSMIUM`: `16'849.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `708`
+- day `0`: `95'696.0`
+  - `ASH_COATED_OSMIUM`: `16'299.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `690`
+
+Reference:
+- `TradervR1_34_1.py`: `96'129.5 / 96'217.0 / 95'696.0`
+
+Read:
+- `v43` is completely identical to the base on all three local days
+- that means the combined “best surviving donor” branch was still too light to change realized behavior
+- this is still useful:
+  - it suggests the next improvement is unlikely to come from stacking tiny safe overlays
+  - if a better bot exists from here, it probably needs one clearly stronger structural change, not two nearly inert ones
+
+## Round 1 Active Set Cleanup
+
+Top-level Round 1 folder now keeps only the active files that still look useful:
+- `TradervR1_34.py`
+- `TradervR1_34_1.py`
+- `TradervR1_35.py`
+- `TradervR1_39_4.py`
+- `TradervR1_42_P1_1.py`
+- `TradervR1_42_O2_1.py`
+- `TradervR1_43.py`
+
+Moved to `Bots/Round1/archive/`:
+- all the clearly harmful, inert, superseded, or duplicate top-level research variants from the later Round 1 branch set
+- examples include:
+  - `TradervR1_27*` to `TradervR1_33*`
+  - `TradervR1_35_HMMOsmium.py`
+  - `TradervR1_36.py`
+  - `TradervR1_37.py`
+  - `TradervR1_38.py`
+  - `TradervR1_39.py` to `TradervR1_39_3.py`
+  - `TradervR1_40.py`
+  - `TradervR1_41.py`
+  - `TradervR1_41_1.py`
+  - `TradervR1_42_Base.py`
+  - `TradervR1_42_O1_1.py`
+  - `TradervR1_42_O3_2.py`
+  - `TradervR1_42_O4_1.py`
+  - `TradervR1_42_O5_1.py`
+  - `TradervR1_42_P3_1.py`
+
+Practical takeaway:
+- the Round 1 working set is now much cleaner
+- the visible top-level files are the ones that still carry either:
+  - best-performance value
+  - or real donor value for the next branch
+
+### `TradervR1_44.py`
+
+Idea:
+- keep the `TradervR1_34_1.py` fair-value trunk unchanged for both products
+- keep `INTARIAN_PEPPER_ROOT` exactly on the trunk
+- change only `ASH_COATED_OSMIUM`
+- add an inventory-quality layer that separates Osmium inventory into:
+  - fresh inventory worth defending
+  - stale inventory worth recycling
+- use side-specific entry reference, age, and stale score to:
+  - back off new adds when current inventory quality is poor
+  - tighten exits on stale inventory
+  - allow small recycler behavior before inventory gets extreme
+
+Verified local Rust replay:
+- day `-2`: `95'021.5`
+  - `ASH_COATED_OSMIUM`: `15'377.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `696`
+- day `-1`: `94'749.0`
+  - `ASH_COATED_OSMIUM`: `15'381.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `670`
+- day `0`: `94'672.0`
+  - `ASH_COATED_OSMIUM`: `15'275.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `641`
+
+Comparison vs `TradervR1_34_1.py`:
+- day `-2`: `-1'108.0`
+- day `-1`: `-1'468.0`
+- day `0`: `-1'024.0`
+
+Read:
+- Pepper stayed identical on all three days
+- the full miss is Osmium
+- the structural idea is coherent, but this first recycler implementation is too eager
+- it improves inventory hygiene by lowering churn and reducing add-back into weak inventory, but it gives up too much normal spread capture
+
+Takeaway:
+- the missing architectural seam is still inventory quality, not fair-value discovery
+- but a full “fresh vs stale” recycler should be much lighter
+- if we revisit this path, the likely surviving donor is:
+  - stale inventory only as a small quote-shaping bias
+  - not as a broader recycle controller
+
+### `TradervR1_45.py`
+
+Idea:
+- test a blunt but honest execution hypothesis:
+  - make the whole bot roughly one tick more aggressive
+- keep the same structure as `TradervR1_34_1.py`
+- do not change the fair models
+- only change execution thresholds:
+  - `ASH_COATED_OSMIUM`
+    - lower tiered take edges by about one tick
+    - lower the passive quote floor by about one tick
+  - `INTARIAN_PEPPER_ROOT`
+    - lower base take edge by about one tick
+    - lower base passive quote edge by about one tick
+
+Verified local Rust replay:
+- day `-2`: `96'134.0`
+  - `ASH_COATED_OSMIUM`: `16'504.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'630.0`
+  - trades: `830`
+- day `-1`: `96'344.0`
+  - `ASH_COATED_OSMIUM`: `17'010.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'334.0`
+  - trades: `808`
+- day `0`: `95'832.0`
+  - `ASH_COATED_OSMIUM`: `16'408.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'424.0`
+  - trades: `797`
+
+Comparison vs `TradervR1_34_1.py`:
+- day `-2`: `+4.5`
+- day `-1`: `+127.0`
+- day `0`: `+136.0`
+
+Read:
+- this is one of the first broad execution changes that actually improved the trunk locally
+- the gain comes mostly from Osmium monetizing more
+- Pepper is mixed:
+  - slightly worse on days `-2` and `-1`
+  - slightly better on day `0`
+- the trade count increased meaningfully, so this version is clearly taking more risk to earn the gain
+
+Takeaway:
+- the trunk may have been a little too conservative in execution
+- there is real edge in slightly more aggressive participation
+- but this should still be treated carefully:
+  - local gain is real
+  - official transfer is not yet proven
+
+### `TradervR1_46.py`
+
+Idea:
+- isolate the `v45` result more cleanly
+- keep `INTARIAN_PEPPER_ROOT` exactly on the `TradervR1_34_1.py` trunk
+- keep the more aggressive execution only for `ASH_COATED_OSMIUM`
+- this tests whether the `v45` gain was really Osmium-led or just a broad risk-on effect
+
+Implementation note:
+- this version is a thin local derivative of `TradervR1_34_1.py`
+- it is useful for research/backtesting inside this repo
+- if promoted, it should be inlined into a standalone single-file trader before official upload
+
+Verified local Rust replay:
+- day `-2`: `96'148.0`
+  - `ASH_COATED_OSMIUM`: `16'504.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `830`
+- day `-1`: `96'378.0`
+  - `ASH_COATED_OSMIUM`: `17'010.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `808`
+- day `0`: `95'805.0`
+  - `ASH_COATED_OSMIUM`: `16'408.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `798`
+
+Comparison vs `TradervR1_34_1.py`:
+- day `-2`: `+18.5`
+- day `-1`: `+161.0`
+- day `0`: `+109.0`
+
+Comparison vs `TradervR1_45.py`:
+- day `-2`: `+14.0`
+- day `-1`: `+34.0`
+- day `0`: `-27.0`
+
+Read:
+- this is cleaner than `v45`
+- the gain really is mostly from more aggressive Osmium execution
+- keeping Pepper on the stronger trunk logic improves days `-2` and `-1`
+- `v45` is still slightly better on day `0`, but `v46` is the cleaner architecture
+
+Takeaway:
+- if we want to keep pushing this direction, Osmium aggression is the right lever
+- Pepper did not need the extra aggression
+
+Implementation note:
+- `TradervR1_46.py` is now a standalone single-file trader and does not use dynamic loading
+- that makes it safe to upload directly
+
+### `TradervR1_47.py`
+
+Idea:
+- keep the same clean split as `TradervR1_46.py`
+- push only the Osmium aggression much further
+- leave Pepper fully unchanged
+- this is the strongest standalone Osmium-aggression candidate from the up/down sweep
+
+Verified local Rust replay:
+- day `-2`: `96'657.5`
+  - `ASH_COATED_OSMIUM`: `17'013.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `830`
+- day `-1`: `96'739.0`
+  - `ASH_COATED_OSMIUM`: `17'371.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `814`
+- day `0`: `96'448.0`
+  - `ASH_COATED_OSMIUM`: `17'051.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `789`
+
+Comparison vs `TradervR1_34_1.py`:
+- day `-2`: `+528.0`
+- day `-1`: `+522.0`
+- day `0`: `+752.0`
+
+Three-day total:
+- `TradervR1_34_1.py`: `288'042.5`
+- `TradervR1_47.py`: `289'844.5`
+- delta: `+1'802.0`
+
+Read:
+- the Osmium aggression sweep did not top out where we first expected
+- stronger Osmium execution kept improving the branch
+- the gain is entirely Osmium-led
+- Pepper remained unchanged, which is exactly what we wanted from the split architecture
+
+Implementation note:
+- `TradervR1_47.py` is also standalone and upload-safe
+
+## Osmium Aggression Flop Sweep
+
+After `TradervR1_47.py` improved strongly, we pushed a standalone Osmium-only aggression ladder further:
+
+| Bot | Day -2 | Day -1 | Day 0 | 3-day Total | Delta vs `TradervR1_34_1.py` |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `TradervR1_47.py` | `96'657.5` | `96'739.0` | `96'448.0` | `289'844.5` | `+1'802.0` |
+| `TradervR1_48.py` | `96'501.5` | `96'729.0` | `96'455.0` | `289'685.5` | `+1'643.0` |
+| `TradervR1_49.py` | `96'501.5` | `96'729.0` | `96'455.0` | `289'685.5` | `+1'643.0` |
+| `TradervR1_50.py` | `96'501.5` | `96'729.0` | `96'455.0` | `289'685.5` | `+1'643.0` |
+| `TradervR1_51.py` | `96'501.5` | `96'729.0` | `96'455.0` | `289'685.5` | `+1'643.0` |
+
+Read:
+- `TradervR1_47.py` is the local peak from this aggression family
+- pushing aggression beyond `v47` made the result worse, so that is the first clean local flop point
+- stronger variants `v48` to `v51` all collapsed to the same outcome, which suggests the execution logic hit saturation:
+  - quote placement is already pinned near `best_ask - 1` / `best_bid + 1`
+  - once take thresholds get pushed below the toxicity-driven minimum, further lowering them does not create new good trades
+
+Takeaway:
+- the branch was under-aggressive up to `v47`
+- the aggression ridge peaks around `v47`
+- beyond that, extra aggression is either:
+  - ineffective because the logic saturates
+  - or slightly harmful because it gives up execution quality without unlocking more capture
+
+### `TradervR1_47_1.py`
+
+Idea:
+- keep the exact `TradervR1_47.py` aggression level
+- add only a very light Osmium bad-trade brake:
+  - side-specific fill-markout EMA
+  - small quote-edge penalty after bad fills
+  - small size-down in bad states
+  - hard veto only when markout is clearly bad and imbalance still points the wrong way
+
+Verified local Rust replay:
+- day `-2`: `96'657.5`
+  - `ASH_COATED_OSMIUM`: `17'013.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `830`
+- day `-1`: `96'739.0`
+  - `ASH_COATED_OSMIUM`: `17'371.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `814`
+- day `0`: `96'448.0`
+  - `ASH_COATED_OSMIUM`: `17'051.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `789`
+
+Read:
+- `v47.1` is completely identical to `v47` locally
+- that means this first “improve the bad trades” layer is inert on top of the current aggression peak
+- the likely reason is that:
+  - the markout thresholds are too rarely triggered under this branch
+  - and/or the current aggressive Osmium logic is already pinned at the effective quote/take boundary
+
+Takeaway:
+- the next useful refinement is probably not another very soft brake
+- if we keep improving `v47`, it likely needs:
+  - a more direct selective rule
+  - or a different structural lever than lightweight markout memory

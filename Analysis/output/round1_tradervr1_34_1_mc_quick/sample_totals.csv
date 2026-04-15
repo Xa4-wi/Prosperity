@@ -1,0 +1,7 @@
+bot,family,sample_id,total_pnl,total_fills,path_mode,avg_block_steps,avg_passive_fill_prob,avg_passive_qty_scale,avg_aggressive_slip_prob,avg_aggressive_slip_ticks,day_-1_pnl,day_-2_pnl
+TradervR1_34_1,bootstrap_balanced,bootstrap_balanced_001,13036.0,1491,bootstrap,313.5,0.912351,0.954104,0.036482,1.0,51730.0,-38694.0
+TradervR1_34_1,bootstrap_balanced,bootstrap_balanced_002,-7096.5,1319,bootstrap,376.5,0.887647,0.914655,0.026202,1.0,9404.0,-16500.5
+TradervR1_34_1,bootstrap_path,bootstrap_path_001,1905.0,1393,bootstrap,286.5,1.0,1.0,0.0,1.0,-24851.0,26756.0
+TradervR1_34_1,bootstrap_path,bootstrap_path_002,70302.0,1498,bootstrap,325.5,1.0,1.0,0.0,1.0,21028.0,49274.0
+TradervR1_34_1,original_noise,original_noise_001,190359.0,1417,original,0.0,0.97288,0.996116,0.006982,1.0,94961.0,95398.0
+TradervR1_34_1,original_noise,original_noise_002,189507.0,1405,original,0.0,0.956695,0.982913,0.016491,1.0,94442.0,95065.0
