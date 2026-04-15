@@ -1558,3 +1558,262 @@ Practical takeaway:
 - state-based regime filtering still appears too expensive for Osmium
 - markout-aware veto is the only hybrid element that comes close to surviving
 - if we continue this path, `TradervR1_39_4.py` is the right donor branch, not the HMM-style state versions
+
+## `TradervR1_35_HMMOsmium.py`
+
+Idea:
+- keep the stronger `v35`-style local-fair Osmium base
+- add a small HMM-style calm / normal / toxic execution filter
+- add side-specific markout-aware quote penalties
+- keep Pepper mostly unchanged except for a small innovation gate
+
+Status:
+- the file runs correctly as-is; no runtime fix was needed
+
+Verified local Rust replay:
+- day `-2`: `94'834.5`
+  - `ASH_COATED_OSMIUM`: `15'190.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `617`
+- day `-1`: `94'878.0`
+  - `ASH_COATED_OSMIUM`: `15'510.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `596`
+- day `0`: `94'718.0`
+  - `ASH_COATED_OSMIUM`: `15'321.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `584`
+
+Reference:
+- `TradervR1_34_1.py`: `96'129.5 / 96'217.0 / 95'696.0`
+
+Read:
+- this HMM Osmium branch is clearly below the stronger Round 1 trunk
+- the loss is again mainly Osmium
+- the trade count is notably lower, which is consistent with the state filter over-defending and giving up too much normal spread capture
+
+## Broad CMA-ES On `TradervR1_35_HMMOsmium.py`
+
+Goal:
+- see whether this branch is mainly under-tuned or structurally too costly
+- search broadly over the HMM-state parameters, Osmium execution parameters, and the small Pepper innovation gate
+
+Config:
+- `TraderFactory/configs/round1/tradervr1_35_hmmosmium_cmaes_broad.json`
+- search:
+  - `max_iter = 5`
+  - `population = 10`
+  - `parents = 4`
+  - `sigma0 = 0.10`
+
+Result:
+- the optimizer returned the exact source defaults as best
+- best scores stayed:
+  - day `-2`: `94'834.5`
+  - day `-1`: `94'878.0`
+  - day `0`: `94'718.0`
+
+Artifacts:
+- `Analysis/output/round1_tradervr1_35_hmmosmium_cmaes_broad/`
+
+Practical takeaway:
+- this branch does not appear to hide a better parameter basin
+- broad CMA-ES was unable to improve it at all
+- the limitation looks architectural, not tuning-related
+- if this family is to improve, it likely needs to collapse toward the much lighter `v39.4`-style markout-only donor logic rather than pushing the HMM state filter harder
+
+## `TradervR1_40.py`
+
+Idea:
+- keep `TradervR1_34_1.py` as the transfer-friendly trunk
+- test the advisor-style “small deliberate volume move” idea in the closest honest form available in the continuous Round 1 interface
+- add only two narrow Osmium overlays:
+  - a **volume-aware nudge sweep** that removes tiny stale slices of the book only when doing so cheaply reveals a meaningfully better next level
+  - a **gentle capacity-recycling cross** when inventory is stretched and local edge is near zero
+- keep `INTARIAN_PEPPER_ROOT` unchanged
+
+Important implementation note:
+- the Round 1 bot interface exposes only continuous order books and trades, not a separate auction-clearing state
+- so this version is a proxy for the auction-volume idea, not a true auction-clearing optimizer
+
+Verified local Rust replay:
+- day `-2`: `95'676.5`
+  - `ASH_COATED_OSMIUM`: `16'032.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `866`
+- day `-1`: `96'094.0`
+  - `ASH_COATED_OSMIUM`: `16'726.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `856`
+- day `0`: `95'635.0`
+  - `ASH_COATED_OSMIUM`: `16'238.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `837`
+
+Reference:
+- `TradervR1_34_1.py`: `96'129.5 / 96'217.0 / 95'696.0`
+  - trades: `730 / 708 / 690`
+
+Read:
+- Pepper stayed perfectly stable, so the whole read is Osmium
+- the new layer increased Osmium turnover a lot:
+  - `v40`: `866 / 856 / 837` trades
+  - `v34.1`: `730 / 708 / 690` trades
+- but that extra churn did **not** monetize better:
+  - day `-2`: `-453.0`
+  - day `-1`: `-123.0`
+  - day `0`: `-61.0`
+- this suggests the “volume nudge” idea is directionally interesting, but in the continuous-book setting it behaves more like over-aggressive stale-volume harvesting than a true auction edge
+
+Practical takeaway:
+- the advisor insight is still useful conceptually
+- but without a real auction-clearing interface, this proxy does not transfer well
+- for Round 1 continuous trading, small volume nudges added churn faster than they added quality
+
+## `TradervR1_41.py` and `TradervR1_41_1.py`
+
+Idea:
+- test a completely different Osmium direction:
+  - very fast-paced trading
+  - do not hold inventory long
+  - recycle back toward flat quickly after fills
+- keep `INTARIAN_PEPPER_ROOT` unchanged
+- use `TradervR1_34_1.py` as the trunk in both cases
+
+What changed:
+- `TradervR1_41.py`
+  - hard fast-recycle rewrite for Osmium
+  - explicit inventory-age memory
+  - strong zero-target reservation pull
+  - cheaper opposite-side takes
+  - reduced same-side quoting once inventory is carried
+  - effectively tries to flatten quickly and avoid holding risk
+- `TradervR1_41_1.py`
+  - much lighter version of the same idea
+  - no age-based shutdown
+  - mild recycle reservation skew
+  - mild opposite-side take bonus
+  - slightly smaller same-side passive size
+  - tiny stretch-only clearing clip
+
+Verified local Rust replay:
+- `TradervR1_41.py`
+  - day `-2`: `84'605.0`
+    - `ASH_COATED_OSMIUM`: `4'961.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+    - trades: `808`
+  - day `-1`: `85'177.0`
+    - `ASH_COATED_OSMIUM`: `5'809.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+    - trades: `790`
+  - day `0`: `83'274.0`
+    - `ASH_COATED_OSMIUM`: `3'877.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+    - trades: `805`
+- `TradervR1_41_1.py`
+  - day `-2`: `95'621.0`
+    - `ASH_COATED_OSMIUM`: `15'977.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+    - trades: `751`
+  - day `-1`: `95'726.0`
+    - `ASH_COATED_OSMIUM`: `16'358.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+    - trades: `739`
+  - day `0`: `94'930.0`
+    - `ASH_COATED_OSMIUM`: `15'533.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+    - trades: `702`
+
+Reference:
+- `TradervR1_34_1.py`: `96'129.5 / 96'217.0 / 95'696.0`
+
+Read:
+- the extreme fast-recycle version in `TradervR1_41.py` is clearly the wrong direction
+- the lighter version in `TradervR1_41_1.py` is much healthier, which means the idea itself is not nonsense
+- but even the lighter version still loses to the trunk on all three days:
+  - day `-2`: `-508.5`
+  - day `-1`: `-491.0`
+  - day `0`: `-766.0`
+- Pepper stayed identical in both cases, so the whole read is Osmium
+
+Practical takeaway:
+- Osmium does not seem to want a “flip it back out quickly” identity
+- a mild recycle bias is survivable
+- but the trunk still monetizes better by letting good passive inventory breathe a bit longer
+
+## Stage 1 Controlled Sweep: `TradervR1_42_*`
+
+Goal:
+- run the first isolated sweep from the current best transferable trunk
+- change one meaningful mechanism per version so we can see which axis is actually alive
+
+Baseline:
+- `TradervR1_42_Base.py`
+  - exact snapshot of `TradervR1_34_1.py`
+
+Stage 1 variants:
+- `TradervR1_42_P1_1.py`
+  - Pepper `ShockGateLight`
+  - aggressive buys only get a small innovation / drift-shock gate
+- `TradervR1_42_P3_1.py`
+  - Pepper `RareOverlaySell`
+  - overlay sells only in extreme rich states
+- `TradervR1_42_O1_1.py`
+  - Osmium `DepthAwareImbalance`
+  - fair simplified to anchor + depth-scaled imbalance + microprice
+- `TradervR1_42_O2_1.py`
+  - Osmium `PassiveFillPenaltyLight`
+  - light side-specific markout veto on passive quoting
+- `TradervR1_42_O3_2.py`
+  - Osmium `ToxicOneSidedMedium`
+  - toxic side disabled instead of merely widened
+- `TradervR1_42_O4_1.py`
+  - Osmium `LinearClearer`
+  - explicit near-zero-edge inventory clearing when stretched
+- `TradervR1_42_O5_1.py`
+  - Osmium `Level1Sniper`
+  - best-level-only active taking, no broader aggression
+
+Three-day totals:
+- `TradervR1_42_Base.py`: `288'042.5`
+- `TradervR1_42_P3_1.py`: `288'042.5`
+- `TradervR1_42_O4_1.py`: `288'042.5`
+- `TradervR1_42_P1_1.py`: `288'037.5`
+- `TradervR1_42_O2_1.py`: `288'015.5`
+- `TradervR1_42_O1_1.py`: `286'724.5`
+- `TradervR1_42_O5_1.py`: `285'965.0`
+- `TradervR1_42_O3_2.py`: `284'205.5`
+
+Read:
+- `P3_1` and `O4_1` were completely inert
+  - rare Pepper overlay selling did not change realized behavior at all
+  - explicit Osmium linear clearing also did not change realized behavior at all
+- `P1_1` was almost inert but slightly worse
+  - only `-5.0` total over the full three-day sweep
+  - this means Pepper shock-gating is still a live research lever, but the light version did not improve the trunk
+- `O2_1` was the best surviving Osmium-side change
+  - only `-27.0` over the full three-day sweep
+  - this is the closest thing to a usable donor from Stage 1
+- `O1_1`, `O5_1`, and especially `O3_2` were clearly harmful
+  - simplifying Osmium fair to anchor + imbalance + micro lost too much
+  - a stricter best-level sniper under-monetized Osmium
+  - toxic one-sided shutdown gave up the most normal spread capture
+
+Behavior notes:
+- Pepper final position stayed `+80` in every Stage 1 run
+- the winners/losers were therefore almost entirely about execution quality, not changing the broad inventory thesis
+- Osmium trade count fell meaningfully in the weaker defensive variants, but that lower churn did not translate into better PnL
+
+Artifacts:
+- full sweep summary CSV:
+  - `Analysis/output/r1_42_stage1/stage1_summary.csv`
+
+Practical takeaway:
+- the current trunk really is hard to beat with single isolated changes
+- the only Stage 1 ideas that survived contact were:
+  - Pepper entry shock gating (`P1_1`)
+  - Osmium passive fill-quality veto (`O2_1`)
+- if we continue to Stage 2, the highest-value path is:
+  - deepen `P1` a bit on Pepper
+  - deepen `O2` on Osmium
+  - do **not** spend more cycles on `O1`, `O3`, or `O5` in their current form

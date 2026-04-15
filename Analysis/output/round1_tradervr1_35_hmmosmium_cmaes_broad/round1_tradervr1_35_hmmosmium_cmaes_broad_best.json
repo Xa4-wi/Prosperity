@@ -1,0 +1,104 @@
+{
+  "config_name": "TradervR1_35_HMMOsmium Round 1 Broad HMM Osmium CMA-ES",
+  "config_path": "/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_35_hmmosmium_cmaes_broad.json",
+  "source_bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_35_HMMOsmium.py",
+  "best_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_35_hmmosmium_cmaes_broad/bots/TradervR1_35_HMMOsmium_best.py",
+  "parameters": {
+    "ASH_ANCHOR_WEIGHT": 0.42,
+    "ASH_WALL_MID_BLEND": 0.32,
+    "ASH_LOCAL_MICRO_WEIGHT": 0.42,
+    "ASH_LOCAL_IMBALANCE_BIAS": 0.16,
+    "ASH_DEPTH_IMPACT_SCALE": 58.0,
+    "ASH_INVENTORY_SKEW": 0.104,
+    "ASH_INVENTORY_CURVE": 2.2,
+    "ASH_BASE_EDGE": 2.0,
+    "ASH_JOIN_EDGE": 2.0,
+    "ASH_FRONT_SIZE": 18.0,
+    "ASH_TAKE_L1_EDGE": 2.0,
+    "ASH_TAKE_L2_EDGE": 5.0,
+    "ASH_ADVERSE_IMBALANCE": 0.2,
+    "ASH_STRONG_IMBALANCE": 0.16,
+    "ASH_CALM_SIGMA": 1.0,
+    "ASH_NORMAL_SIGMA": 2.2,
+    "ASH_TOXIC_SIGMA": 4.0,
+    "ASH_MARKOUT_ALPHA": 0.16,
+    "ASH_QUOTE_PENALTY_SCALE": 0.75,
+    "ASH_STATE_TOXIC_WIDEN": 0.9,
+    "ASH_STATE_CALM_TIGHTEN": 0.2,
+    "ASH_STRONG_ONE_SIDED_PROB": 0.62,
+    "ASH_DISLOCATION_EDGE_BONUS": 0.85,
+    "IPR_NEG_SHOCK_Z": -0.55,
+    "IPR_POS_SHOCK_Z": 0.8500000000000001
+  },
+  "baseline_scores": {
+    "-2": 94834.5,
+    "-1": 94878.0,
+    "0": 94718.0
+  },
+  "best_scores": {
+    "-2": 94834.5,
+    "-1": 94878.0,
+    "0": 94718.0
+  },
+  "average": 94810.16666666667,
+  "objective": 94810.16666666667,
+  "regression_penalty": 0.0,
+  "imbalance_penalty": 0.0,
+  "drift_penalty": 8.765121169122353e-32,
+  "search": {
+    "max_iter": 5,
+    "population": 10,
+    "parents": 4,
+    "sigma0": 0.1,
+    "seed": 4351,
+    "timeout_seconds": 360.0
+  },
+  "penalties": {
+    "regression": 6.0,
+    "imbalance": 1.0,
+    "drift": 100.0
+  },
+  "total_evaluations": 51,
+  "history": [
+    {
+      "generation": 1,
+      "sigma": 0.0944859383978871,
+      "generation_best_objective": -141086.35163698273,
+      "generation_best_average": 82589.83333333333,
+      "global_best_objective": 94810.16666666667,
+      "global_best_average": 94810.16666666667
+    },
+    {
+      "generation": 2,
+      "sigma": 0.09058632172164667,
+      "generation_best_objective": 19267.385071734978,
+      "generation_best_average": 90953.33333333333,
+      "global_best_objective": 94810.16666666667,
+      "global_best_average": 94810.16666666667
+    },
+    {
+      "generation": 3,
+      "sigma": 0.08701789109798555,
+      "generation_best_objective": 29045.560738987155,
+      "generation_best_average": 91471.33333333333,
+      "global_best_objective": 94810.16666666667,
+      "global_best_average": 94810.16666666667
+    },
+    {
+      "generation": 4,
+      "sigma": 0.08411950822809434,
+      "generation_best_objective": -206704.65117664624,
+      "generation_best_average": 78988.0,
+      "global_best_objective": 94810.16666666667,
+      "global_best_average": 94810.16666666667
+    },
+    {
+      "generation": 5,
+      "sigma": 0.08117078745093027,
+      "generation_best_objective": -206704.64610428357,
+      "generation_best_average": 78988.0,
+      "global_best_objective": 94810.16666666667,
+      "global_best_average": 94810.16666666667
+    }
+  ]
+}
