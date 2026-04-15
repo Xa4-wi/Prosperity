@@ -1,0 +1,18 @@
+{
+  "round": 8,
+  "generated_at": "2026-04-16T00:27:16+02:00",
+  "family_weights": {
+    "ash_attack_tuning": 0.14618552323540343,
+    "ash_quality_guard": 0.31613432569327915,
+    "ash_local_fair_blend": 0.14618552323540343,
+    "pepper_entry_quality": 0.25408517215215104,
+    "pepper_carry_defense": 0.13740945568376298
+  },
+  "family_notes": [
+    "ash_attack_tuning: mean_score=1672.49 old=0.137 new=0.213",
+    "ash_quality_guard: mean_score=1167.66 old=0.301 new=0.46",
+    "ash_local_fair_blend: mean_score=2424.65 old=0.137 new=0.213",
+    "pepper_entry_quality: mean_score=780.97 old=0.273 new=0.37",
+    "pepper_carry_defense: mean_score=0.0 old=0.152 new=0.2"
+  ]
+}

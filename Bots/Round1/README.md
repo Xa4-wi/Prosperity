@@ -2133,6 +2133,69 @@ Read:
 - `v47.1` is completely identical to `v47` locally
 - that means this first “improve the bad trades” layer is inert on top of the current aggression peak
 - the likely reason is that:
+
+### `TradervR1_47_2.py`
+
+Idea:
+- keep `TradervR1_47.py` as the attack profile
+- add a confidence-gated Osmium mode switch:
+  - `attack` when the local book looks calm and trustworthy
+  - `normal` when the book is usable but not especially clean
+  - `defense` when confidence drops or the book looks noisy / toxic
+- leave `INTARIAN_PEPPER_ROOT` completely unchanged
+
+What changed:
+- `ASH_COATED_OSMIUM`
+  - compute a simple confidence score from:
+    - spread width
+    - top-of-book depth
+    - imbalance magnitude
+    - microprice vs mid stability
+    - distance from the long-run anchor
+    - distance between local fair and raw mid
+  - blend take thresholds, quote widths, and passive size between:
+    - `v47` attack settings
+    - mid-aggression settings near `v46`
+    - defensive fallback settings
+
+Verified local Rust replay:
+- day `-2`: `96'345.5`
+  - `ASH_COATED_OSMIUM`: `16'701.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `821`
+- day `-1`: `96'754.0`
+  - `ASH_COATED_OSMIUM`: `17'386.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `800`
+- day `0`: `96'264.0`
+  - `ASH_COATED_OSMIUM`: `16'867.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `786`
+
+Comparison:
+- vs `TradervR1_34_1.py`
+  - day `-2`: `+216.0`
+  - day `-1`: `+537.0`
+  - day `0`: `+568.0`
+  - three-day delta: `+1'321.0`
+- vs `TradervR1_47.py`
+  - day `-2`: `-312.0`
+  - day `-1`: `+15.0`
+  - day `0`: `-184.0`
+  - three-day delta: `-481.0`
+
+Read:
+- the confidence-gated aggression idea is structurally sane
+- it stays comfortably above the old trunk
+- but it gives back too much of the `v47` edge
+- the fallback logic improves selectivity a bit, but it also trims too many good Osmium opportunities on days `-2` and `0`
+
+Takeaway:
+- this is not the new peak
+- `TradervR1_47.py` remains the best local aggressive candidate
+- the promising part of `v47.2` is the direction:
+  - state-selective aggression can work
+  - but this first confidence switch is too defensive overall
   - the markout thresholds are too rarely triggered under this branch
   - and/or the current aggressive Osmium logic is already pinned at the effective quote/take boundary
 

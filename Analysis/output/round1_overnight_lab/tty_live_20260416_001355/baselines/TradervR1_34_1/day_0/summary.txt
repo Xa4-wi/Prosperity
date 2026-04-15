@@ -1,0 +1,4 @@
+Deterministic engine: rust
+Metrics: /Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/tty_live_20260416_001355/baselines/TradervR1_34_1/day_0/metrics.json
+Submission log: /Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/tty_live_20260416_001355/baselines/TradervR1_34_1/day_0/submission.log
+Final total PnL: 95696.0
