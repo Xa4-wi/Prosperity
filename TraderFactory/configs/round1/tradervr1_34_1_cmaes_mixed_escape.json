@@ -1,0 +1,149 @@
+{
+  "name": "TradervR1_34_1 Round 1 Mixed Escape CMA-ES",
+  "source_bot": "../../../Bots/Round1/TradervR1_34_1.py",
+  "baselines": {
+    "-2": 96129.5,
+    "-1": 96217.0,
+    "0": 95696.0
+  },
+  "search": {
+    "max_iter": 5,
+    "population": 10,
+    "parents": 4,
+    "sigma0": 0.10,
+    "seed": 4343,
+    "timeout_seconds": 360
+  },
+  "penalties": {
+    "regression": 6.0,
+    "imbalance": 1.0,
+    "drift": 100.0
+  },
+  "output_prefix": "round1_tradervr1_34_1_cmaes_mixed_escape",
+  "output_dir": "../../../Analysis/output/round1_tradervr1_34_1_cmaes_mixed_escape",
+  "data_root": "../../../Data/ROUND_1",
+  "dataset_tag": "round_1",
+  "engine": "rust",
+  "parameters": [
+    {
+      "name": "ASH_ANCHOR_WEIGHT",
+      "lower": 0.24,
+      "upper": 0.58,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "ANCHOR_WEIGHT"
+      }
+    },
+    {
+      "name": "ASH_WALL_MID_BLEND",
+      "lower": 0.10,
+      "upper": 0.54,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "WALL_MID_BLEND"
+      }
+    },
+    {
+      "name": "ASH_LOCAL_MICRO_WEIGHT",
+      "lower": 0.12,
+      "upper": 0.70,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "LOCAL_MICRO_WEIGHT"
+      }
+    },
+    {
+      "name": "ASH_LOCAL_IMBALANCE_BIAS",
+      "lower": 0.00,
+      "upper": 0.28,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "LOCAL_IMBALANCE_BIAS"
+      }
+    },
+    {
+      "name": "ASH_BASE_EDGE",
+      "lower": 1.70,
+      "upper": 2.30,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "BASE_EDGE"
+      }
+    },
+    {
+      "name": "ASH_FRONT_SIZE",
+      "lower": 14.0,
+      "upper": 20.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "FRONT_SIZE"
+      }
+    },
+    {
+      "name": "IPR_LOOKAHEAD_BONUS",
+      "lower": 3.0,
+      "upper": 6.8,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "LOOKAHEAD_BONUS"
+      }
+    },
+    {
+      "name": "IPR_BASE_CARRY",
+      "lower": 5.0,
+      "upper": 12.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "BASE_CARRY"
+      }
+    },
+    {
+      "name": "IPR_EARLY_LONG_BIAS",
+      "lower": 32.0,
+      "upper": 54.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "EARLY_LONG_BIAS"
+      }
+    },
+    {
+      "name": "IPR_BASE_TAKE_EDGE",
+      "lower": 2.0,
+      "upper": 3.5,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "BASE_TAKE_EDGE"
+      }
+    },
+    {
+      "name": "IPR_CHEAP_ACCUM_QUOTE_EDGE_BONUS",
+      "lower": 0.10,
+      "upper": 0.90,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CHEAP_ACCUM_QUOTE_EDGE_BONUS"
+      }
+    },
+    {
+      "name": "IPR_CHEAP_ACCUM_TARGET_BUFFER",
+      "lower": 10.0,
+      "upper": 28.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CHEAP_ACCUM_TARGET_BUFFER"
+      }
+    }
+  ]
+}

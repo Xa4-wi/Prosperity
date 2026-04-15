@@ -1135,3 +1135,426 @@ Practical takeaway:
 - this is a good research base for later Osmium tuning
 - but it is not a production upgrade over `TradervR1_25_2.py`
 - the main missing piece is not architecture anymore, it is restoring more of the trunk's day-to-day capture without reintroducing bad churn
+
+### `TradervR1_34.py` and `TradervR1_34_1.py`
+
+Idea:
+- continue directly from the `TradervR1_33.py` lesson
+- test two follow-ups:
+  - `TradervR1_34.py`: keep the full local-fair / fill-quality / nonlinear-inventory Osmium structure, but loosen it so it captures more normal spread
+  - `TradervR1_34_1.py`: lighter hybrid that keeps the stronger trunk-style Osmium execution and only upgrades the fair / reservation layer with stable-book local fair logic
+- keep `INTARIAN_PEPPER_ROOT` unchanged
+
+Verified local Rust replay:
+- `TradervR1_34.py`
+  - day `-2`: `92'499.0`
+    - `ASH_COATED_OSMIUM`: `12'855.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+    - trades: `562`
+  - day `-1`: `93'533.0`
+    - `ASH_COATED_OSMIUM`: `14'165.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+    - trades: `572`
+  - day `0`: `93'451.0`
+    - `ASH_COATED_OSMIUM`: `14'054.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+    - trades: `581`
+- `TradervR1_34_1.py`
+  - day `-2`: `96'129.5`
+    - `ASH_COATED_OSMIUM`: `16'485.5`
+    - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+    - trades: `730`
+  - day `-1`: `96'217.0`
+    - `ASH_COATED_OSMIUM`: `16'849.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+    - trades: `708`
+  - day `0`: `95'696.0`
+    - `ASH_COATED_OSMIUM`: `16'299.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+    - trades: `690`
+
+Reference:
+- `TradervR1_25_2.py`: `95'984.0 / 96'517.0 / 95'444.0`
+  - sum: `287'945.0`
+- `TradervR1_34_1.py`: `96'129.5 / 96'217.0 / 95'696.0`
+  - sum: `288'042.5`
+
+Read:
+- `TradervR1_34.py` confirms the main `v33` lesson: the fully structured Osmium base improves over `v33`, but still leaves too much normal capture on the table
+- `TradervR1_34_1.py` is the important result:
+  - the local-fair upgrade *does* help
+  - but it helps most when the trunk-style execution still stays in charge
+  - this is the first clean local-fair Osmium follow-up that edges out the current trunk on total three-day sum
+
+Practical takeaway:
+- the better path is not “more Osmium architecture”
+- it is “strong trunk execution + better local fair + only light nonlinear reservation shaping”
+- `TradervR1_34_1.py` becomes the new best candidate from this branch
+
+### `TradervR1_35.py`
+
+Idea:
+- continue from `TradervR1_34_1.py`
+- keep the strong trunk-style Osmium execution
+- do **not** trust the local fair equally in every book state
+- blend between:
+  - the new stable-book / wall-mid local fair
+  - the old trunk fair
+- use a simple confidence score based on:
+  - top-book depth
+  - spread width
+  - how far stable-book mid drifts away from the 10000 anchor
+- when local structure looks healthy, lean harder on local fair
+- when local structure looks noisy, fall back toward the older anchored/trunk fair
+
+Additional research:
+- ran a focused TraderFactory search on `TradervR1_34_1.py`
+  - config: `TraderFactory/configs/round1/tradervr1_34_1_cmaes.json`
+  - result: completely flat; the optimizer returned the default bot unchanged
+  - useful conclusion: the old `v34.1` parameters were already locally well-tuned, so the next gain had to come from structure, not another constant sweep
+
+Verified local Rust replay:
+- day `-2`: `96'244.5`
+  - `ASH_COATED_OSMIUM`: `16'600.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `631`
+- day `-1`: `96'584.0`
+  - `ASH_COATED_OSMIUM`: `17'216.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `615`
+- day `0`: `95'709.0`
+  - `ASH_COATED_OSMIUM`: `16'312.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `609`
+
+Reference:
+- `TradervR1_34_1.py`: `96'129.5 / 96'217.0 / 95'696.0`
+  - sum: `288'042.5`
+- `TradervR1_35.py`: `96'244.5 / 96'584.0 / 95'709.0`
+  - sum: `288'537.5`
+
+Read:
+- this is a clean improvement over `TradervR1_34_1.py`
+- the gain is entirely Osmium; Pepper stayed fixed
+- day `-1` shows the biggest benefit, but the bot is up on all three days
+- trade count came down versus `v34.1`, which is a healthy sign: the improvement did not come from more churn, but from better fair selection
+
+Practical takeaway:
+- the local-fair idea is real
+- the key is not to use it everywhere, but to trust it selectively
+- `TradervR1_35.py` is the new best candidate from this branch
+
+### `TradervR1_36.py`
+
+Idea:
+- continue from `TradervR1_35.py`
+- add a passive-fill adverse-selection memory layer for `ASH_COATED_OSMIUM`
+- track recent side-specific low-quality fills in traderData:
+  - buy fills followed by downward markout
+  - sell fills followed by upward markout
+- use that memory to:
+  - widen that side
+  - reduce size on that side
+  - temporarily suppress that side when recent bad-fill score gets high
+- keep `INTARIAN_PEPPER_ROOT` unchanged
+
+Verified local Rust replay:
+- day `-2`: `96'244.5`
+  - `ASH_COATED_OSMIUM`: `16'600.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `631`
+- day `-1`: `96'584.0`
+  - `ASH_COATED_OSMIUM`: `17'216.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `615`
+- day `0`: `95'709.0`
+  - `ASH_COATED_OSMIUM`: `16'312.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `609`
+
+Reference:
+- `TradervR1_35.py`: `96'244.5 / 96'584.0 / 95'709.0`
+- `TradervR1_36.py`: `96'244.5 / 96'584.0 / 95'709.0`
+
+Read:
+- completely inert on local replay
+- same product split
+- same trade count
+- same totals on all three days
+
+Practical takeaway:
+- the passive-fill quality idea is structurally reasonable
+- but in this first local implementation it did not activate in a way that changed realized behavior
+- so the current local bottleneck is probably not simple recent-fill braking on top of `v35`
+
+### `TradervR1_37.py` and `TradervR1_38.py`
+
+Idea:
+- push the next structural round directly on the two remaining hypotheses:
+  - Pepper should improve mainly through better **entry quality**, not more state complexity
+  - Osmium should improve through **markout-aware passive quoting** and **adaptive front size**, not another fair rewrite
+- `TradervR1_37.py`
+  - keep `TradervR1_35.py` as trunk
+  - replace broad cheap-accum activation with a drift-adjusted shock gate
+  - add a lighter realized-fill markout memory to Osmium
+  - adapt front/back passive size by local-fair confidence, imbalance, toxicity, and inventory stretch
+- `TradervR1_38.py`
+  - same structure as `v37`
+  - but make the shock gate and fill-quality filter materially stronger so the logic actually bites
+
+Verified local Rust replay:
+- `TradervR1_37.py`
+  - day `-2`: `96'249.5`
+    - `ASH_COATED_OSMIUM`: `16'605.5`
+    - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+    - trades: `631`
+  - day `-1`: `96'584.0`
+    - `ASH_COATED_OSMIUM`: `17'216.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+    - trades: `615`
+  - day `0`: `95'709.0`
+    - `ASH_COATED_OSMIUM`: `16'312.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+    - trades: `609`
+- `TradervR1_38.py`
+  - day `-2`: `96'249.5`
+    - `ASH_COATED_OSMIUM`: `16'605.5`
+    - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+    - trades: `631`
+  - day `-1`: `96'584.0`
+    - `ASH_COATED_OSMIUM`: `17'216.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+    - trades: `615`
+  - day `0`: `95'700.0`
+    - `ASH_COATED_OSMIUM`: `16'312.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'388.0`
+    - trades: `609`
+
+Reference:
+- `TradervR1_35.py`: `96'244.5 / 96'584.0 / 95'709.0`
+  - sum: `288'537.5`
+- `TradervR1_37.py`: `96'249.5 / 96'584.0 / 95'709.0`
+  - sum: `288'542.5`
+- `TradervR1_38.py`: `96'249.5 / 96'584.0 / 95'700.0`
+  - sum: `288'533.5`
+
+Read:
+- `v37` moved the bot only marginally
+  - small `+5` on day `-2`
+  - no change on day `-1`
+  - no change on day `0`
+- `v38` made the same structure stronger, but that only gave back `-9` on day `0`
+- in practice:
+  - the new Pepper shock gate barely changes realized behavior on top of this trunk
+  - the new Osmium fill-quality / adaptive-size layer is structurally reasonable, but still not a meaningful driver locally
+
+Practical takeaway:
+- these improvements are not “wrong,” but on the current `v35` trunk they are mostly inert
+- the strongest current bot from this line is still `TradervR1_37.py` by a hair, but the gain is too small to treat as a robust new step
+- the real value of this round is the negative information:
+  - better Pepper entry timing is not unlocking a big gain here
+  - simple realized-fill braking on Osmium is also not the missing edge
+
+## Official Read: `v37`
+
+Saved official-style logs:
+- `TradervR1_34_1.log`
+- `TradervR1_35.log`
+- `TradervR1_37.log`
+
+Official totals:
+- `TradervR1_34_1`: `10'086.96875`
+  - `ASH_COATED_OSMIUM`: `2'500.96875`
+  - `INTARIAN_PEPPER_ROOT`: `7'586.0`
+- `TradervR1_35`: `10'049.84375`
+  - `ASH_COATED_OSMIUM`: `2'463.84375`
+  - `INTARIAN_PEPPER_ROOT`: `7'586.0`
+- `TradervR1_37`: `10'011.84375`
+  - `ASH_COATED_OSMIUM`: `2'463.84375`
+  - `INTARIAN_PEPPER_ROOT`: `7'548.0`
+
+Trade-quality read:
+- `TradervR1_35` and `TradervR1_37` had identical `ASH_COATED_OSMIUM` outcomes
+- the whole `v37` giveback came from `INTARIAN_PEPPER_ROOT`
+- Pepper trade profile:
+  - `v35`: buy qty `80`, avg buy `12005.075`
+  - `v37`: buy qty `80`, avg buy `12005.55`
+
+Read:
+- `v37` did not unlock a new edge
+- it effectively kept the `v35` Osmium behavior and only paid a worse average Pepper entry price
+- practical conclusion: `v37` should be dropped as a candidate and `v34.1` remains the stronger official-transfer branch
+
+## Broad CMA-ES Sweep Around `TradervR1_34_1`
+
+Goal:
+- test whether `TradervR1_34_1.py` is sitting in a real local optimum
+- use broader search bands than the earlier focused run
+- check both one-product and cross-product escape routes
+
+Searches run:
+- `tradervr1_34_1_cmaes_broad_osmium.json`
+- `tradervr1_34_1_cmaes_broad_pepper.json`
+- `tradervr1_34_1_cmaes_mixed_escape.json`
+
+Configs:
+- all used the Round 1 Rust engine on days `-2 / -1 / 0`
+- broad single-product bands:
+  - `max_iter = 4`
+  - `population = 8`
+  - `parents = 3`
+  - `sigma0 = 0.09`
+- mixed escape band:
+  - `max_iter = 5`
+  - `population = 10`
+  - `parents = 4`
+  - `sigma0 = 0.10`
+
+Results:
+- all three searches returned the exact source bot as the best solution
+- best scores in every case stayed:
+  - day `-2`: `96'129.5`
+  - day `-1`: `96'217.0`
+  - day `0`: `95'696.0`
+  - average: `96'014.16666666667`
+
+Artifacts:
+- `Analysis/output/round1_tradervr1_34_1_cmaes_broad_osmium/`
+- `Analysis/output/round1_tradervr1_34_1_cmaes_broad_pepper/`
+- `Analysis/output/round1_tradervr1_34_1_cmaes_mixed_escape/`
+
+Read:
+- the broad Osmium band did not find a better fair/execution basin
+- the broad Pepper band did not find a better carry-entry basin
+- even the mixed escape search, which allowed coupled Pepper+Osmium changes, still snapped back to the source defaults
+
+Practical takeaway:
+- this is strong evidence that `TradervR1_34_1.py` is sitting in a genuinely robust local optimum under the current architecture
+- if we want a real next gain, it likely will not come from broader constant sweeps alone
+- the next improvement probably has to be structural, but only if it preserves the turnover/capacity profile that made `v34.1` transfer well
+
+## `TradervR1_39.py` and `TradervR1_39_1.py`
+
+Idea:
+- test the “paper-inspired structural change” in the most practical way possible:
+  - keep `TradervR1_34_1.py` as the trunk
+  - keep `INTARIAN_PEPPER_ROOT` almost unchanged
+  - add only a small innovation gate to Pepper aggressive buys
+  - add a lightweight calm / normal / toxic state filter to `ASH_COATED_OSMIUM`
+  - add side-specific fill-quality memory to Osmium so quoting can react to recent bad fills
+
+`TradervR1_39.py`:
+- first full structural version
+- Osmium state filter affects:
+  - take thresholds
+  - quote widths
+  - passive-size scaling
+  - one-sided shutdown
+  - gentle inventory clearing in neutral books
+
+`TradervR1_39_1.py`:
+- lighter salvage pass on top of `v39`
+- keeps the state filter, but:
+  - removes the state-driven edge tightening
+  - reduces fill-penalty impact
+  - makes size scaling much gentler
+  - removes the explicit inventory-clearing add-on
+
+Verified local Rust replay:
+- `TradervR1_39.py`
+  - day `-2`: `94'857.0`
+    - `ASH_COATED_OSMIUM`: `15'213.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - day `-1`: `95'562.0`
+    - `ASH_COATED_OSMIUM`: `16'199.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'363.0`
+  - day `0`: `94'896.0`
+    - `ASH_COATED_OSMIUM`: `15'499.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+- `TradervR1_39_1.py`
+  - day `-2`: `95'002.0`
+    - `ASH_COATED_OSMIUM`: `15'358.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - day `-1`: `95'608.0`
+    - `ASH_COATED_OSMIUM`: `16'245.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'363.0`
+  - day `0`: `94'976.0`
+    - `ASH_COATED_OSMIUM`: `15'579.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+
+Reference:
+- `TradervR1_34_1.py`: `96'129.5 / 96'217.0 / 95'696.0`
+
+Read:
+- both branches preserve the broad Pepper behavior
+- the loss is overwhelmingly Osmium
+- `v39.1` is clearly better than `v39`, which means the first version simply over-defended and gave up too much normal spread capture
+- but even the lighter stateful branch still stays well below the `v34.1` trunk
+
+Practical takeaway:
+- the HMM-style calm / normal / toxic idea is intellectually coherent
+- but as a live execution overlay on current Osmium it is still too costly in turnover
+- if we revisit this direction, it should be even lighter:
+  - state only as a veto / one-sided permission system
+  - not as a broad quote-width and capacity controller
+
+## `TradervR1_39_2.py`, `TradervR1_39_3.py`, and `TradervR1_39_4.py`
+
+Idea:
+- test truly selective hybrids instead of the heavier `v39` overlay
+- all three keep `TradervR1_34_1.py` as the behavioral trunk and only import tiny Osmium-side donor logic
+
+Variants:
+- `TradervR1_39_2.py`
+  - HMM-style state filter used only as a passive quoting veto / one-sided permission layer
+  - side-specific markout veto
+  - no state-driven quote-width or size shaping
+- `TradervR1_39_3.py`
+  - same as `v39.2`
+  - plus very mild toxic-state take restraint
+- `TradervR1_39_4.py`
+  - no HMM state filter at all
+  - fill-quality / markout veto only
+  - this is the cleanest hybrid donor test
+
+Verified local Rust replay:
+- `TradervR1_39_2.py`
+  - day `-2`: `95'289.5`
+    - `ASH_COATED_OSMIUM`: `15'645.5`
+    - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - day `-1`: `95'952.0`
+    - `ASH_COATED_OSMIUM`: `16'589.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'363.0`
+  - day `0`: `95'363.0`
+    - `ASH_COATED_OSMIUM`: `15'966.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+- `TradervR1_39_3.py`
+  - identical to `TradervR1_39_2.py` on all three days
+- `TradervR1_39_4.py`
+  - day `-2`: `95'976.5`
+    - `ASH_COATED_OSMIUM`: `16'332.5`
+    - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - day `-1`: `96'166.0`
+    - `ASH_COATED_OSMIUM`: `16'803.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'363.0`
+  - day `0`: `95'696.0`
+    - `ASH_COATED_OSMIUM`: `16'299.0`
+    - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+
+Reference:
+- `TradervR1_34_1.py`: `96'129.5 / 96'217.0 / 95'696.0`
+
+Read:
+- `v39.2` and `v39.3` still give up too much Osmium edge
+- the extra toxic take restraint in `v39.3` is completely inert
+- `v39.4` is by far the best hybrid:
+  - only `-153.0` on day `-2`
+  - only `-51.0` on day `-1`
+  - exactly equal on day `0`
+- that means the useful donor from the `v39` family is not the state filter
+- the only piece that survives is the very light fill-quality / markout veto
+
+Practical takeaway:
+- state-based regime filtering still appears too expensive for Osmium
+- markout-aware veto is the only hybrid element that comes close to surviving
+- if we continue this path, `TradervR1_39_4.py` is the right donor branch, not the HMM-style state versions

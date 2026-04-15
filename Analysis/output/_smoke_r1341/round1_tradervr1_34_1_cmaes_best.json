@@ -1,0 +1,59 @@
+{
+  "config_name": "TradervR1_34_1 Round 1 Focused Osmium Local-Fair CMA-ES",
+  "config_path": "/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_34_1_cmaes.json",
+  "source_bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_34_1.py",
+  "best_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/_smoke_r1341/bots/TradervR1_34_1_best.py",
+  "parameters": {
+    "ASH_ANCHOR_WEIGHT": 0.42,
+    "ASH_WALL_MID_BLEND": 0.32,
+    "ASH_LOCAL_MICRO_WEIGHT": 0.42,
+    "ASH_LOCAL_IMBALANCE_BIAS": 0.16,
+    "ASH_DEPTH_IMPACT_SCALE": 58.0,
+    "ASH_INVENTORY_SKEW": 0.104,
+    "ASH_INVENTORY_CURVE": 2.2,
+    "ASH_BASE_EDGE": 2.0,
+    "ASH_JOIN_EDGE": 2.0,
+    "ASH_FRONT_SIZE": 17.52842512,
+    "ASH_ADVERSE_IMBALANCE": 0.2,
+    "ASH_STRONG_IMBALANCE": 0.16
+  },
+  "baseline_scores": {
+    "-2": 95526.5,
+    "-1": 95486.0,
+    "0": 96293.0
+  },
+  "best_scores": {
+    "-2": 95526.5,
+    "-1": 95486.0,
+    "0": 96293.0
+  },
+  "average": 95768.5,
+  "objective": 86436.5,
+  "regression_penalty": 8004.0,
+  "imbalance_penalty": 1328.0,
+  "drift_penalty": 0.0,
+  "search": {
+    "max_iter": 1,
+    "population": 2,
+    "parents": 1,
+    "sigma0": 0.05,
+    "seed": 341,
+    "timeout_seconds": 240.0
+  },
+  "penalties": {
+    "regression": 6.0,
+    "imbalance": 1.0,
+    "drift": 100.0
+  },
+  "total_evaluations": 3,
+  "history": [
+    {
+      "generation": 1,
+      "sigma": 0.048099867173361815,
+      "generation_best_objective": 80538.58306632409,
+      "generation_best_average": 95388.0,
+      "global_best_objective": 86436.5,
+      "global_best_average": 95768.5
+    }
+  ]
+}

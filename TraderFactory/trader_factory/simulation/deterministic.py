@@ -213,7 +213,28 @@ def _run_rust_deterministic(
 ) -> DeterministicRunResult:
     rust_root = prosperity_rust_backtester_root()
     cargo_wrapper = prosperity_rust_backtester_cargo_wrapper()
-    if not cargo_wrapper.exists():
+    local_binary = rust_root / "target_local" / "debug" / "rust_backtester"
+    if local_binary.exists():
+        binary = str(local_binary)
+        command = [
+            binary,
+            "--trader",
+            str(bot),
+            "--dataset",
+            _resolve_rust_dataset_input(day=day, data_root=data_root, dataset_tag=dataset_tag),
+            f"--day={day}",
+            "--run-id",
+            out_dir.name,
+            "--output-root",
+            str(out_dir.parent),
+            "--artifact-mode",
+            "submission",
+            "--products",
+            "off",
+        ]
+        cwd = rust_root
+        env = None
+    elif not cargo_wrapper.exists():
         binary = shutil.which("rust_backtester")
         if binary is None:
             raise FileNotFoundError(

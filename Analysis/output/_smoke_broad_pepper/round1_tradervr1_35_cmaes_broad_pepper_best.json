@@ -1,0 +1,60 @@
+{
+  "config_name": "TradervR1_35 Round 1 Broad Pepper Basin CMA-ES",
+  "config_path": "/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_35_cmaes_broad_pepper.json",
+  "source_bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_35.py",
+  "best_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/_smoke_broad_pepper/bots/TradervR1_35_best.py",
+  "parameters": {
+    "IPR_RESIDUAL_ALPHA": 0.10760201453509102,
+    "IPR_LOOKAHEAD_BONUS": 5.037814409349775,
+    "IPR_BASE_CARRY": 6.835534219425929,
+    "IPR_EARLY_LONG_BIAS": 42.228043712243746,
+    "IPR_EDGE_TARGET_SCALE": 12.474154980034491,
+    "IPR_BASE_TAKE_EDGE": 2.799105365628167,
+    "IPR_BASE_QUOTE_EDGE": 5.33888197559606,
+    "IPR_EARLY_ACCUM_END": 0.44567808869945225,
+    "IPR_CHEAP_ACCUM_END": 0.5658780444315278,
+    "IPR_CHEAP_ACCUM_TAKE_PENALTY": 0.10933085292664164,
+    "IPR_CHEAP_ACCUM_QUOTE_EDGE_BONUS": 0.4898351598356208,
+    "IPR_CHEAP_ACCUM_Z_RELAX": -0.55875415271165,
+    "IPR_CHEAP_ACCUM_TARGET_BUFFER": 19.33802333339529
+  },
+  "baseline_scores": {
+    "-2": 95977.5,
+    "-1": 95887.0,
+    "0": 96602.0
+  },
+  "best_scores": {
+    "-2": 95977.5,
+    "-1": 95887.0,
+    "0": 96591.0
+  },
+  "average": 96151.83333333333,
+  "objective": 88788.5765231804,
+  "regression_penalty": 5784.0,
+  "imbalance_penalty": 1579.0,
+  "drift_penalty": 0.25681015292533244,
+  "search": {
+    "max_iter": 1,
+    "population": 2,
+    "parents": 1,
+    "sigma0": 0.05,
+    "seed": 436,
+    "timeout_seconds": 360.0
+  },
+  "penalties": {
+    "regression": 6.0,
+    "imbalance": 1.0,
+    "drift": 100.0
+  },
+  "total_evaluations": 3,
+  "history": [
+    {
+      "generation": 1,
+      "sigma": 0.04707004053803947,
+      "generation_best_objective": 88788.5765231804,
+      "generation_best_average": 96151.83333333333,
+      "global_best_objective": 88788.5765231804,
+      "global_best_average": 96151.83333333333
+    }
+  ]
+}

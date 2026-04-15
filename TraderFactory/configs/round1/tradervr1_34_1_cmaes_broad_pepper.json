@@ -1,0 +1,159 @@
+{
+  "name": "TradervR1_34_1 Round 1 Broad Pepper Basin CMA-ES",
+  "source_bot": "../../../Bots/Round1/TradervR1_34_1.py",
+  "baselines": {
+    "-2": 96129.5,
+    "-1": 96217.0,
+    "0": 95696.0
+  },
+  "search": {
+    "max_iter": 4,
+    "population": 8,
+    "parents": 3,
+    "sigma0": 0.09,
+    "seed": 4342,
+    "timeout_seconds": 360
+  },
+  "penalties": {
+    "regression": 6.0,
+    "imbalance": 1.0,
+    "drift": 100.0
+  },
+  "output_prefix": "round1_tradervr1_34_1_cmaes_broad_pepper",
+  "output_dir": "../../../Analysis/output/round1_tradervr1_34_1_cmaes_broad_pepper",
+  "data_root": "../../../Data/ROUND_1",
+  "dataset_tag": "round_1",
+  "engine": "rust",
+  "parameters": [
+    {
+      "name": "IPR_RESIDUAL_ALPHA",
+      "lower": 0.04,
+      "upper": 0.18,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "RESIDUAL_ALPHA"
+      }
+    },
+    {
+      "name": "IPR_LOOKAHEAD_BONUS",
+      "lower": 2.5,
+      "upper": 7.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "LOOKAHEAD_BONUS"
+      }
+    },
+    {
+      "name": "IPR_BASE_CARRY",
+      "lower": 4.0,
+      "upper": 14.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "BASE_CARRY"
+      }
+    },
+    {
+      "name": "IPR_EARLY_LONG_BIAS",
+      "lower": 28.0,
+      "upper": 58.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "EARLY_LONG_BIAS"
+      }
+    },
+    {
+      "name": "IPR_EDGE_TARGET_SCALE",
+      "lower": 7.0,
+      "upper": 18.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "EDGE_TARGET_SCALE"
+      }
+    },
+    {
+      "name": "IPR_BASE_TAKE_EDGE",
+      "lower": 1.8,
+      "upper": 3.8,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "BASE_TAKE_EDGE"
+      }
+    },
+    {
+      "name": "IPR_BASE_QUOTE_EDGE",
+      "lower": 4.2,
+      "upper": 6.6,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "BASE_QUOTE_EDGE"
+      }
+    },
+    {
+      "name": "IPR_EARLY_ACCUM_END",
+      "lower": 0.28,
+      "upper": 0.56,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "EARLY_ACCUM_END"
+      }
+    },
+    {
+      "name": "IPR_CHEAP_ACCUM_END",
+      "lower": 0.42,
+      "upper": 0.72,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CHEAP_ACCUM_END"
+      }
+    },
+    {
+      "name": "IPR_CHEAP_ACCUM_TAKE_PENALTY",
+      "lower": -0.05,
+      "upper": 0.30,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CHEAP_ACCUM_TAKE_PENALTY"
+      }
+    },
+    {
+      "name": "IPR_CHEAP_ACCUM_QUOTE_EDGE_BONUS",
+      "lower": 0.00,
+      "upper": 1.00,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CHEAP_ACCUM_QUOTE_EDGE_BONUS"
+      }
+    },
+    {
+      "name": "IPR_CHEAP_ACCUM_Z_RELAX",
+      "lower": -1.20,
+      "upper": -0.10,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CHEAP_ACCUM_Z_RELAX"
+      }
+    },
+    {
+      "name": "IPR_CHEAP_ACCUM_TARGET_BUFFER",
+      "lower": 8.0,
+      "upper": 28.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CHEAP_ACCUM_TARGET_BUFFER"
+      }
+    }
+  ]
+}

@@ -16,50 +16,40 @@ PRODUCT_LIMITS = {
 }
 
 # ── ASH_COATED_OSMIUM params ───────────────────────────────────────────────────
-# Archetype: local-fair market maker around the 10000 anchor.
+# Archetype: anchored_mm with tiered takes, join logic, two-level passive ladder
 DEFAULT_ASH_PARAMS = {
     "ENABLED": True,
     "REFERENCE_PRICE": 10000.0,
-    # Local fair estimation
-    "ANCHOR_WEIGHT": 0.32,
-    "STABLE_MID_WEIGHT": 0.68,
-    "MICRO_WEIGHT": 0.48,
-    "IMBALANCE_BIAS": 0.18,
-    "DEPTH_IMPACT_SCALE": 62.0,
+    "ANCHOR_WEIGHT": 0.42,
+    "STABLE_MID_WEIGHT": 0.58,
+    "WALL_MID_BLEND": 0.32,
+    "LOCAL_MICRO_WEIGHT": 0.42,
+    "LOCAL_IMBALANCE_BIAS": 0.16,
+    "DEPTH_IMPACT_SCALE": 58.0,
     "DEPTH_FLOOR": 8.0,
-    "LOCAL_FAIR_ALPHA": 0.34,
-    "BOOK_LEVELS": 3,
-    "WALL_MID_BLEND": 0.35,
-    # Reservation / inventory pressure
-    "INV_L1": 1.55,
-    "INV_L3": 3.25,
-    "SOFT_LIMIT": 66,
-    "HARD_LIMIT_BUFFER": 10,
-    # Passive quoting
-    "BASE_HALF_SPREAD": 4.05,
-    "VOL_MULT": 0.56,
-    "SPREAD_MULT": 0.10,
-    "JOIN_EDGE": 2.0,
-    "MIN_NET_EDGE": 0.12,
-    "FRONT_SIZE": 15,
+    "INVENTORY_SKEW": 0.104,
+    "INVENTORY_CURVE": 2.2,
+    "BASE_EDGE": 2.0,           # default passive quote edge
+    "JOIN_EDGE": 2.0,           # snap quote to existing order when within this
+    "FRONT_SIZE": 17.52842512,
     "BACK_SIZE": 5,
-    # Aggressive stale-book taking
-    "TAKE_EDGE": 1.35,
-    "DISLOCATION_EDGE": 3.55,
-    "DISLOCATION_LEVELS": 2,
-    "DISLOCATION_CLIP": 12,
-    # Toxicity / fill-quality
-    "TOXIC_IMBALANCE": 0.24,
+    "SOFT_LIMIT": 70.0,           # reduce aggressiveness above this inventory
+    # Tiered take: [(min_edge, qty_clip), ...]
+    "TAKE_L1_EDGE": 2.0,
+    "TAKE_L1_SIZE": 6,
+    "TAKE_L2_EDGE": 5.0,
+    "TAKE_L2_SIZE": 10,
+    "TAKE_L3_EDGE": 8.0,
+    "TAKE_L3_SIZE": 16,
+    # Toxic-book thresholds
+    "ADVERSE_IMBALANCE": 0.20,
     "STRONG_IMBALANCE": 0.16,
-    "THIN_DEPTH_FLOOR": 15.0,
-    "PENALTY_TOXIC": 0.72,
-    "PENALTY_ALPHA": 0.18,
-    "SPREAD_ALPHA": 0.10,
-    "VOL_ALPHA": 0.10,
-    # Inventory freeing
-    "CLEARING_EDGE": 0.18,
-    "CLEARING_CLIP": 6,
-    "CLEARING_NEUTRAL_IMB": 0.10,
+    # Lightweight state filter + fill-quality memory
+    "STATE_ALPHA": 0.18,
+    "MARKOUT_ALPHA": 0.28,
+    "BAD_MARKOUT": -0.75,
+    "TOXIC_STATE_THRESHOLD": 0.76,
+    "INVENTORY_CLEAR_EDGE": 0.9,
 }
 
 # ── INTARIAN_PEPPER_ROOT params ────────────────────────────────────────────────
@@ -101,6 +91,11 @@ DEFAULT_IPR_PARAMS = {
     "CHEAP_ACCUM_BACK_SIZE_BONUS": 1,
     "CHEAP_ACCUM_Z_RELAX": -0.55,
     "CHEAP_ACCUM_TARGET_BUFFER": 20,
+    # Small innovation gate on aggressive buys only
+    "BUY_INNOVATION_NEG": -0.60,
+    "BUY_INNOVATION_POS": 0.45,
+    "BUY_INNOVATION_BONUS": 0.12,
+    "BUY_INNOVATION_PENALTY": 0.22,
 }
 
 
@@ -114,6 +109,12 @@ def ema(prev: Optional[float], current: float, alpha: float) -> float:
     if prev is None:
         return current
     return (1.0 - alpha) * prev + alpha * current
+
+
+def gaussian_likelihood(x: float, mean: float, std: float) -> float:
+    std = max(1e-6, std)
+    z = (x - mean) / std
+    return math.exp(-0.5 * z * z) / std
 
 
 class Book:
@@ -185,57 +186,22 @@ class Manager:
 
 class AshCoatedOsmiumTrader:
     """
-    Local-fair Osmium engine.
-    The long-run anchor stays at 10000, but the live fair is estimated from
-    robust book structure, then used for reservation pricing, toxicity-aware
-    passive quoting, controlled dislocation taking, and gentle capacity freeing.
+    Trunk execution with a stronger local-fair layer.
+    This keeps the simple, high-capture Osmium engine, but replaces the pure
+    fixed-anchor fair with a stable-book / wall-mid style local fair and a
+    slightly nonlinear reservation price.
     """
 
     def __init__(self, params: dict) -> None:
         self.p = params
 
-    def _load_state(self, memory: dict) -> dict:
-        raw = memory.get("ASH_STATE", {})
-        if not isinstance(raw, dict):
-            raw = {}
-        return {
-            "prev_mid": float(raw.get("prev_mid", 0.0)),
-            "prev_pos": int(raw.get("prev_pos", 0)),
-            "spread_ema": float(raw.get("spread_ema", 14.0)),
-            "vol_ema": float(raw.get("vol_ema", 1.5)),
-            "buy_penalty_ema": float(raw.get("buy_penalty_ema", 0.35)),
-            "sell_penalty_ema": float(raw.get("sell_penalty_ema", 0.35)),
-            "fair_ema": float(raw.get("fair_ema", float(self.p["REFERENCE_PRICE"]))),
-        }
-
-    def _update_state_from_realized_fills(self, book: Book, position: int, st: dict) -> dict:
-        prev_mid = float(st["prev_mid"])
-        prev_pos = int(st["prev_pos"])
-        move = 0.0 if prev_mid <= 0.0 else (book.mid - prev_mid)
-        st["spread_ema"] = ema(float(st["spread_ema"]), book.spread_val, float(self.p["SPREAD_ALPHA"]))
-        st["vol_ema"] = ema(float(st["vol_ema"]), abs(move), float(self.p["VOL_ALPHA"]))
-
-        delta_pos = position - prev_pos
-        penalty_alpha = float(self.p["PENALTY_ALPHA"])
-        if delta_pos > 0:
-            st["buy_penalty_ema"] = ema(float(st["buy_penalty_ema"]), max(0.0, -move), penalty_alpha)
-        else:
-            st["buy_penalty_ema"] = ema(float(st["buy_penalty_ema"]), 0.0, 0.06)
-        if delta_pos < 0:
-            st["sell_penalty_ema"] = ema(float(st["sell_penalty_ema"]), max(0.0, move), penalty_alpha)
-        else:
-            st["sell_penalty_ema"] = ema(float(st["sell_penalty_ema"]), 0.0, 0.06)
-        return st
-
     def _stable_mid(self, book: Book) -> float:
-        levels = max(1, int(self.p["BOOK_LEVELS"]))
-        bid_levels = book.buy_levels[:levels]
-        ask_levels = book.sell_levels[:levels]
+        bid_levels = book.buy_levels[:3]
+        ask_levels = book.sell_levels[:3]
         bid_vol = sum(v for _, v in bid_levels)
         ask_vol = sum(v for _, v in ask_levels)
         if bid_vol <= 0 or ask_vol <= 0:
             return book.mid
-
         popular_bid = sum(px * vol for px, vol in bid_levels) / bid_vol
         popular_ask = sum(px * vol for px, vol in ask_levels) / ask_vol
         wall_bid = max(bid_levels, key=lambda x: (x[1], x[0]))[0]
@@ -247,132 +213,82 @@ class AshCoatedOsmiumTrader:
             + float(self.p["WALL_MID_BLEND"]) * wall_mid
         )
 
-    def _fair_value(self, book: Book, st: dict) -> tuple[float, float]:
+    def _fair_value(self, book: Book) -> float:
         stable_mid = self._stable_mid(book)
         depth = max(float(self.p["DEPTH_FLOOR"]), float(book.best_bid_vol + book.best_ask_vol))
         beta = float(self.p["DEPTH_IMPACT_SCALE"]) / depth
-        raw_local = (
+        return (
             float(self.p["ANCHOR_WEIGHT"]) * float(self.p["REFERENCE_PRICE"])
             + float(self.p["STABLE_MID_WEIGHT"]) * stable_mid
-            + float(self.p["MICRO_WEIGHT"]) * (book.micro - book.mid)
-            + (beta + float(self.p["IMBALANCE_BIAS"])) * book.imbalance
+            + float(self.p["LOCAL_MICRO_WEIGHT"]) * (book.micro - book.mid)
+            + (beta + float(self.p["LOCAL_IMBALANCE_BIAS"])) * book.imbalance
         )
-        local_fair = ema(float(st["fair_ema"]), raw_local, float(self.p["LOCAL_FAIR_ALPHA"]))
-        return local_fair, stable_mid
 
     def _reservation(self, fair: float, projected_pos: int) -> float:
         inv_ratio = projected_pos / float(PRODUCT_LIMITS["ASH_COATED_OSMIUM"])
-        inv_pressure = float(self.p["INV_L1"]) * inv_ratio + float(self.p["INV_L3"]) * (inv_ratio ** 3)
-        return fair - inv_pressure
+        inv_shift = float(self.p["INVENTORY_SKEW"]) * projected_pos
+        inv_shift += float(self.p["INVENTORY_CURVE"]) * (inv_ratio ** 3)
+        return fair - inv_shift
 
-    def _toxicity(self, book: Book, st: dict) -> tuple[bool, bool, float, float, bool, bool]:
-        tox = float(self.p["TOXIC_IMBALANCE"])
-        bid_support = float(sum(v for _, v in book.buy_levels[:2]))
-        ask_support = float(sum(v for _, v in book.sell_levels[:2]))
-        thin_floor = float(self.p["THIN_DEPTH_FLOOR"])
-        bid_thin = bid_support < thin_floor or bid_support < 0.55 * ask_support
-        ask_thin = ask_support < thin_floor or ask_support < 0.55 * bid_support
-
-        bid_toxic = book.imbalance < -tox and (book.micro < book.mid or bid_thin)
-        ask_toxic = book.imbalance > tox and (book.micro > book.mid or ask_thin)
-        bid_penalty = (
-            float(st["buy_penalty_ema"])
-            + float(self.p["PENALTY_TOXIC"]) * max(0.0, -book.imbalance)
-            + max(0.0, book.mid - book.micro)
-            + (0.14 if bid_thin else 0.0)
-            + 0.08 * float(st["vol_ema"])
-        )
-        ask_penalty = (
-            float(st["sell_penalty_ema"])
-            + float(self.p["PENALTY_TOXIC"]) * max(0.0, book.imbalance)
-            + max(0.0, book.micro - book.mid)
-            + (0.14 if ask_thin else 0.0)
-            + 0.08 * float(st["vol_ema"])
-        )
-        return bid_toxic, ask_toxic, bid_penalty, ask_penalty, bid_thin, ask_thin
-
-    def _quote_half_spreads(
+    def _infer_fill_quality(
         self,
         book: Book,
-        st: dict,
-        projected_pos: int,
+        position: int,
+        ash_state: dict,
+    ) -> Tuple[float, float]:
+        buy_markout = float(ash_state.get("buy_markout_ema", 0.0))
+        sell_markout = float(ash_state.get("sell_markout_ema", 0.0))
+        last_position = int(ash_state.get("last_position", position))
+        prev_mid = ash_state.get("prev_mid")
+        if prev_mid is not None:
+            delta = position - last_position
+            move = book.mid - float(prev_mid)
+            if delta > 0:
+                buy_markout = ema(buy_markout, move, float(self.p["MARKOUT_ALPHA"]))
+            elif delta < 0:
+                sell_markout = ema(sell_markout, -move, float(self.p["MARKOUT_ALPHA"]))
+        return buy_markout, sell_markout
+
+    def _state_probabilities(
+        self,
+        book: Book,
         fair: float,
-        bid_toxic: bool,
-        ask_toxic: bool,
-    ) -> tuple[float, float]:
-        inv_ratio = projected_pos / float(PRODUCT_LIMITS["ASH_COATED_OSMIUM"])
-        base_half = (
-            float(self.p["BASE_HALF_SPREAD"])
-            + float(self.p["VOL_MULT"]) * float(st["vol_ema"])
-            + float(self.p["SPREAD_MULT"]) * max(0.0, float(st["spread_ema"]) - 12.0)
+        ash_state: dict,
+        buy_markout: float,
+        sell_markout: float,
+    ) -> Tuple[Tuple[float, float, float], float]:
+        prev_fair = float(ash_state.get("prev_fair", fair))
+        prev_micro = float(ash_state.get("prev_micro", book.micro))
+        spread_ema = ema(float(ash_state.get("spread_ema", book.spread_val)), book.spread_val, float(self.p["STATE_ALPHA"]))
+
+        p_calm = float(ash_state.get("p_calm", 0.45))
+        p_normal = float(ash_state.get("p_normal", 0.40))
+        p_toxic = float(ash_state.get("p_toxic", 0.15))
+
+        innovation = book.mid - prev_fair
+        micro_move = book.micro - prev_micro
+        spread_shock = max(0.0, book.spread_val - spread_ema)
+        stress = (
+            abs(innovation)
+            + 0.6 * abs(micro_move)
+            + 0.35 * spread_shock
+            + 0.9 * max(0.0, -buy_markout)
+            + 0.9 * max(0.0, -sell_markout)
         )
-        buy_half = base_half
-        sell_half = base_half
 
-        if inv_ratio > 0.0:
-            buy_half += 1.45 * inv_ratio + 2.9 * (inv_ratio ** 3)
-            sell_half -= 0.55 * inv_ratio
-        elif inv_ratio < 0.0:
-            sell_half += 1.45 * (-inv_ratio) + 2.9 * ((-inv_ratio) ** 3)
-            buy_half -= 0.55 * (-inv_ratio)
+        pred_calm = 0.78 * p_calm + 0.18 * p_normal + 0.06 * p_toxic
+        pred_normal = 0.20 * p_calm + 0.68 * p_normal + 0.34 * p_toxic
+        pred_toxic = 0.02 * p_calm + 0.14 * p_normal + 0.60 * p_toxic
 
-        strong = float(self.p["STRONG_IMBALANCE"])
-        if book.imbalance > strong:
-            buy_half -= 0.40
-            sell_half += 0.22
-        elif book.imbalance < -strong:
-            buy_half += 0.22
-            sell_half -= 0.40
+        like_calm = gaussian_likelihood(stress, 0.6, 0.9)
+        like_normal = gaussian_likelihood(stress, 1.8, 1.4)
+        like_toxic = gaussian_likelihood(stress, 4.5, 2.1)
 
-        fair_stability = abs(fair - float(st["fair_ema"]))
-        if fair_stability < 0.55 and abs(inv_ratio) < 0.24 and not bid_toxic and not ask_toxic:
-            buy_half -= 0.25
-            sell_half -= 0.25
-
-        if bid_toxic:
-            buy_half += 0.80
-        if ask_toxic:
-            sell_half += 0.80
-
-        return max(4.0, buy_half), max(4.0, sell_half)
-
-    def _dislocation_take(
-        self,
-        mgr: Manager,
-        book: Book,
-        reservation: float,
-        bid_penalty: float,
-        ask_penalty: float,
-        bid_toxic: bool,
-        ask_toxic: bool,
-    ) -> None:
-        take_edge = float(self.p["TAKE_EDGE"])
-        disloc_edge = float(self.p["DISLOCATION_EDGE"])
-        max_levels = max(1, int(self.p["DISLOCATION_LEVELS"]))
-        clip = int(self.p["DISLOCATION_CLIP"])
-        soft = int(self.p["SOFT_LIMIT"])
-
-        if not bid_toxic:
-            for idx, (ask_px, ask_vol) in enumerate(book.sell_levels[:max_levels]):
-                edge = reservation - ask_px - 0.35 * bid_penalty
-                threshold = disloc_edge if idx > 0 else take_edge
-                if edge < threshold:
-                    break
-                qty = min(ask_vol, clip if idx > 0 else min(clip, 8))
-                if mgr.projected() >= soft:
-                    qty = max(0, qty - 3)
-                mgr.buy(ask_px, qty)
-
-        if not ask_toxic:
-            for idx, (bid_px, bid_vol) in enumerate(book.buy_levels[:max_levels]):
-                edge = bid_px - reservation - 0.35 * ask_penalty
-                threshold = disloc_edge if idx > 0 else take_edge
-                if edge < threshold:
-                    break
-                qty = min(bid_vol, clip if idx > 0 else min(clip, 8))
-                if mgr.projected() <= -soft:
-                    qty = max(0, qty - 3)
-                mgr.sell(bid_px, qty)
+        p_calm = pred_calm * like_calm
+        p_normal = pred_normal * like_normal
+        p_toxic = pred_toxic * like_toxic
+        total = max(1e-9, p_calm + p_normal + p_toxic)
+        return (p_calm / total, p_normal / total, p_toxic / total), spread_ema
 
     def build_orders(self, state: TradingState, memory: dict) -> Tuple[List[Order], dict]:
         if not self.p.get("ENABLED", True):
@@ -380,134 +296,136 @@ class AshCoatedOsmiumTrader:
         book = Book(state.order_depths.get("ASH_COATED_OSMIUM"))
         if not book.valid:
             return [], memory
-
+        ash_state = memory.get("ASH_STATE", {})
+        if not isinstance(ash_state, dict):
+            ash_state = {}
         position = int(state.position.get("ASH_COATED_OSMIUM", 0))
         mgr = Manager("ASH_COATED_OSMIUM", position, PRODUCT_LIMITS["ASH_COATED_OSMIUM"])
-        st = self._load_state(memory)
-        st = self._update_state_from_realized_fills(book, position, st)
 
-        fair, stable_mid = self._fair_value(book, st)
-        reservation = self._reservation(fair, mgr.projected())
-        bid_toxic, ask_toxic, bid_penalty, ask_penalty, bid_thin, ask_thin = self._toxicity(book, st)
-
-        self._dislocation_take(mgr, book, reservation, bid_penalty, ask_penalty, bid_toxic, ask_toxic)
+        fair = self._fair_value(book)
+        buy_markout, sell_markout = self._infer_fill_quality(book, position, ash_state)
+        (p_calm, p_normal, p_toxic), spread_ema = self._state_probabilities(
+            book, fair, ash_state, buy_markout, sell_markout
+        )
         reservation = self._reservation(fair, mgr.projected())
 
-        buy_half, sell_half = self._quote_half_spreads(book, st, mgr.projected(), fair, bid_toxic, ask_toxic)
-        front_buy = int(math.floor(reservation - buy_half))
-        front_sell = int(math.ceil(reservation + sell_half))
-        back_buy = front_buy - 2
-        back_sell = front_sell + 2
+        # Toxic book detection
+        adverse = float(self.p["ADVERSE_IMBALANCE"])
+        strong = float(self.p["STRONG_IMBALANCE"])
+        bid_toxic = (book.imbalance < -adverse and book.micro < book.mid)
+        ask_toxic = (book.imbalance > adverse and book.micro > book.mid)
+        buy_edge_needed = 1.8 if bid_toxic else 1.3
+        sell_edge_needed = 1.8 if ask_toxic else 1.3
+
+        # Tiered takes
+        buy_edge = reservation - book.best_ask
+        take_buy = 0
+        for edge_thr, clip in [
+            (self.p["TAKE_L1_EDGE"], self.p["TAKE_L1_SIZE"]),
+            (self.p["TAKE_L2_EDGE"], self.p["TAKE_L2_SIZE"]),
+            (self.p["TAKE_L3_EDGE"], self.p["TAKE_L3_SIZE"]),
+        ]:
+            if buy_edge >= max(float(edge_thr), buy_edge_needed):
+                take_buy = int(clip)
+        if take_buy > 0:
+            pos = mgr.projected()
+            if pos >= self.p["SOFT_LIMIT"]:
+                take_buy = max(0, take_buy - 4)
+            mgr.buy(book.best_ask, min(book.best_ask_vol, take_buy))
+
+        sell_edge = book.best_bid - reservation
+        take_sell = 0
+        for edge_thr, clip in [
+            (self.p["TAKE_L1_EDGE"], self.p["TAKE_L1_SIZE"]),
+            (self.p["TAKE_L2_EDGE"], self.p["TAKE_L2_SIZE"]),
+            (self.p["TAKE_L3_EDGE"], self.p["TAKE_L3_SIZE"]),
+        ]:
+            if sell_edge >= max(float(edge_thr), sell_edge_needed):
+                take_sell = int(clip)
+        if take_sell > 0:
+            pos = mgr.projected()
+            if pos <= -self.p["SOFT_LIMIT"]:
+                take_sell = max(0, take_sell - 4)
+            mgr.sell(book.best_bid, min(book.best_bid_vol, take_sell))
+
+        # Dynamic quote edges (spread + imbalance + toxicity adjustments)
+        base_edge = float(self.p["BASE_EDGE"])
+        buy_qe = sell_qe = base_edge
+        if book.spread_val <= 14:
+            buy_qe -= 0.7; sell_qe -= 0.7
+        elif book.spread_val >= 18:
+            buy_qe += 0.7; sell_qe += 0.7
+        if book.imbalance > strong:
+            buy_qe -= 0.4; sell_qe += 0.2
+        elif book.imbalance < -strong:
+            buy_qe += 0.2; sell_qe -= 0.4
+        if bid_toxic:
+            buy_qe += 1.0
+        if ask_toxic:
+            sell_qe += 1.0
+        pos = mgr.projected()
+        soft = int(self.p["SOFT_LIMIT"])
+        if pos >= soft:
+            buy_qe += 1.2; sell_qe -= 0.8
+        elif pos <= -soft:
+            buy_qe -= 0.8; sell_qe += 1.2
+        buy_qe = max(4.8, buy_qe)
+        sell_qe = max(4.8, sell_qe)
 
         join_edge = float(self.p["JOIN_EDGE"])
+        front_buy = int(round(reservation - buy_qe))
+        front_sell = int(round(reservation + sell_qe))
+
+        # Market-join: snap to existing resting order if it's at a good edge
         for price, _ in book.buy_levels[:2]:
-            if reservation - price >= buy_half and reservation - price <= buy_half + join_edge:
-                front_buy = price
+            if reservation - price >= buy_qe:
+                front_buy = price if reservation - price <= join_edge else price + 1
                 break
         for price, _ in book.sell_levels[:2]:
-            if price - reservation >= sell_half and price - reservation <= sell_half + join_edge:
-                front_sell = price
+            if price - reservation >= sell_qe:
+                front_sell = price if price - reservation <= join_edge else price - 1
                 break
-
-        if (
-            not bid_toxic
-            and book.spread_val <= 16
-            and reservation - (book.best_bid + 1) >= 0.30
-        ):
-            front_buy = max(front_buy, book.best_bid + 1)
-        if (
-            not ask_toxic
-            and book.spread_val <= 16
-            and (book.best_ask - 1) - reservation >= 0.30
-        ):
-            front_sell = min(front_sell, book.best_ask - 1)
 
         front_buy = min(front_buy, book.best_ask - 1)
         front_sell = max(front_sell, book.best_bid + 1)
-        back_buy = min(back_buy, book.best_ask - 1)
-        back_sell = max(back_sell, book.best_bid + 1)
+        back_buy = min(front_buy - 2, book.best_ask - 1)
+        back_sell = max(front_sell + 2, book.best_bid + 1)
 
-        projected = mgr.projected()
-        inv_ratio = projected / float(PRODUCT_LIMITS["ASH_COATED_OSMIUM"])
-        soft = int(self.p["SOFT_LIMIT"])
-        hard_buf = int(self.p["HARD_LIMIT_BUFFER"])
-        gross_bid_edge = reservation - front_buy
-        gross_ask_edge = front_sell - reservation
-        net_bid_edge = gross_bid_edge - bid_penalty
-        net_ask_edge = gross_ask_edge - ask_penalty
-        min_net = float(self.p["MIN_NET_EDGE"])
-
-        allow_bid = net_bid_edge >= min_net and not (bid_toxic and projected > 6)
-        allow_ask = net_ask_edge >= min_net and not (ask_toxic and projected < -6)
-        if projected >= soft + hard_buf:
-            allow_bid = False
-        if projected <= -(soft + hard_buf):
-            allow_ask = False
-
-        # When inventory is stretched and book state is neutral, free capacity near flat edge.
-        neutral = abs(book.imbalance) <= float(self.p["CLEARING_NEUTRAL_IMB"])
-        fair_not_supporting_long = fair <= stable_mid + 0.8
-        fair_not_supporting_short = fair >= stable_mid - 0.8
-        allow_clear_sell = (
-            projected > soft
-            and neutral
-            and not bid_toxic
-            and fair_not_supporting_long
-            and net_ask_edge >= -float(self.p["CLEARING_EDGE"])
+        allow_bid = (
+            not (bid_toxic and pos > 8)
+            and pos < soft + 6
+            and not (p_toxic > float(self.p["TOXIC_STATE_THRESHOLD"]) and book.imbalance < 0.0)
+            and not (buy_markout < float(self.p["BAD_MARKOUT"]) and book.imbalance <= 0.0)
         )
-        allow_clear_buy = (
-            projected < -soft
-            and neutral
-            and not ask_toxic
-            and fair_not_supporting_short
-            and net_bid_edge >= -float(self.p["CLEARING_EDGE"])
+        allow_ask = (
+            not (ask_toxic and pos < -8)
+            and pos > -(soft + 6)
+            and not (p_toxic > float(self.p["TOXIC_STATE_THRESHOLD"]) and book.imbalance > 0.0)
+            and not (sell_markout < float(self.p["BAD_MARKOUT"]) and book.imbalance >= 0.0)
         )
-        if allow_clear_buy:
-            allow_bid = True
-        if allow_clear_sell:
-            allow_ask = True
 
-        front_sz = int(self.p["FRONT_SIZE"])
-        back_sz = int(self.p["BACK_SIZE"])
-        if book.spread_val <= 12:
-            front_sz = max(13, front_sz - 1)
-        elif book.spread_val >= 18 and not bid_toxic and not ask_toxic:
-            front_sz += 1
-        if allow_bid and front_buy > 0 and front_buy < book.best_ask:
-            size = front_sz + (3 if inv_ratio < -0.45 else 0)
-            if allow_clear_buy:
-                size = min(size, int(self.p["CLEARING_CLIP"]))
-            mgr.buy(front_buy, size)
-            if (
-                back_buy > 0
-                and back_buy < book.best_ask
-                and not bid_toxic
-                and not bid_thin
-                and net_bid_edge >= min_net + 0.18
-            ):
+        front_sz = int(round(float(self.p["FRONT_SIZE"])))
+        back_sz = int(round(float(self.p["BACK_SIZE"])))
+        if allow_bid and front_buy < book.best_ask and front_buy > 0:
+            mgr.buy(front_buy, front_sz)
+            if back_buy > 0 and back_buy < book.best_ask:
                 mgr.buy(back_buy, back_sz)
-
         if allow_ask and front_sell > book.best_bid:
-            size = front_sz + (3 if inv_ratio > 0.45 else 0)
-            if allow_clear_sell:
-                size = min(size, int(self.p["CLEARING_CLIP"]))
-            mgr.sell(front_sell, size)
-            if (
-                back_sell > book.best_bid
-                and not ask_toxic
-                and not ask_thin
-                and net_ask_edge >= min_net + 0.18
-            ):
+            mgr.sell(front_sell, front_sz)
+            if back_sell > book.best_bid:
                 mgr.sell(back_sell, back_sz)
 
         memory["ASH_STATE"] = {
-            "prev_mid": float(book.mid),
-            "prev_pos": int(position),
-            "spread_ema": float(st["spread_ema"]),
-            "vol_ema": float(st["vol_ema"]),
-            "buy_penalty_ema": float(st["buy_penalty_ema"]),
-            "sell_penalty_ema": float(st["sell_penalty_ema"]),
-            "fair_ema": float(fair),
+            "prev_mid": book.mid,
+            "prev_micro": book.micro,
+            "prev_fair": fair,
+            "spread_ema": spread_ema,
+            "last_position": position,
+            "buy_markout_ema": buy_markout,
+            "sell_markout_ema": sell_markout,
+            "p_calm": p_calm,
+            "p_normal": p_normal,
+            "p_toxic": p_toxic,
         }
         return mgr.orders, memory
 
@@ -551,6 +469,7 @@ class IntarianPepperRootTrader:
         residual_ema_val = float(ps.get("residual_ema", 0.0))
         spread_ema_val = float(ps.get("spread_ema", 13.0))
         last_ts = float(ps.get("last_ts", -1.0))
+        prev_mid = ps.get("prev_mid")
 
         # Day reset
         if last_ts >= 0 and timestamp < last_ts:
@@ -573,6 +492,10 @@ class IntarianPepperRootTrader:
 
         residual = book.mid - trend_line
         residual_ema_val = ema(residual_ema_val, residual, float(self.p["RESIDUAL_ALPHA"]))
+        innovation = 0.0
+        if prev_mid is not None and last_ts >= 0 and timestamp > last_ts:
+            expected_move = drift * (timestamp - last_ts)
+            innovation = (book.mid - float(prev_mid)) - expected_move
 
         # ── Fair value ────────────────────────────────────────────────────────
         half_spread = max(1.0, book.spread_val / 2.0)
@@ -635,6 +558,10 @@ class IntarianPepperRootTrader:
         pos = mgr.projected()
         if pos < target_int:
             buy_te -= 0.35
+        if innovation < float(self.p["BUY_INNOVATION_NEG"]):
+            buy_te -= float(self.p["BUY_INNOVATION_BONUS"])
+        elif innovation > float(self.p["BUY_INNOVATION_POS"]):
+            buy_te += float(self.p["BUY_INNOVATION_PENALTY"])
         if pos > target_int:
             sell_te -= 0.05
         if zscore < -0.45:
@@ -755,6 +682,7 @@ class IntarianPepperRootTrader:
             "residual_ema": residual_ema_val,
             "spread_ema": spread_ema_val,
             "last_ts": float(timestamp),
+            "prev_mid": book.mid,
             "initialized": True,
         }
 

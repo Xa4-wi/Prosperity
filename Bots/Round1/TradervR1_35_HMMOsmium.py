@@ -9,17 +9,15 @@ try:
 except ModuleNotFoundError:
     from trader_factory.core.datamodel import Order, OrderDepth, TradingState
 
-# ── Position limits (official Round 1 limits are 80) ──────────────────────────
 PRODUCT_LIMITS = {
     "ASH_COATED_OSMIUM": 80,
     "INTARIAN_PEPPER_ROOT": 80,
 }
 
-# ── ASH_COATED_OSMIUM params ───────────────────────────────────────────────────
-# Archetype: anchored_mm with tiered takes, join logic, two-level passive ladder
 DEFAULT_ASH_PARAMS = {
     "ENABLED": True,
     "REFERENCE_PRICE": 10000.0,
+    # Local-fair layer from the current best trunk
     "ANCHOR_WEIGHT": 0.42,
     "STABLE_MID_WEIGHT": 0.58,
     "WALL_MID_BLEND": 0.32,
@@ -27,45 +25,55 @@ DEFAULT_ASH_PARAMS = {
     "LOCAL_IMBALANCE_BIAS": 0.16,
     "DEPTH_IMPACT_SCALE": 58.0,
     "DEPTH_FLOOR": 8.0,
+    # Inventory / quoting
     "INVENTORY_SKEW": 0.104,
     "INVENTORY_CURVE": 2.2,
-    "BASE_EDGE": 2.0,           # default passive quote edge
-    "JOIN_EDGE": 2.0,           # snap quote to existing order when within this
-    "FRONT_SIZE": 17.52842512,
+    "BASE_EDGE": 2.0,
+    "JOIN_EDGE": 2.0,
+    "FRONT_SIZE": 18,
     "BACK_SIZE": 5,
-    "SOFT_LIMIT": 70.0,           # reduce aggressiveness above this inventory
-    # Tiered take: [(min_edge, qty_clip), ...]
+    "SOFT_LIMIT": 70.0,
+    # Taking logic
     "TAKE_L1_EDGE": 2.0,
     "TAKE_L1_SIZE": 6,
     "TAKE_L2_EDGE": 5.0,
     "TAKE_L2_SIZE": 10,
     "TAKE_L3_EDGE": 8.0,
     "TAKE_L3_SIZE": 16,
-    # Toxic-book thresholds
+    # Toxicity thresholds
     "ADVERSE_IMBALANCE": 0.20,
     "STRONG_IMBALANCE": 0.16,
+    # Small HMM-style execution state filter
+    "P_CALM_INIT": 0.45,
+    "P_NORMAL_INIT": 0.40,
+    "P_TOXIC_INIT": 0.15,
+    "CALM_SIGMA": 1.0,
+    "NORMAL_SIGMA": 2.2,
+    "TOXIC_SIGMA": 4.0,
+    "MARKOUT_ALPHA": 0.16,
+    "SPREAD_ALPHA": 0.12,
+    "QUOTE_PENALTY_SCALE": 0.75,
+    "STATE_TOXIC_WIDEN": 0.90,
+    "STATE_CALM_TIGHTEN": 0.20,
+    "STRONG_ONE_SIDED_PROB": 0.62,
+    "DISLOCATION_EDGE_BONUS": 0.85,
 }
 
-# ── INTARIAN_PEPPER_ROOT params ────────────────────────────────────────────────
-# Archetype: directional_mm with state-based trend + residual tracking
-# Key fix: passive quotes anchored to mid (not drift-adjusted fair), so they
-# actually land inside the spread and can fill.
 DEFAULT_IPR_PARAMS = {
     "ENABLED": True,
-    # Trend model
-    "DRIFT_PER_TIMESTAMP": 0.0026009226,   # +1 tick / 1000 timestamps → +1000/day
-    "RESIDUAL_ALPHA": 0.10,          # EMA alpha for residual tracking
-    "SPREAD_ALPHA": 0.08,            # EMA alpha for spread tracking
-    "LOOKAHEAD_BONUS": 4.8849030549,          # constant upward bias in fair value
+    "DRIFT_PER_TIMESTAMP": 0.0026009226,
+    "RESIDUAL_ALPHA": 0.10,
+    "SPREAD_ALPHA": 0.08,
+    "LOOKAHEAD_BONUS": 4.8849030549,
     # Position targeting
-    "BASE_CARRY": 7.7045484383,              # always want at least this many units
-    "EARLY_LONG_BIAS": 43.1941331644,         # extra target early in day (fades to 0 by 85%)
-    "EDGE_TARGET_SCALE": 12.0,       # target += scale * (fair - mid)
+    "BASE_CARRY": 7.7045484383,
+    "EARLY_LONG_BIAS": 43.1941331644,
+    "EDGE_TARGET_SCALE": 12.0,
     "ZSCORE_BUY_BONUS": 12.0,
     "ZSCORE_SELL_PENALTY": 8.0,
     "MAX_LONG_TARGET": 76.0,
     "MAX_SHORT_TARGET": 20,
-    "EARLY_ACCUM_END": 0.42,         # fraction of day where early accumulation ends
+    "EARLY_ACCUM_END": 0.42,
     # Execution
     "INVENTORY_SKEW": 0.078,
     "BASE_TAKE_EDGE": 2.7678379562,
@@ -77,7 +85,7 @@ DEFAULT_IPR_PARAMS = {
     "PASSIVE_SELL_BUFFER": 8,
     "OVEREXTENSION_Z": 1.05,
     "BULLISH_IMBALANCE": 0.05,
-    # Cheaper accumulation overlay
+    # Cheaper accumulation overlay from the best trunk
     "CHEAP_ACCUM_END": 0.56,
     "CHEAP_ACCUM_TAKE_PENALTY": 0.08,
     "CHEAP_ACCUM_QUOTE_EDGE_BONUS": 0.45,
@@ -85,10 +93,16 @@ DEFAULT_IPR_PARAMS = {
     "CHEAP_ACCUM_BACK_SIZE_BONUS": 1,
     "CHEAP_ACCUM_Z_RELAX": -0.55,
     "CHEAP_ACCUM_TARGET_BUFFER": 20,
+    # Small innovation gate: buy dips vs expected drift, avoid paying up after positive shocks
+    "INNOV_ALPHA": 0.18,
+    "NEG_SHOCK_Z": -0.55,
+    "POS_SHOCK_Z": 0.85,
+    "POS_SHOCK_TAKE_PENALTY": 0.38,
+    "POS_SHOCK_QUOTE_WIDEN": 0.55,
+    "NEG_SHOCK_TAKE_BONUS": 0.10,
+    "NEG_SHOCK_QUOTE_TIGHTEN": 0.18,
 }
 
-
-# ── Shared helpers ─────────────────────────────────────────────────────────────
 
 def clamp(value: float, lo: float, hi: float) -> float:
     return max(lo, min(hi, value))
@@ -165,18 +179,41 @@ class Manager:
             self.sell_cap -= size
 
 
-# ── ASH_COATED_OSMIUM trader ───────────────────────────────────────────────────
-
 class AshCoatedOsmiumTrader:
     """
-    Trunk execution with a stronger local-fair layer.
-    This keeps the simple, high-capture Osmium engine, but replaces the pure
-    fixed-anchor fair with a stable-book / wall-mid style local fair and a
-    slightly nonlinear reservation price.
+    Osmium base branch with:
+    - local-fair / wall-mid estimator
+    - nonlinear inventory pressure
+    - small HMM-style execution state filter (calm / normal / toxic)
+    - markout-aware quoting: passive quotes are penalized by recent post-fill drift
+    - one-sided quoting when the toxic state is dominant
     """
 
     def __init__(self, params: dict) -> None:
         self.p = params
+
+    def _load_state(self, memory: dict) -> dict:
+        raw = memory.get("OSM_STATE", {})
+        if not isinstance(raw, dict):
+            raw = {}
+        return {
+            "initialized": bool(raw.get("initialized", False)),
+            "prev_mid": float(raw.get("prev_mid", 0.0)),
+            "prev_fair": float(raw.get("prev_fair", 0.0)),
+            "spread_ema": float(raw.get("spread_ema", 16.0)),
+            "p_calm": float(raw.get("p_calm", self.p["P_CALM_INIT"])),
+            "p_normal": float(raw.get("p_normal", self.p["P_NORMAL_INIT"])),
+            "p_toxic": float(raw.get("p_toxic", self.p["P_TOXIC_INIT"])),
+            "bid_markout_ema": float(raw.get("bid_markout_ema", 0.0)),
+            "ask_markout_ema": float(raw.get("ask_markout_ema", 0.0)),
+            "last_position": int(raw.get("last_position", 0)),
+            "last_ts": float(raw.get("last_ts", -1.0)),
+        }
+
+    def _gaussian_likelihood(self, value: float, mean: float, sigma: float) -> float:
+        sigma = max(1e-6, sigma)
+        z = (value - mean) / sigma
+        return math.exp(-0.5 * z * z) / sigma
 
     def _stable_mid(self, book: Book) -> float:
         bid_levels = book.buy_levels[:3]
@@ -207,34 +244,149 @@ class AshCoatedOsmiumTrader:
             + (beta + float(self.p["LOCAL_IMBALANCE_BIAS"])) * book.imbalance
         )
 
-    def _reservation(self, fair: float, projected_pos: int) -> float:
+    def _reservation(self, fair: float, projected_pos: int, p_toxic: float) -> float:
         inv_ratio = projected_pos / float(PRODUCT_LIMITS["ASH_COATED_OSMIUM"])
-        inv_shift = float(self.p["INVENTORY_SKEW"]) * projected_pos
+        inv_shift = float(self.p["INVENTORY_SKEW"]) * projected_pos * (1.0 + 0.35 * p_toxic)
         inv_shift += float(self.p["INVENTORY_CURVE"]) * (inv_ratio ** 3)
         return fair - inv_shift
 
-    def build_orders(self, state: TradingState) -> List[Order]:
+    def _update_state(self, book: Book, fair: float, position: int, timestamp: int, state: dict) -> dict:
+        last_ts = float(state["last_ts"])
+        if last_ts >= 0 and timestamp < last_ts:
+            state = {
+                "initialized": False,
+                "prev_mid": 0.0,
+                "prev_fair": 0.0,
+                "spread_ema": 16.0,
+                "p_calm": self.p["P_CALM_INIT"],
+                "p_normal": self.p["P_NORMAL_INIT"],
+                "p_toxic": self.p["P_TOXIC_INIT"],
+                "bid_markout_ema": 0.0,
+                "ask_markout_ema": 0.0,
+                "last_position": 0,
+                "last_ts": -1.0,
+            }
+
+        prev_mid = float(state["prev_mid"])
+        prev_fair = float(state["prev_fair"])
+        prev_pos = int(state["last_position"])
+        delta_pos = position - prev_pos
+
+        bid_markout = float(state["bid_markout_ema"])
+        ask_markout = float(state["ask_markout_ema"])
+        if prev_mid > 0.0:
+            if delta_pos > 0:
+                # We bought and then observed a lower mid -> adverse for the bid side.
+                bid_markout = ema(bid_markout, max(0.0, prev_mid - book.mid), float(self.p["MARKOUT_ALPHA"]))
+                ask_markout = ema(ask_markout, 0.0, float(self.p["MARKOUT_ALPHA"]) * 0.5)
+            elif delta_pos < 0:
+                # We sold and then observed a higher mid -> adverse for the ask side.
+                ask_markout = ema(ask_markout, max(0.0, book.mid - prev_mid), float(self.p["MARKOUT_ALPHA"]))
+                bid_markout = ema(bid_markout, 0.0, float(self.p["MARKOUT_ALPHA"]) * 0.5)
+            else:
+                bid_markout = ema(bid_markout, 0.0, float(self.p["MARKOUT_ALPHA"]) * 0.3)
+                ask_markout = ema(ask_markout, 0.0, float(self.p["MARKOUT_ALPHA"]) * 0.3)
+
+        spread_ema = ema(float(state["spread_ema"]), book.spread_val, float(self.p["SPREAD_ALPHA"]))
+        delta_mid = 0.0 if prev_mid <= 0.0 else (book.mid - prev_mid)
+        delta_fair = 0.0 if prev_fair <= 0.0 else (fair - prev_fair)
+        innovation = delta_mid - delta_fair
+        abs_innov = abs(innovation)
+
+        transition = (
+            (0.78, 0.18, 0.04),
+            (0.18, 0.68, 0.14),
+            (0.10, 0.22, 0.68),
+        )
+        current_probs = (
+            float(state["p_calm"]),
+            float(state["p_normal"]),
+            float(state["p_toxic"]),
+        )
+        predicted = [
+            current_probs[0] * transition[0][i]
+            + current_probs[1] * transition[1][i]
+            + current_probs[2] * transition[2][i]
+            for i in range(3)
+        ]
+
+        calm_like = self._gaussian_likelihood(abs_innov, 0.0, float(self.p["CALM_SIGMA"]))
+        calm_like *= self._gaussian_likelihood(book.spread_val, spread_ema, max(1.0, 0.20 * spread_ema))
+        normal_like = self._gaussian_likelihood(abs_innov, 1.1, float(self.p["NORMAL_SIGMA"]))
+        toxic_like = self._gaussian_likelihood(abs_innov, 3.0, float(self.p["TOXIC_SIGMA"]))
+
+        if abs(book.imbalance) < 0.08:
+            calm_like *= 1.05
+        if abs(book.imbalance) > 0.16:
+            toxic_like *= 1.30
+        if book.spread_val > spread_ema + 1.0:
+            toxic_like *= 1.20
+        if max(bid_markout, ask_markout) > 1.2:
+            toxic_like *= 1.25
+        if abs(book.imbalance) < 0.10 and abs_innov < 1.0:
+            normal_like *= 0.95
+            calm_like *= 1.05
+
+        post = [
+            predicted[0] * calm_like,
+            predicted[1] * normal_like,
+            predicted[2] * toxic_like,
+        ]
+        total_post = sum(post)
+        if total_post <= 1e-12:
+            p_calm, p_normal, p_toxic = current_probs
+        else:
+            p_calm = post[0] / total_post
+            p_normal = post[1] / total_post
+            p_toxic = post[2] / total_post
+
+        return {
+            "initialized": True,
+            "prev_mid": book.mid,
+            "prev_fair": fair,
+            "spread_ema": spread_ema,
+            "p_calm": p_calm,
+            "p_normal": p_normal,
+            "p_toxic": p_toxic,
+            "bid_markout_ema": bid_markout,
+            "ask_markout_ema": ask_markout,
+            "last_position": position,
+            "last_ts": float(timestamp),
+            "innovation": innovation,
+            "abs_innov": abs_innov,
+        }
+
+    def build_orders(self, state: TradingState, memory: dict) -> Tuple[List[Order], dict]:
         if not self.p.get("ENABLED", True):
-            return []
+            return [], memory
         book = Book(state.order_depths.get("ASH_COATED_OSMIUM"))
         if not book.valid:
-            return []
+            return [], memory
+
         position = int(state.position.get("ASH_COATED_OSMIUM", 0))
         mgr = Manager("ASH_COATED_OSMIUM", position, PRODUCT_LIMITS["ASH_COATED_OSMIUM"])
+        timestamp = int(getattr(state, "timestamp", 0))
 
+        state_mem = self._load_state(memory)
         fair = self._fair_value(book)
-        reservation = self._reservation(fair, mgr.projected())
+        state_mem = self._update_state(book, fair, position, timestamp, state_mem)
+        p_calm = float(state_mem["p_calm"])
+        p_normal = float(state_mem["p_normal"])
+        p_toxic = float(state_mem["p_toxic"])
+        bid_penalty = float(state_mem["bid_markout_ema"]) + 0.80 * p_toxic
+        ask_penalty = float(state_mem["ask_markout_ema"]) + 0.80 * p_toxic
 
-        # Toxic book detection
+        reservation = self._reservation(fair, mgr.projected(), p_toxic)
+
         adverse = float(self.p["ADVERSE_IMBALANCE"])
         strong = float(self.p["STRONG_IMBALANCE"])
-        bid_toxic = book.imbalance < -adverse and book.micro < book.mid
-        ask_toxic = book.imbalance > adverse and book.micro > book.mid
-        buy_edge_needed = 1.8 if bid_toxic else 1.3
-        sell_edge_needed = 1.8 if ask_toxic else 1.3
+        bid_toxic = (book.imbalance < -adverse and book.micro < book.mid) or (p_toxic > 0.62 and book.imbalance < 0.0)
+        ask_toxic = (book.imbalance > adverse and book.micro > book.mid) or (p_toxic > 0.62 and book.imbalance > 0.0)
+        buy_edge_needed = (1.8 if bid_toxic else 1.3) + self.p["DISLOCATION_EDGE_BONUS"] * p_toxic
+        sell_edge_needed = (1.8 if ask_toxic else 1.3) + self.p["DISLOCATION_EDGE_BONUS"] * p_toxic
 
-        # Tiered takes
-        buy_edge = reservation - book.best_ask
+        # Aggressive takes: stricter in toxic states, but still use the local fair / reservation.
+        buy_edge = reservation - book.best_ask - bid_penalty
         take_buy = 0
         for edge_thr, clip in [
             (self.p["TAKE_L1_EDGE"], self.p["TAKE_L1_SIZE"]),
@@ -243,13 +395,15 @@ class AshCoatedOsmiumTrader:
         ]:
             if buy_edge >= max(float(edge_thr), buy_edge_needed):
                 take_buy = int(clip)
+        if p_toxic > 0.45:
+            take_buy = max(0, take_buy - 2)
         if take_buy > 0:
             pos = mgr.projected()
             if pos >= self.p["SOFT_LIMIT"]:
                 take_buy = max(0, take_buy - 4)
             mgr.buy(book.best_ask, min(book.best_ask_vol, take_buy))
 
-        sell_edge = book.best_bid - reservation
+        sell_edge = book.best_bid - reservation - ask_penalty
         take_sell = 0
         for edge_thr, clip in [
             (self.p["TAKE_L1_EDGE"], self.p["TAKE_L1_SIZE"]),
@@ -258,41 +412,56 @@ class AshCoatedOsmiumTrader:
         ]:
             if sell_edge >= max(float(edge_thr), sell_edge_needed):
                 take_sell = int(clip)
+        if p_toxic > 0.45:
+            take_sell = max(0, take_sell - 2)
         if take_sell > 0:
             pos = mgr.projected()
             if pos <= -self.p["SOFT_LIMIT"]:
                 take_sell = max(0, take_sell - 4)
             mgr.sell(book.best_bid, min(book.best_bid_vol, take_sell))
 
-        # Dynamic quote edges (spread + imbalance + toxicity adjustments)
         base_edge = float(self.p["BASE_EDGE"])
         buy_qe = sell_qe = base_edge
         if book.spread_val <= 14:
-            buy_qe -= 0.7; sell_qe -= 0.7
+            buy_qe -= 0.7
+            sell_qe -= 0.7
         elif book.spread_val >= 18:
-            buy_qe += 0.7; sell_qe += 0.7
+            buy_qe += 0.7
+            sell_qe += 0.7
         if book.imbalance > strong:
-            buy_qe -= 0.4; sell_qe += 0.2
+            buy_qe -= 0.4
+            sell_qe += 0.2
         elif book.imbalance < -strong:
-            buy_qe += 0.2; sell_qe -= 0.4
+            buy_qe += 0.2
+            sell_qe -= 0.4
+        if p_calm > 0.55 and abs(book.imbalance) < 0.10:
+            buy_qe -= float(self.p["STATE_CALM_TIGHTEN"])
+            sell_qe -= float(self.p["STATE_CALM_TIGHTEN"])
+        if p_toxic > 0.45:
+            buy_qe += float(self.p["STATE_TOXIC_WIDEN"])
+            sell_qe += float(self.p["STATE_TOXIC_WIDEN"])
         if bid_toxic:
             buy_qe += 1.0
         if ask_toxic:
             sell_qe += 1.0
+
         pos = mgr.projected()
         soft = int(self.p["SOFT_LIMIT"])
         if pos >= soft:
-            buy_qe += 1.2; sell_qe -= 0.8
+            buy_qe += 1.2
+            sell_qe -= 0.8
         elif pos <= -soft:
-            buy_qe -= 0.8; sell_qe += 1.2
-        buy_qe = max(4.8, buy_qe)
-        sell_qe = max(4.8, sell_qe)
+            buy_qe -= 0.8
+            sell_qe += 1.2
+        buy_qe += float(self.p["QUOTE_PENALTY_SCALE"]) * bid_penalty
+        sell_qe += float(self.p["QUOTE_PENALTY_SCALE"]) * ask_penalty
+        buy_qe = max(4.6, buy_qe)
+        sell_qe = max(4.6, sell_qe)
 
         join_edge = float(self.p["JOIN_EDGE"])
         front_buy = int(round(reservation - buy_qe))
         front_sell = int(round(reservation + sell_qe))
 
-        # Market-join: snap to existing resting order if it's at a good edge
         for price, _ in book.buy_levels[:2]:
             if reservation - price >= buy_qe:
                 front_buy = price if reservation - price <= join_edge else price + 1
@@ -307,34 +476,68 @@ class AshCoatedOsmiumTrader:
         back_buy = min(front_buy - 2, book.best_ask - 1)
         back_sell = max(front_sell + 2, book.best_bid + 1)
 
-        allow_bid = not (bid_toxic and pos > 8) and pos < soft + 6
-        allow_ask = not (ask_toxic and pos < -8) and pos > -(soft + 6)
+        # Markout-aware gating: only quote if gross edge exceeds the side penalty.
+        gross_bid_edge = reservation - front_buy
+        gross_ask_edge = front_sell - reservation
+        allow_bid = gross_bid_edge > bid_penalty + 0.35
+        allow_ask = gross_ask_edge > ask_penalty + 0.35
 
-        front_sz = int(self.p["FRONT_SIZE"])
-        back_sz = int(self.p["BACK_SIZE"])
-        if allow_bid and front_buy < book.best_ask and front_buy > 0:
-            mgr.buy(front_buy, front_sz)
-            if back_buy > 0 and back_buy < book.best_ask:
-                mgr.buy(back_buy, back_sz)
+        if bid_toxic and pos > 8:
+            allow_bid = False
+        if ask_toxic and pos < -8:
+            allow_ask = False
+        if pos >= soft + 6:
+            allow_bid = False
+        if pos <= -(soft + 6):
+            allow_ask = False
+        if p_toxic > float(self.p["STRONG_ONE_SIDED_PROB"]):
+            if book.imbalance < 0.0:
+                allow_bid = False
+            elif book.imbalance > 0.0:
+                allow_ask = False
+
+        front_sz = int(round(float(self.p["FRONT_SIZE"]) * (1.10 if p_calm > 0.58 else 0.85 if p_toxic > 0.52 else 1.0)))
+        back_sz = int(round(float(self.p["BACK_SIZE"]) * (1.05 if p_calm > 0.58 else 0.80 if p_toxic > 0.52 else 1.0)))
+        front_sz = max(4, front_sz)
+        back_sz = max(2, back_sz)
+
+        # Gentle zero-edge inventory clearing: free capacity when inventory is stretched and state is not toxic.
+        if p_toxic < 0.40:
+            if pos > int(0.75 * soft) and front_sell > book.best_bid:
+                front_sell = max(book.best_bid + 1, min(front_sell, int(round(reservation + 4.8))))
+            elif pos < -int(0.75 * soft) and front_buy < book.best_ask:
+                front_buy = min(book.best_ask - 1, max(front_buy, int(round(reservation - 4.8))))
+
+        if allow_bid and front_buy > 0 and front_buy < book.best_ask:
+            mgr.buy(front_buy, min(front_sz, mgr.buy_cap))
+            if back_buy > 0 and back_buy < book.best_ask and p_toxic < 0.55:
+                mgr.buy(back_buy, min(back_sz, mgr.buy_cap))
         if allow_ask and front_sell > book.best_bid:
-            mgr.sell(front_sell, front_sz)
-            if back_sell > book.best_bid:
-                mgr.sell(back_sell, back_sz)
+            mgr.sell(front_sell, min(front_sz, mgr.sell_cap))
+            if back_sell > book.best_bid and p_toxic < 0.55:
+                mgr.sell(back_sell, min(back_sz, mgr.sell_cap))
 
-        return mgr.orders
+        memory["OSM_STATE"] = {
+            "initialized": True,
+            "prev_mid": state_mem["prev_mid"],
+            "prev_fair": state_mem["prev_fair"],
+            "spread_ema": state_mem["spread_ema"],
+            "p_calm": state_mem["p_calm"],
+            "p_normal": state_mem["p_normal"],
+            "p_toxic": state_mem["p_toxic"],
+            "bid_markout_ema": state_mem["bid_markout_ema"],
+            "ask_markout_ema": state_mem["ask_markout_ema"],
+            "last_position": position,
+            "last_ts": float(timestamp),
+        }
+        return mgr.orders, memory
 
-
-# ── INTARIAN_PEPPER_ROOT trader ────────────────────────────────────────────────
 
 class IntarianPepperRootTrader:
     """
-    Directional MM for strongly trending asset (+1000 ticks/day).
-    - State: anchor price + residual EMA persisted in traderData
-    - Fair value: weighted blend of trend-line, mid, micro, flow + lookahead bonus
-    - Position target: BASE_CARRY + early long bias (fades) + edge/zscore signals
-    - Passive quotes anchored to RESERVATION (near mid), NOT to drift-adjusted fair
-      → quotes land inside the spread and actually fill
-    - Sell suppression in bullish state to stay long through the trend
+    Keep the currently best Pepper architecture mostly intact.
+    Add only a small innovation gate on buys: buy dips relative to the expected drift,
+    but avoid paying up after positive shocks.
     """
 
     def __init__(self, params: dict) -> None:
@@ -353,7 +556,6 @@ class IntarianPepperRootTrader:
         timestamp = int(getattr(state, "timestamp", 0))
         progress = clamp(timestamp / 999900.0, 0.0, 1.0)
 
-        # ── Load / init persistent state ──────────────────────────────────────
         ps = memory.get("IPR_STATE", {})
         if not isinstance(ps, dict):
             ps = {}
@@ -363,13 +565,16 @@ class IntarianPepperRootTrader:
         residual_ema_val = float(ps.get("residual_ema", 0.0))
         spread_ema_val = float(ps.get("spread_ema", 13.0))
         last_ts = float(ps.get("last_ts", -1.0))
+        prev_mid = float(ps.get("prev_mid", 0.0))
+        innov_ema = float(ps.get("innov_ema", 0.0))
 
-        # Day reset
         if last_ts >= 0 and timestamp < last_ts:
             initialized = False
             anchor = 0.0
             residual_ema_val = 0.0
             spread_ema_val = 13.0
+            prev_mid = 0.0
+            innov_ema = 0.0
 
         drift = float(self.p["DRIFT_PER_TIMESTAMP"])
         trend_line = anchor + drift * timestamp
@@ -386,7 +591,7 @@ class IntarianPepperRootTrader:
         residual = book.mid - trend_line
         residual_ema_val = ema(residual_ema_val, residual, float(self.p["RESIDUAL_ALPHA"]))
 
-        # ── Fair value ────────────────────────────────────────────────────────
+        # Drift-dominant fair
         half_spread = max(1.0, book.spread_val / 2.0)
         flow_fair = book.mid + book.imbalance * half_spread
         lookahead = float(self.p["LOOKAHEAD_BONUS"]) * (1.0 - 0.65 * progress)
@@ -399,11 +604,17 @@ class IntarianPepperRootTrader:
             + lookahead
         )
 
-        # ── z-score of residual ───────────────────────────────────────────────
         spread_scale = max(4.0, spread_ema_val * 0.45)
         zscore = residual / spread_scale
 
-        # ── Target position ───────────────────────────────────────────────────
+        # Small innovation filter around expected drift.
+        dt = max(100.0, float(timestamp) - last_ts) if last_ts >= 0.0 else 100.0
+        expected_move = drift * dt
+        innovation = 0.0 if prev_mid <= 0.0 else (book.mid - prev_mid) - expected_move
+        innov_ema = ema(innov_ema, innovation, float(self.p["INNOV_ALPHA"]))
+        innov_scale = max(2.0, spread_ema_val * 0.25)
+        innov_z = innov_ema / innov_scale
+
         edge = fair - book.mid
         target = float(self.p["BASE_CARRY"])
         early_factor = max(0.0, 1.0 - progress / 0.85)
@@ -436,11 +647,9 @@ class IntarianPepperRootTrader:
         max_short = int(self.p["MAX_SHORT_TARGET"])
         target_int = int(clamp(target, -max_short, max_long))
 
-        # ── Reservation price ─────────────────────────────────────────────────
         skew = float(self.p["INVENTORY_SKEW"])
         reservation = fair - (mgr.projected() - target_int) * skew
 
-        # ── Take orders ───────────────────────────────────────────────────────
         base_take = float(self.p["BASE_TAKE_EDGE"])
         buy_te = base_take
         sell_te = base_take + 0.55
@@ -466,6 +675,10 @@ class IntarianPepperRootTrader:
             and zscore > float(self.p["CHEAP_ACCUM_Z_RELAX"])
         ):
             buy_te += float(self.p["CHEAP_ACCUM_TAKE_PENALTY"])
+        if innov_z > float(self.p["POS_SHOCK_Z"]):
+            buy_te += float(self.p["POS_SHOCK_TAKE_PENALTY"])
+        elif innov_z < float(self.p["NEG_SHOCK_Z"]):
+            buy_te -= float(self.p["NEG_SHOCK_TAKE_BONUS"])
         buy_te = max(0.35, buy_te)
         sell_te = max(1.05, sell_te)
 
@@ -484,9 +697,6 @@ class IntarianPepperRootTrader:
                 qty = min(qty, 4)
             mgr.sell(book.best_bid, qty)
 
-        # ── Passive quotes ────────────────────────────────────────────────────
-        # Anchored to RESERVATION (near actual mid), NOT to drift-adjusted fair.
-        # This places quotes inside the spread where they can actually fill.
         base_qe = float(self.p["BASE_QUOTE_EDGE"])
         buy_qe = base_qe
         sell_qe = base_qe + 0.75
@@ -506,6 +716,10 @@ class IntarianPepperRootTrader:
         )
         if cheap_accum:
             buy_qe -= float(self.p["CHEAP_ACCUM_QUOTE_EDGE_BONUS"])
+        if innov_z > float(self.p["POS_SHOCK_Z"]):
+            buy_qe += float(self.p["POS_SHOCK_QUOTE_WIDEN"])
+        elif innov_z < float(self.p["NEG_SHOCK_Z"]) and pos < target_int:
+            buy_qe -= float(self.p["NEG_SHOCK_QUOTE_TIGHTEN"])
 
         front_buy = math.floor(reservation - buy_qe)
         front_sell = math.ceil(reservation + sell_qe)
@@ -522,7 +736,6 @@ class IntarianPepperRootTrader:
         back_buy = min(front_buy - 2, book.best_ask - 1)
         back_sell = max(front_sell + 2, book.best_bid + 1)
 
-        # Sell suppression: don't sell when accumulating / bullish
         early_accum = float(self.p["EARLY_ACCUM_END"])
         allow_sell = True
         if progress < early_accum and pos < target_int - 6:
@@ -561,19 +774,18 @@ class IntarianPepperRootTrader:
                 qty = min(size, mgr.sell_cap, max(0, pos - (target_int - sell_buf)))
                 mgr.sell(price, qty)
 
-        # ── Save state ────────────────────────────────────────────────────────
         memory["IPR_STATE"] = {
             "anchor": anchor,
             "residual_ema": residual_ema_val,
             "spread_ema": spread_ema_val,
+            "prev_mid": book.mid,
+            "innov_ema": innov_ema,
             "last_ts": float(timestamp),
             "initialized": True,
         }
 
         return mgr.orders, memory
 
-
-# ── Top-level Trader ───────────────────────────────────────────────────────────
 
 class Trader:
     def __init__(self) -> None:
@@ -594,7 +806,8 @@ class Trader:
         result: Dict[str, List[Order]] = {}
 
         if "ASH_COATED_OSMIUM" in state.order_depths:
-            result["ASH_COATED_OSMIUM"] = self.ash.build_orders(state)
+            ash_orders, memory = self.ash.build_orders(state, memory)
+            result["ASH_COATED_OSMIUM"] = ash_orders
 
         if "INTARIAN_PEPPER_ROOT" in state.order_depths:
             ipr_orders, memory = self.ipr.build_orders(state, memory)

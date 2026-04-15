@@ -1,0 +1,91 @@
+{
+  "config_name": "TradervR1_34_1 Round 1 Mixed Escape CMA-ES",
+  "config_path": "/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_34_1_cmaes_mixed_escape.json",
+  "source_bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_34_1.py",
+  "best_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_34_1_cmaes_mixed_escape/bots/TradervR1_34_1_best.py",
+  "parameters": {
+    "ASH_ANCHOR_WEIGHT": 0.42,
+    "ASH_WALL_MID_BLEND": 0.32,
+    "ASH_LOCAL_MICRO_WEIGHT": 0.42,
+    "ASH_LOCAL_IMBALANCE_BIAS": 0.16,
+    "ASH_BASE_EDGE": 2.0,
+    "ASH_FRONT_SIZE": 17.52842512,
+    "IPR_LOOKAHEAD_BONUS": 4.8849030549,
+    "IPR_BASE_CARRY": 7.7045484383,
+    "IPR_EARLY_LONG_BIAS": 43.1941331644,
+    "IPR_BASE_TAKE_EDGE": 2.7678379562,
+    "IPR_CHEAP_ACCUM_QUOTE_EDGE_BONUS": 0.44999999999999996,
+    "IPR_CHEAP_ACCUM_TARGET_BUFFER": 20.0
+  },
+  "baseline_scores": {
+    "-2": 96129.5,
+    "-1": 96217.0,
+    "0": 95696.0
+  },
+  "best_scores": {
+    "-2": 96129.5,
+    "-1": 96217.0,
+    "0": 95696.0
+  },
+  "average": 96014.16666666667,
+  "objective": 96014.16666666667,
+  "regression_penalty": 0.0,
+  "imbalance_penalty": 0.0,
+  "drift_penalty": 4.0123540508067415e-32,
+  "search": {
+    "max_iter": 5,
+    "population": 10,
+    "parents": 4,
+    "sigma0": 0.1,
+    "seed": 4343,
+    "timeout_seconds": 360.0
+  },
+  "penalties": {
+    "regression": 6.0,
+    "imbalance": 1.0,
+    "drift": 100.0
+  },
+  "total_evaluations": 51,
+  "history": [
+    {
+      "generation": 1,
+      "sigma": 0.09764935565752232,
+      "generation_best_objective": -228641.6406974007,
+      "generation_best_average": 78983.0,
+      "global_best_objective": 96014.16666666667,
+      "global_best_average": 96014.16666666667
+    },
+    {
+      "generation": 2,
+      "sigma": 0.09622682759968594,
+      "generation_best_objective": -228568.9757022715,
+      "generation_best_average": 78986.66666666667,
+      "global_best_objective": 96014.16666666667,
+      "global_best_average": 96014.16666666667
+    },
+    {
+      "generation": 3,
+      "sigma": 0.09280389478918244,
+      "generation_best_objective": -228584.91266334418,
+      "generation_best_average": 78986.66666666667,
+      "global_best_objective": 96014.16666666667,
+      "global_best_average": 96014.16666666667
+    },
+    {
+      "generation": 4,
+      "sigma": 0.0919511900201402,
+      "generation_best_objective": -228621.16961982488,
+      "generation_best_average": 78984.33333333333,
+      "global_best_objective": 96014.16666666667,
+      "global_best_average": 96014.16666666667
+    },
+    {
+      "generation": 5,
+      "sigma": 0.09071738759683991,
+      "generation_best_objective": -228548.74721677235,
+      "generation_best_average": 78988.0,
+      "global_best_objective": 96014.16666666667,
+      "global_best_average": 96014.16666666667
+    }
+  ]
+}
