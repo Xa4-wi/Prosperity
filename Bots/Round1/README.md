@@ -682,3 +682,387 @@ Read:
 - this gets fully back to the `TradervR1_10.py` line on days `-2` and `-1`
 - and is slightly better on day `0`
 - practical takeaway: the passive-accumulation improvement is fine, but the aggressive-buy penalty had to be almost fully removed
+
+### `TradervR1_26_*` Osmium Research Branch
+
+Idea:
+- start a dedicated Osmium research branch while keeping Pepper fixed on the strong `TradervR1_25_2.py` trunk
+- map different academic ideas into separate `ASH_COATED_OSMIUM` engines and compare them cleanly
+
+Baseline for comparison:
+- [TradervR1_25_2.py](./TradervR1_25_2.py)
+  - day `-2`: `95'984.0`
+  - day `-1`: `96'517.0`
+  - day `0`: `95'444.0`
+  - three-day sum: `287'945.0`
+
+#### `TradervR1_26_as.py`
+
+Paper idea:
+- Avellaneda-Stoikov style reservation price and half-spread from risk / fill elasticity proxies
+
+What changed:
+- keep fair anchored to `10000`
+- compute A-S style reservation from inventory, volatility proxy, and depth-based `k`
+- compute passive half-spread from the same reactive terms
+
+Verified local Rust replay:
+- day `-2`: `76'541.5`
+- day `-1`: `78'770.0`
+- day `0`: `75'189.0`
+- three-day sum: `230'500.5`
+
+Read:
+- clearly broken for this market
+- Osmium collapses badly, including negative Osmium PnL on days `-2` and `0`
+- practical takeaway: a literal A-S style reactive spread is far too aggressive / unstable here
+
+#### `TradervR1_26_glft.py`
+
+Paper idea:
+- Guéant-Lehalle-Fernandez-Tapia style nonlinear inventory pressure
+
+What changed:
+- replace linear inventory skew with a nonlinear inventory map
+- widen same-side quotes faster as inventory stress rises
+- move toward one-sided quoting near the soft limit
+
+Verified local Rust replay:
+- day `-2`: `95'832.5`
+  - `ASH_COATED_OSMIUM`: `16'188.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+- day `-1`: `96'775.0`
+  - `ASH_COATED_OSMIUM`: `17'407.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+- day `0`: `95'014.0`
+  - `ASH_COATED_OSMIUM`: `15'617.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+- three-day sum: `287'621.5`
+
+Read:
+- this is the most promising paper path
+- it improves day `-1` by improving Osmium only
+- but it gives back more than that on days `-2` and `0`
+- practical takeaway: nonlinear inventory pressure is a real signal, but this first calibration is not yet robust enough to beat the trunk
+
+#### `TradervR1_26_cks.py`
+
+Paper idea:
+- Cont-Kukanov-Stoikov depth-aware imbalance fair
+
+What changed:
+- replace fixed imbalance skew with depth-scaled imbalance impact
+- increase fair movement when top-of-book depth is thinner
+
+Verified local Rust replay:
+- day `-2`: `95'764.5`
+- day `-1`: `96'387.0`
+- day `0`: `95'178.0`
+- three-day sum: `287'329.5`
+
+Read:
+- safe and reasonably competitive
+- but still below the trunk on all-day sum
+- practical takeaway: depth-aware fair is directionally sensible, but by itself not enough
+
+#### `TradervR1_26_lm.py`
+
+Paper idea:
+- Lehalle-Mounjid style toxicity, cancel, and reinsert logic
+
+What changed:
+- retreat faster from toxic queue states
+- reinsert farther back on the toxic side
+- reduce willingness to sit in clearly adverse passive positions
+
+Verified local Rust replay:
+- day `-2`: `95'075.0`
+- day `-1`: `95'300.0`
+- day `0`: `94'624.0`
+- three-day sum: `284'999.0`
+
+Read:
+- too defensive
+- it cuts Osmium participation and loses real PnL
+- practical takeaway: toxicity defense matters, but this layer alone over-retreats
+
+#### `TradervR1_26_delise.py`
+
+Paper idea:
+- DeLise-style passive fill penalty / adverse markout gating
+
+What changed:
+- add a passive fill penalty proxy based on imbalance, toxicity, and depth
+- only allow passive quotes when estimated net edge stays positive after that penalty
+
+Verified local Rust replay:
+- day `-2`: `95'984.0`
+- day `-1`: `96'517.0`
+- day `0`: `95'444.0`
+- three-day sum: `287'945.0`
+
+Read:
+- completely inert relative to the trunk
+- practical takeaway: the current passive fill penalty proxy is either too weak or already implicit in the existing Osmium logic
+
+#### `TradervR1_26_combo.py`
+
+Paper idea:
+- combine the main paper ideas in one engine:
+  - depth-aware fair
+  - nonlinear inventory pressure
+  - toxicity retreat
+  - passive fill penalty gating
+
+Verified local Rust replay:
+- day `-2`: `94'732.0`
+- day `-1`: `95'515.0`
+- day `0`: `93'832.0`
+- three-day sum: `284'079.0`
+
+Read:
+- combining everything at once makes the engine too defensive and too noisy
+- practical takeaway: the ideas do not compose well naively; they need to be layered much more selectively
+
+#### `TradervR1_26_glft_zones.py`
+
+Idea:
+- follow up only on the promising GLFT path
+- soften the nonlinear inventory engine into inventory zones so pressure only activates outside a neutral band
+
+Verified local Rust replay:
+- day `-2`: `94'095.0`
+- day `-1`: `96'020.0`
+- day `0`: `92'719.0`
+
+Read:
+- worse than the always-on GLFT version
+- practical takeaway: the useful edge was the nonlinear inventory shaping itself, not delayed activation
+
+### Osmium Branch Read
+
+What survived the branch best:
+- `TradervR1_26_glft.py` is the only paper variant with a real positive local signal
+- `TradervR1_26_delise.py` is effectively neutral
+- `TradervR1_26_cks.py` is safe but not strong enough
+- `TradervR1_26_as.py` is clearly the wrong direction for this simulator
+
+Best current takeaway:
+- the strongest next Osmium path is:
+  - keep the `TradervR1_25_2.py` / `TradervR1_10.py` trunk
+  - borrow only the nonlinear inventory pressure idea from `TradervR1_26_glft.py`
+  - tune that very narrowly instead of adding more paper layers all at once
+
+### `TradervR1_27.py`
+
+Idea:
+- build the narrow hybrid suggested by the `v26` branch
+- keep the full `TradervR1_25_2.py` trunk intact
+- keep `INTARIAN_PEPPER_ROOT` exactly unchanged
+- import only a mild nonlinear inventory-pressure overlay into `ASH_COATED_OSMIUM`:
+  - small cubic inventory pressure added to reservation price
+  - light same-side / opposite-side quote asymmetry from inventory ratio
+  - no broader GLFT execution rewrite
+
+Verified local Rust replay:
+- day `-2`: `95'942.5`
+  - `ASH_COATED_OSMIUM`: `16'298.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+- day `-1`: `96'328.0`
+  - `ASH_COATED_OSMIUM`: `16'960.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+- day `0`: `95'565.0`
+  - `ASH_COATED_OSMIUM`: `16'168.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+- three-day sum: `287'835.5`
+
+Read:
+- this hybrid is safe and clearly much better than the full `TradervR1_26_glft.py` rewrite
+- it improves `ASH_COATED_OSMIUM` on day `0`
+- but it is still slightly below `TradervR1_25_2.py` on the three-day total
+
+Practical takeaway:
+- the nonlinear inventory idea does belong in the Osmium trunk
+- but only as a very light overlay
+- this first blend is close, though not yet a true upgrade
+
+### `TradervR1_27.x` inventory-pressure sweep
+
+Idea:
+- narrow local sweep around the two new Osmium-only hybrid knobs in `TradervR1_27.py`
+- keep Pepper fixed
+- only change:
+  - `INV_PRESSURE_A1`
+  - `INV_PRESSURE_A3`
+
+Sweep results:
+- `TradervR1_27.py`: `95'942.5 / 96'328.0 / 95'565.0`
+  - sum: `287'835.5`
+- `TradervR1_27_1.py`: `95'951.5 / 96'414.0 / 95'513.0`
+  - sum: `287'878.5`
+- `TradervR1_27_2.py`: `95'883.0 / 96'342.0 / 95'472.0`
+  - sum: `287'697.0`
+- `TradervR1_27_3.py`: `95'905.5 / 96'354.0 / 95'601.0`
+  - sum: `287'860.5`
+- `TradervR1_27_4.py`: `95'914.0 / 96'399.0 / 95'550.0`
+  - sum: `287'863.0`
+
+Reference:
+- `TradervR1_25_2.py`: `95'984.0 / 96'517.0 / 95'444.0`
+  - sum: `287'945.0`
+
+Read:
+- none of the sweep variants beat `TradervR1_25_2.py`
+- the best overall was `TradervR1_27_1.py`
+- `TradervR1_27_4.py` had the strongest day `-1` Osmium result in the sweep, but did not hold that edge across the full three-day view
+
+Practical takeaway:
+- the hybrid wants a soft inventory-pressure overlay, not a strong one
+- the direction is real, but the gain is too small and too inconsistent so far
+- `TradervR1_25_2.py` remains the production trunk for now
+
+### `TradervR1_28.py`
+
+Idea:
+- rebuild `ASH_COATED_OSMIUM` into an explicit 4-state anchored execution engine
+- keep `INTARIAN_PEPPER_ROOT` unchanged from the strong trunk
+- Osmium states:
+  - `normal_mm`
+  - `stretched_mean_revert`
+  - `toxic_defense`
+  - `wide_spread_harvest`
+- keep fair simple around `10000`
+- move adaptation into execution state, quote width, and take behavior
+
+Verified local Rust replay:
+- day `-2`: `81'474.0`
+  - `ASH_COATED_OSMIUM`: `1'830.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `1'468`
+- day `-1`: `83'076.0`
+  - `ASH_COATED_OSMIUM`: `3'708.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `1'431`
+- day `0`: `82'866.0`
+  - `ASH_COATED_OSMIUM`: `3'469.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `1'380`
+
+Read:
+- the 4-state concept is much too active in this first form
+- Pepper stayed intact
+- the entire collapse came from Osmium
+- trade count exploded while Osmium PnL collapsed, so the engine is switching / harvesting far too often and paying for that churn
+
+Practical takeaway:
+- Osmium does not want a broad execution-state rewrite in this form
+- the useful lesson is still execution-first, but the adaptation needs to be much lighter and more selective
+
+### `TradervR1_29.py`
+
+Idea:
+- try a much simpler mechanism around the failed `TradervR1_28.py` concept
+- keep the strong Round 1 trunk intact
+- keep `INTARIAN_PEPPER_ROOT` unchanged
+- add only two light Osmium overlays:
+  - small OU-style stretch lean around the `10000` anchor
+  - small toxic retreat on clearly adverse passive states
+
+Verified local Rust replay:
+- day `-2`: `79'600.0`
+  - `ASH_COATED_OSMIUM`: `-44.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `1'665`
+- day `-1`: `82'313.0`
+  - `ASH_COATED_OSMIUM`: `2'945.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `1'657`
+- day `0`: `82'021.0`
+  - `ASH_COATED_OSMIUM`: `2'624.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `1'563`
+
+Read:
+- this simplified mechanism still breaks Osmium badly
+- Pepper remains intact
+- the whole loss is again Osmium, with trade count exploding even more than the trunk
+
+Practical takeaway:
+- the problem is not only that `TradervR1_28.py` had too many states
+- even the lighter stretch-plus-toxic overlay is still pushing Osmium into too much churn
+- so the next Osmium path should probably move away from state overlays and focus on narrower execution-quality levers instead
+
+### `TradervR1_30.py`
+
+Idea:
+- do the opposite of the active overlay family
+- keep the strong Round 1 trunk and Pepper unchanged
+- make `ASH_COATED_OSMIUM` more passive-first:
+  - less twitchy fair
+  - higher take thresholds
+  - smaller passive size in narrow or toxic books
+  - larger passive size only in wide, safe books
+  - stronger retreat from toxic passive states
+
+Verified local Rust replay:
+- day `-2`: `94'411.0`
+  - `ASH_COATED_OSMIUM`: `14'767.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `471`
+- day `-1`: `94'802.0`
+  - `ASH_COATED_OSMIUM`: `15'434.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `484`
+- day `0`: `93'816.0`
+  - `ASH_COATED_OSMIUM`: `14'419.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `467`
+
+Read:
+- this is still below the trunk, but it is much healthier than `TradervR1_28.py` or `TradervR1_29.py`
+- Pepper stayed unchanged
+- Osmium trade count dropped sharply and the catastrophic churn disappeared
+
+Practical takeaway:
+- the “180 turn” was directionally useful
+- Osmium clearly prefers this lower-churn direction over the active state-overlay family
+- but the current passive-first calibration is too conservative and gives up too much good Osmium edge
+
+### `TradervR1_31*` middle-ground Osmium refinements
+
+Idea:
+- use the information from `TradervR1_30.py`, but move back toward the strong trunk
+- keep Pepper unchanged
+- test a few middle-ground Osmium variants:
+  - less fair twitchiness than the trunk
+  - slightly higher take thresholds
+  - slightly smaller passive size in narrow / toxic books
+  - still keep enough normal spread capture alive
+
+Results:
+- `TradervR1_31.py`: `95'385.5 / 95'945.0 / 94'791.0`
+  - sum: `286'121.5`
+- `TradervR1_31_1.py`: `94'881.0 / 95'247.0 / 94'434.0`
+  - sum: `284'562.0`
+- `TradervR1_31_2.py`: `95'635.0 / 96'231.0 / 95'106.0`
+  - sum: `286'972.0`
+
+Reference:
+- `TradervR1_25_2.py`: `95'984.0 / 96'517.0 / 95'444.0`
+  - sum: `287'945.0`
+
+Best of the new set:
+- `TradervR1_31_2.py`
+  - day `-2`: `ASH_COATED_OSMIUM 15'991.0`, `INTARIAN_PEPPER_ROOT 79'644.0`, trades `554`
+  - day `-1`: `ASH_COATED_OSMIUM 16'863.0`, `INTARIAN_PEPPER_ROOT 79'368.0`, trades `556`
+  - day `0`: `ASH_COATED_OSMIUM 15'709.0`, `INTARIAN_PEPPER_ROOT 79'397.0`, trades `542`
+
+Read:
+- the middle-ground direction is much healthier than `TradervR1_30.py`
+- `TradervR1_31_2.py` recovers most of the passive-first giveback
+- but it still does not beat the main trunk
+
+Practical takeaway:
+- the useful signal from `TradervR1_30.py` was real
+- Osmium does want some reduction in churn
+- but only lightly; once the reduction gets too strong, it gives up too much edge
