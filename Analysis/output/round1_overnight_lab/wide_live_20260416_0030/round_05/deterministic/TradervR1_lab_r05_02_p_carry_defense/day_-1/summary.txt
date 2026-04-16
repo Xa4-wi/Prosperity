@@ -1,4 +1,0 @@
-Deterministic engine: rust
-Metrics: /Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/wide_live_20260416_0030/round_05/deterministic/TradervR1_lab_r05_02_p_carry_defense/day_-1/metrics.json
-Submission log: /Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/wide_live_20260416_0030/round_05/deterministic/TradervR1_lab_r05_02_p_carry_defense/day_-1/submission.log
-Final total PnL: 96693.0

@@ -1,9 +1,0 @@
-{
-  "started_at": "2026-04-16T00:30:36+02:00",
-  "finished_at": "2026-04-16T00:31:02+02:00",
-  "rounds_completed": 1,
-  "candidates_seen": 3,
-  "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/wide_smoke_20260416",
-  "best_deterministic_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/wide_smoke_20260416/round_01/candidates/TradervR1_lab_r01_03_p_entry_quality_a_quality_guard.py",
-  "best_robust_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/wide_smoke_20260416/round_01/candidates/TradervR1_lab_r01_03_p_entry_quality_a_quality_guard.py"
-}
