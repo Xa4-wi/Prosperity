@@ -1,0 +1,60 @@
+{
+  "config_name": "TradervR1_lab_r14_02_a_quality_guard_a_local_fair_blend short CMA-ES ash_quality_guard",
+  "config_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_live_20260416_0038/attempts/attempt_01/round_14/cmaes/tradervr1_lab_r14_02_a_quality_guard_a_local_fair_blend_ash_quality_guard.json",
+  "source_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_live_20260416_0038/attempts/attempt_01/round_14/candidates/TradervR1_lab_r14_02_a_quality_guard_a_local_fair_blend.py",
+  "best_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_live_20260416_0038/attempts/attempt_01/round_14/cmaes/TradervR1_lab_r14_02_a_quality_guard_a_local_fair_blend_ash_quality_guard/bots/TradervR1_lab_r14_02_a_quality_guard_a_local_fair_blend_best.py",
+  "parameters": {
+    "DEFAULT_ASH_PARAMS_ADVERSE_IMBALANCE": 0.1885136771,
+    "DEFAULT_ASH_PARAMS_STRONG_IMBALANCE": 0.1732792765,
+    "DEFAULT_ASH_PARAMS_SOFT_LIMIT": 67.584401591,
+    "DEFAULT_ASH_PARAMS_FRONT_SIZE": 15.0442027947,
+    "DEFAULT_ASH_PARAMS_BACK_SIZE": 6.0
+  },
+  "baseline_scores": {
+    "-2": 96159.0,
+    "-1": 96496.0,
+    "0": 95705.0
+  },
+  "best_scores": {
+    "-2": 96159.0,
+    "-1": 96496.0,
+    "0": 95705.0
+  },
+  "average": 96120.0,
+  "objective": 96120.0,
+  "regression_penalty": 0.0,
+  "imbalance_penalty": 0.0,
+  "drift_penalty": 0.0,
+  "search": {
+    "max_iter": 2,
+    "population": 4,
+    "parents": 2,
+    "sigma0": 0.08,
+    "seed": 5185,
+    "timeout_seconds": 240.0
+  },
+  "penalties": {
+    "regression": 4.0,
+    "imbalance": 1.0,
+    "drift": 60.0
+  },
+  "total_evaluations": 9,
+  "history": [
+    {
+      "generation": 1,
+      "sigma": 0.07056764377026725,
+      "generation_best_objective": 96119.87339129024,
+      "generation_best_average": 96120.0,
+      "global_best_objective": 96120.0,
+      "global_best_average": 96120.0
+    },
+    {
+      "generation": 2,
+      "sigma": 0.06977179317352958,
+      "generation_best_objective": 96119.52383068067,
+      "generation_best_average": 96120.0,
+      "global_best_objective": 96120.0,
+      "global_best_average": 96120.0
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "started_at": "2026-04-16T00:15:45+02:00",
+  "finished_at": "2026-04-16T00:43:55+02:00",
+  "rounds_completed": 18,
+  "candidates_seen": 153,
+  "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/tty_live_20260416_001355",
+  "best_deterministic_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/tty_live_20260416_001355/round_18/candidates/TradervR1_lab_r18_07_a_local_fair_blend_a_attack_tuning.py",
+  "best_robust_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/tty_live_20260416_001355/round_04/candidates/TradervR1_lab_r04_08_a_quality_guard_a_attack_tuning.py"
+}

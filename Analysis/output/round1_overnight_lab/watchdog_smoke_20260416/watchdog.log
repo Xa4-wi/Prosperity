@@ -1,0 +1,24 @@
+[2026-04-16T01:12:02+02:00] started attempt 1 pid=86607 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_01
+[2026-04-16T01:12:04+02:00] healthy pid=86607 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_01
+[2026-04-16T01:12:06+02:00] healthy pid=86607 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_01
+[2026-04-16T01:12:08+02:00] healthy pid=86607 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_01
+[2026-04-16T01:12:10+02:00] healthy pid=86607 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_01
+[2026-04-16T01:12:12+02:00] healthy pid=86607 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_01
+[2026-04-16T01:12:14+02:00] healthy pid=86607 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_01
+[2026-04-16T01:12:16+02:00] healthy pid=86607 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_01
+[2026-04-16T01:12:18+02:00] healthy pid=86607 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_01
+[2026-04-16T01:12:20+02:00] healthy pid=86607 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_01
+[2026-04-16T01:12:22+02:00] healthy pid=86607 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_01
+[2026-04-16T01:12:24+02:00] stopped rc=0 attempt=1 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_01
+[2026-04-16T01:12:24+02:00] started attempt 2 pid=86662 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_02
+[2026-04-16T01:12:26+02:00] healthy pid=86662 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_02
+[2026-04-16T01:12:28+02:00] healthy pid=86662 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_02
+[2026-04-16T01:12:30+02:00] healthy pid=86662 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_02
+[2026-04-16T01:12:32+02:00] healthy pid=86662 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_02
+[2026-04-16T01:12:34+02:00] healthy pid=86662 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_02
+[2026-04-16T01:12:36+02:00] healthy pid=86662 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_02
+[2026-04-16T01:12:38+02:00] healthy pid=86662 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_02
+[2026-04-16T01:12:40+02:00] healthy pid=86662 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_02
+[2026-04-16T01:12:42+02:00] healthy pid=86662 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_02
+[2026-04-16T01:12:44+02:00] healthy pid=86662 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_02
+[2026-04-16T01:12:46+02:00] stopped rc=0 attempt=2 dir=/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_02

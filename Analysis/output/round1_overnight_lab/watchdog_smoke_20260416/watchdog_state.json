@@ -1,0 +1,10 @@
+{
+  "updated_at": "2026-04-16T01:12:46+02:00",
+  "attempt_index": 2,
+  "restarts": 1,
+  "deadline": 1776294794.650862,
+  "current_attempt_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_smoke_20260416/attempts/attempt_02",
+  "child_pid": 86662,
+  "child_returncode": 0,
+  "status": "finished"
+}

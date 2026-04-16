@@ -1,0 +1,13 @@
+bot,family,sample_id,total_pnl,total_fills,path_mode,avg_block_steps,avg_passive_fill_prob,avg_passive_qty_scale,avg_aggressive_slip_prob,avg_aggressive_slip_ticks,day_-1_pnl,day_-2_pnl,day_0_pnl
+TradervR1_34_1,bootstrap_balanced,bootstrap_balanced_001,-24558.0,2197,bootstrap,322.3333,0.922312,0.95269,0.03845,1.0,51730.0,-38694.0,-37594.0
+TradervR1_34_1,bootstrap_balanced,bootstrap_balanced_002,132084.5,2114,bootstrap,377.6667,0.911413,0.916122,0.043788,1.0,9404.0,-16500.5,139181.0
+TradervR1_34_1,bootstrap_path,bootstrap_path_001,-5179.0,2110,bootstrap,308.0,1.0,1.0,0.0,1.0,-24851.0,26756.0,-7084.0
+TradervR1_34_1,bootstrap_path,bootstrap_path_002,80642.0,2225,bootstrap,337.3333,1.0,1.0,0.0,1.0,21028.0,49274.0,10340.0
+TradervR1_34_1,original_noise,original_noise_001,286209.0,2131,original,0.0,0.980006,0.993392,0.010975,1.0,94961.0,95398.0,95850.0
+TradervR1_34_1,original_noise,original_noise_002,284710.0,2114,original,0.0,0.95822,0.976527,0.019165,1.0,94442.0,95065.0,95203.0
+TradervR1_lab_r03_04_a_attack_tuning_a_quality_guard_p_entry_quality,bootstrap_balanced,bootstrap_balanced_001,-31024.0,2435,bootstrap,322.3333,0.922312,0.95269,0.03845,1.0,44288.0,-38302.0,-37010.0
+TradervR1_lab_r03_04_a_attack_tuning_a_quality_guard_p_entry_quality,bootstrap_balanced,bootstrap_balanced_002,131260.5,2365,bootstrap,377.6667,0.911413,0.916122,0.043788,1.0,9918.0,-16165.5,137508.0
+TradervR1_lab_r03_04_a_attack_tuning_a_quality_guard_p_entry_quality,bootstrap_path,bootstrap_path_001,-3748.0,2329,bootstrap,308.0,1.0,1.0,0.0,1.0,-24666.0,26785.0,-5867.0
+TradervR1_lab_r03_04_a_attack_tuning_a_quality_guard_p_entry_quality,bootstrap_path,bootstrap_path_002,81585.0,2450,bootstrap,337.3333,1.0,1.0,0.0,1.0,20982.0,49696.0,10907.0
+TradervR1_lab_r03_04_a_attack_tuning_a_quality_guard_p_entry_quality,original_noise,original_noise_001,287604.0,2332,original,0.0,0.980006,0.993392,0.010975,1.0,95050.0,95846.0,96708.0
+TradervR1_lab_r03_04_a_attack_tuning_a_quality_guard_p_entry_quality,original_noise,original_noise_002,285952.5,2308,original,0.0,0.95822,0.976527,0.019165,1.0,94774.0,95485.5,95693.0

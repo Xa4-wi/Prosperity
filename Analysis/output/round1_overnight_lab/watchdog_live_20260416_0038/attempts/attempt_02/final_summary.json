@@ -1,0 +1,9 @@
+{
+  "started_at": "2026-04-16T02:13:14+02:00",
+  "finished_at": "2026-04-16T02:35:43+02:00",
+  "rounds_completed": 18,
+  "candidates_seen": 153,
+  "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_live_20260416_0038/attempts/attempt_02",
+  "best_deterministic_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_live_20260416_0038/attempts/attempt_02/round_04/candidates/TradervR1_lab_r04_01_a_local_fair_blend.py",
+  "best_robust_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_live_20260416_0038/attempts/attempt_02/round_04/candidates/TradervR1_lab_r04_01_a_local_fair_blend.py"
+}

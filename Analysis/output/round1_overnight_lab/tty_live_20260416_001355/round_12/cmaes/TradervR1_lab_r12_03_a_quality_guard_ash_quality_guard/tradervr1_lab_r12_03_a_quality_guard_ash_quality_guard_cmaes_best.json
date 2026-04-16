@@ -1,0 +1,60 @@
+{
+  "config_name": "TradervR1_lab_r12_03_a_quality_guard short CMA-ES ash_quality_guard",
+  "config_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/tty_live_20260416_001355/round_12/cmaes/tradervr1_lab_r12_03_a_quality_guard_ash_quality_guard.json",
+  "source_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/tty_live_20260416_001355/round_12/candidates/TradervR1_lab_r12_03_a_quality_guard.py",
+  "best_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/tty_live_20260416_001355/round_12/cmaes/TradervR1_lab_r12_03_a_quality_guard_ash_quality_guard/bots/TradervR1_lab_r12_03_a_quality_guard_best.py",
+  "parameters": {
+    "DEFAULT_ASH_PARAMS_ADVERSE_IMBALANCE": 0.185465886,
+    "DEFAULT_ASH_PARAMS_STRONG_IMBALANCE": 0.1830104213,
+    "DEFAULT_ASH_PARAMS_SOFT_LIMIT": 70.1516330866,
+    "DEFAULT_ASH_PARAMS_FRONT_SIZE": 16.8798574426,
+    "DEFAULT_ASH_PARAMS_BACK_SIZE": 5.0
+  },
+  "baseline_scores": {
+    "-2": 96657.5,
+    "-1": 96739.0,
+    "0": 96419.0
+  },
+  "best_scores": {
+    "-2": 96657.5,
+    "-1": 96739.0,
+    "0": 96419.0
+  },
+  "average": 96605.16666666667,
+  "objective": 96605.16666666667,
+  "regression_penalty": 0.0,
+  "imbalance_penalty": 0.0,
+  "drift_penalty": 0.0,
+  "search": {
+    "max_iter": 2,
+    "population": 4,
+    "parents": 2,
+    "sigma0": 0.08,
+    "seed": 5094,
+    "timeout_seconds": 240.0
+  },
+  "penalties": {
+    "regression": 4.0,
+    "imbalance": 1.0,
+    "drift": 60.0
+  },
+  "total_evaluations": 9,
+  "history": [
+    {
+      "generation": 1,
+      "sigma": 0.06818169800297386,
+      "generation_best_objective": 96605.0589124748,
+      "generation_best_average": 96605.16666666667,
+      "global_best_objective": 96605.16666666667,
+      "global_best_average": 96605.16666666667
+    },
+    {
+      "generation": 2,
+      "sigma": 0.06583023720102042,
+      "generation_best_objective": 96604.72617278545,
+      "generation_best_average": 96605.16666666667,
+      "global_best_objective": 96605.16666666667,
+      "global_best_average": 96605.16666666667
+    }
+  ]
+}

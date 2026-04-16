@@ -1,0 +1,13 @@
+bot,family,sample_id,total_pnl,total_fills,path_mode,avg_block_steps,avg_passive_fill_prob,avg_passive_qty_scale,avg_aggressive_slip_prob,avg_aggressive_slip_ticks,day_-1_pnl,day_-2_pnl,day_0_pnl
+TradervR1_34_1,bootstrap_balanced,bootstrap_balanced_001,-24558.0,2197,bootstrap,322.3333,0.922312,0.95269,0.03845,1.0,51730.0,-38694.0,-37594.0
+TradervR1_34_1,bootstrap_balanced,bootstrap_balanced_002,132084.5,2114,bootstrap,377.6667,0.911413,0.916122,0.043788,1.0,9404.0,-16500.5,139181.0
+TradervR1_34_1,bootstrap_path,bootstrap_path_001,-5179.0,2110,bootstrap,308.0,1.0,1.0,0.0,1.0,-24851.0,26756.0,-7084.0
+TradervR1_34_1,bootstrap_path,bootstrap_path_002,80642.0,2225,bootstrap,337.3333,1.0,1.0,0.0,1.0,21028.0,49274.0,10340.0
+TradervR1_34_1,original_noise,original_noise_001,286209.0,2131,original,0.0,0.980006,0.993392,0.010975,1.0,94961.0,95398.0,95850.0
+TradervR1_34_1,original_noise,original_noise_002,284710.0,2114,original,0.0,0.95822,0.976527,0.019165,1.0,94442.0,95065.0,95203.0
+TradervR1_lab_r14_02_a_quality_guard_a_local_fair_blend,bootstrap_balanced,bootstrap_balanced_001,-29031.0,1827,bootstrap,322.3333,0.922312,0.95269,0.03845,1.0,46386.0,-38388.0,-37029.0
+TradervR1_lab_r14_02_a_quality_guard_a_local_fair_blend,bootstrap_balanced,bootstrap_balanced_002,131982.0,1766,bootstrap,377.6667,0.911413,0.916122,0.043788,1.0,10435.0,-16867.0,138414.0
+TradervR1_lab_r14_02_a_quality_guard_a_local_fair_blend,bootstrap_path,bootstrap_path_001,-4424.5,1763,bootstrap,308.0,1.0,1.0,0.0,1.0,-24724.0,26802.0,-6502.5
+TradervR1_lab_r14_02_a_quality_guard_a_local_fair_blend,bootstrap_path,bootstrap_path_002,81633.0,1891,bootstrap,337.3333,1.0,1.0,0.0,1.0,21294.0,49549.0,10790.0
+TradervR1_lab_r14_02_a_quality_guard_a_local_fair_blend,original_noise,original_noise_001,287237.5,1735,original,0.0,0.980006,0.993392,0.010975,1.0,95283.0,95495.5,96459.0
+TradervR1_lab_r14_02_a_quality_guard_a_local_fair_blend,original_noise,original_noise_002,286240.5,1736,original,0.0,0.95822,0.976527,0.019165,1.0,95257.0,95093.5,95890.0

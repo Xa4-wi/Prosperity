@@ -1,0 +1,382 @@
+{
+  "config": {
+    "seed": 52,
+    "days": [
+      -2,
+      -1,
+      0
+    ],
+    "samples_per_family": 2,
+    "families": [
+      {
+        "name": "original_noise",
+        "description": "Original historical path with very mild execution-noise perturbations.",
+        "path_mode": "original",
+        "block_steps_min": 0,
+        "block_steps_max": 0,
+        "passive_fill_prob_range": [
+          0.94,
+          1.0
+        ],
+        "passive_qty_scale_range": [
+          0.96,
+          1.0
+        ],
+        "aggressive_slip_prob_range": [
+          0.0,
+          0.03
+        ],
+        "aggressive_slip_ticks_range": [
+          1,
+          1
+        ]
+      },
+      {
+        "name": "bootstrap_path",
+        "description": "Block-bootstrap of the historical path with no fill perturbation.",
+        "path_mode": "bootstrap",
+        "block_steps_min": 160,
+        "block_steps_max": 520,
+        "passive_fill_prob_range": [
+          1.0,
+          1.0
+        ],
+        "passive_qty_scale_range": [
+          1.0,
+          1.0
+        ],
+        "aggressive_slip_prob_range": [
+          0.0,
+          0.0
+        ],
+        "aggressive_slip_ticks_range": [
+          1,
+          1
+        ]
+      },
+      {
+        "name": "bootstrap_balanced",
+        "description": "Block-bootstrap with calibrated mild-to-moderate execution degradation.",
+        "path_mode": "bootstrap",
+        "block_steps_min": 140,
+        "block_steps_max": 420,
+        "passive_fill_prob_range": [
+          0.84,
+          0.97
+        ],
+        "passive_qty_scale_range": [
+          0.86,
+          0.97
+        ],
+        "aggressive_slip_prob_range": [
+          0.01,
+          0.08
+        ],
+        "aggressive_slip_ticks_range": [
+          1,
+          1
+        ]
+      }
+    ],
+    "bots": [
+      "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_live_20260416_0038/attempts/attempt_04/round_12/candidates/TradervR1_lab_r12_07_p_entry_quality.py",
+      "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_34_1.py"
+    ]
+  },
+  "baseline": {
+    "TradervR1_lab_r12_07_p_entry_quality": {
+      "per_day": {
+        "-2": 96424.5,
+        "-1": 96244.0,
+        "0": 97442.0
+      },
+      "combined_total_pnl": 290110.5
+    },
+    "TradervR1_34_1": {
+      "per_day": {
+        "-2": 95526.5,
+        "-1": 95486.0,
+        "0": 96293.0
+      },
+      "combined_total_pnl": 287305.5
+    }
+  },
+  "monte_carlo": {
+    "TradervR1_lab_r12_07_p_entry_quality": {
+      "overall": {
+        "count": 6,
+        "mean": 125948.4167,
+        "std": 127530.5042,
+        "min": -37187.0,
+        "p05": -28477.375,
+        "p10": -19767.75,
+        "p25": 19079.375,
+        "median": 109487.25,
+        "p75": 249454.75,
+        "p90": 288125.75,
+        "p95": 288487.375,
+        "max": 288849.0,
+        "cvar10": -37187.0
+      },
+      "profiles": {
+        "plausible": {
+          "count": 6,
+          "mean": 125948.4167,
+          "std": 127530.5042,
+          "min": -37187.0,
+          "p05": -28477.375,
+          "p10": -19767.75,
+          "p25": 19079.375,
+          "median": 109487.25,
+          "p75": 249454.75,
+          "p90": 288125.75,
+          "p95": 288487.375,
+          "max": 288849.0,
+          "cvar10": -37187.0
+        },
+        "stress": {
+          "count": 0,
+          "mean": 0.0,
+          "std": 0.0,
+          "min": 0.0,
+          "p05": 0.0,
+          "p10": 0.0,
+          "p25": 0.0,
+          "median": 0.0,
+          "p75": 0.0,
+          "p90": 0.0,
+          "p95": 0.0,
+          "max": 0.0,
+          "cvar10": 0.0
+        },
+        "all": {
+          "count": 6,
+          "mean": 125948.4167,
+          "std": 127530.5042,
+          "min": -37187.0,
+          "p05": -28477.375,
+          "p10": -19767.75,
+          "p25": 19079.375,
+          "median": 109487.25,
+          "p75": 249454.75,
+          "p90": 288125.75,
+          "p95": 288487.375,
+          "max": 288849.0,
+          "cvar10": -37187.0
+        }
+      },
+      "by_family": {
+        "original_noise": {
+          "count": 2,
+          "mean": 288125.75,
+          "std": 723.25,
+          "min": 287402.5,
+          "p05": 287474.825,
+          "p10": 287547.15,
+          "p25": 287764.125,
+          "median": 288125.75,
+          "p75": 288487.375,
+          "p90": 288704.35,
+          "p95": 288776.675,
+          "max": 288849.0,
+          "cvar10": 287402.5
+        },
+        "bootstrap_path": {
+          "count": 2,
+          "mean": 40507.25,
+          "std": 42855.75,
+          "min": -2348.5,
+          "p05": 1937.075,
+          "p10": 6222.65,
+          "p25": 19079.375,
+          "median": 40507.25,
+          "p75": 61935.125,
+          "p90": 74791.85,
+          "p95": 79077.425,
+          "max": 83363.0,
+          "cvar10": -2348.5
+        },
+        "bootstrap_balanced": {
+          "count": 2,
+          "mean": 49212.25,
+          "std": 86399.25,
+          "min": -37187.0,
+          "p05": -28547.075,
+          "p10": -19907.15,
+          "p25": 6012.625,
+          "median": 49212.25,
+          "p75": 92411.875,
+          "p90": 118331.65,
+          "p95": 126971.575,
+          "max": 135611.5,
+          "cvar10": -37187.0
+        }
+      }
+    },
+    "TradervR1_34_1": {
+      "overall": {
+        "count": 6,
+        "mean": 125651.4167,
+        "std": 124381.8512,
+        "min": -24558.0,
+        "p05": -19713.25,
+        "p10": -14868.5,
+        "p25": 16276.25,
+        "median": 106363.25,
+        "p75": 246553.625,
+        "p90": 285459.5,
+        "p95": 285834.25,
+        "max": 286209.0,
+        "cvar10": -24558.0
+      },
+      "profiles": {
+        "plausible": {
+          "count": 6,
+          "mean": 125651.4167,
+          "std": 124381.8512,
+          "min": -24558.0,
+          "p05": -19713.25,
+          "p10": -14868.5,
+          "p25": 16276.25,
+          "median": 106363.25,
+          "p75": 246553.625,
+          "p90": 285459.5,
+          "p95": 285834.25,
+          "max": 286209.0,
+          "cvar10": -24558.0
+        },
+        "stress": {
+          "count": 0,
+          "mean": 0.0,
+          "std": 0.0,
+          "min": 0.0,
+          "p05": 0.0,
+          "p10": 0.0,
+          "p25": 0.0,
+          "median": 0.0,
+          "p75": 0.0,
+          "p90": 0.0,
+          "p95": 0.0,
+          "max": 0.0,
+          "cvar10": 0.0
+        },
+        "all": {
+          "count": 6,
+          "mean": 125651.4167,
+          "std": 124381.8512,
+          "min": -24558.0,
+          "p05": -19713.25,
+          "p10": -14868.5,
+          "p25": 16276.25,
+          "median": 106363.25,
+          "p75": 246553.625,
+          "p90": 285459.5,
+          "p95": 285834.25,
+          "max": 286209.0,
+          "cvar10": -24558.0
+        }
+      },
+      "by_family": {
+        "original_noise": {
+          "count": 2,
+          "mean": 285459.5,
+          "std": 749.5,
+          "min": 284710.0,
+          "p05": 284784.95,
+          "p10": 284859.9,
+          "p25": 285084.75,
+          "median": 285459.5,
+          "p75": 285834.25,
+          "p90": 286059.1,
+          "p95": 286134.05,
+          "max": 286209.0,
+          "cvar10": 284710.0
+        },
+        "bootstrap_path": {
+          "count": 2,
+          "mean": 37731.5,
+          "std": 42910.5,
+          "min": -5179.0,
+          "p05": -887.95,
+          "p10": 3403.1,
+          "p25": 16276.25,
+          "median": 37731.5,
+          "p75": 59186.75,
+          "p90": 72059.9,
+          "p95": 76350.95,
+          "max": 80642.0,
+          "cvar10": -5179.0
+        },
+        "bootstrap_balanced": {
+          "count": 2,
+          "mean": 53763.25,
+          "std": 78321.25,
+          "min": -24558.0,
+          "p05": -16725.875,
+          "p10": -8893.75,
+          "p25": 14602.625,
+          "median": 53763.25,
+          "p75": 92923.875,
+          "p90": 116420.25,
+          "p95": 124252.375,
+          "max": 132084.5,
+          "cvar10": -24558.0
+        }
+      }
+    }
+  },
+  "comparison": {
+    "primary_bot": "TradervR1_lab_r12_07_p_entry_quality",
+    "compare_bot": "TradervR1_34_1",
+    "shared_samples": 6,
+    "summary": {
+      "mean_delta": 297.0,
+      "median_delta": 2706.75,
+      "p10_delta": -4994.5,
+      "win_rate": 0.8333
+    },
+    "by_family": {
+      "bootstrap_balanced": {
+        "samples": 2,
+        "mean_delta": -4551.0,
+        "win_rate": 0.5,
+        "p10_delta": -11013.4
+      },
+      "bootstrap_path": {
+        "samples": 2,
+        "mean_delta": 2775.75,
+        "win_rate": 1.0,
+        "p10_delta": 2731.95
+      },
+      "original_noise": {
+        "samples": 2,
+        "mean_delta": 2666.25,
+        "win_rate": 1.0,
+        "p10_delta": 2645.25
+      }
+    },
+    "by_profile": {
+      "plausible": {
+        "samples": 6,
+        "mean_delta": 297.0,
+        "median_delta": 2706.75,
+        "p10_delta": -4994.5,
+        "win_rate": 0.8333
+      },
+      "stress": {
+        "samples": 0,
+        "mean_delta": 0.0,
+        "median_delta": 0.0,
+        "p10_delta": 0.0,
+        "win_rate": 0.0
+      },
+      "all": {
+        "samples": 6,
+        "mean_delta": 297.0,
+        "median_delta": 2706.75,
+        "p10_delta": -4994.5,
+        "win_rate": 0.8333
+      }
+    }
+  }
+}

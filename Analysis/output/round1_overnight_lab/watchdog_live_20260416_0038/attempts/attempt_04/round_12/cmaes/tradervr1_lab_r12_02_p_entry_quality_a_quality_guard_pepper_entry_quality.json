@@ -1,0 +1,79 @@
+{
+  "name": "TradervR1_lab_r12_02_p_entry_quality_a_quality_guard short CMA-ES pepper_entry_quality",
+  "source_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_live_20260416_0038/attempts/attempt_04/round_12/candidates/TradervR1_lab_r12_02_p_entry_quality_a_quality_guard.py",
+  "baselines": {
+    "-2": 96570.5,
+    "-1": 96975.0,
+    "0": 96439.0
+  },
+  "search": {
+    "max_iter": 2,
+    "population": 4,
+    "parents": 2,
+    "sigma0": 0.08,
+    "seed": 5078,
+    "timeout_seconds": 240
+  },
+  "penalties": {
+    "regression": 4.0,
+    "imbalance": 1.0,
+    "drift": 60.0
+  },
+  "output_prefix": "tradervr1_lab_r12_02_p_entry_quality_a_quality_guard_pepper_entry_quality_cmaes",
+  "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_live_20260416_0038/attempts/attempt_04/round_12/cmaes/TradervR1_lab_r12_02_p_entry_quality_a_quality_guard_pepper_entry_quality",
+  "data_root": "/Users/xavierwinkelmann/Prosperity/Data/ROUND_1",
+  "dataset_tag": "round_1",
+  "engine": "rust",
+  "parameters": [
+    {
+      "name": "DEFAULT_IPR_PARAMS_CHEAP_ACCUM_END",
+      "lower": 0.35,
+      "upper": 0.68,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CHEAP_ACCUM_END"
+      }
+    },
+    {
+      "name": "DEFAULT_IPR_PARAMS_CHEAP_ACCUM_TAKE_PENALTY",
+      "lower": 0.0,
+      "upper": 0.45,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CHEAP_ACCUM_TAKE_PENALTY"
+      }
+    },
+    {
+      "name": "DEFAULT_IPR_PARAMS_CHEAP_ACCUM_QUOTE_EDGE_BONUS",
+      "lower": 0.0,
+      "upper": 1.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CHEAP_ACCUM_QUOTE_EDGE_BONUS"
+      }
+    },
+    {
+      "name": "DEFAULT_IPR_PARAMS_CHEAP_ACCUM_Z_RELAX",
+      "lower": -1.2,
+      "upper": 0.1,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CHEAP_ACCUM_Z_RELAX"
+      }
+    },
+    {
+      "name": "DEFAULT_IPR_PARAMS_CHEAP_ACCUM_TARGET_BUFFER",
+      "lower": 10.0,
+      "upper": 28.0,
+      "location": {
+        "type": "dict_block",
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CHEAP_ACCUM_TARGET_BUFFER"
+      }
+    }
+  ]
+}

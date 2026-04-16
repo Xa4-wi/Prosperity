@@ -1,0 +1,62 @@
+{
+  "config_name": "TradervR1_lab_r04_01_a_local_fair_blend short CMA-ES ash_local_fair_blend",
+  "config_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_live_20260416_0038/attempts/attempt_07/round_04/cmaes/tradervr1_lab_r04_01_a_local_fair_blend_ash_local_fair_blend.json",
+  "source_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_live_20260416_0038/attempts/attempt_07/round_04/candidates/TradervR1_lab_r04_01_a_local_fair_blend.py",
+  "best_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_live_20260416_0038/attempts/attempt_07/round_04/cmaes/TradervR1_lab_r04_01_a_local_fair_blend_ash_local_fair_blend/bots/TradervR1_lab_r04_01_a_local_fair_blend_best.py",
+  "parameters": {
+    "DEFAULT_ASH_PARAMS_ANCHOR_WEIGHT": 0.569910423,
+    "DEFAULT_ASH_PARAMS_WALL_MID_BLEND": 0.35179971470000004,
+    "DEFAULT_ASH_PARAMS_LOCAL_MICRO_WEIGHT": 0.1657888073,
+    "DEFAULT_ASH_PARAMS_LOCAL_IMBALANCE_BIAS": 0.1865186591,
+    "DEFAULT_ASH_PARAMS_DEPTH_IMPACT_SCALE": 40.7579842076,
+    "DEFAULT_ASH_PARAMS_INVENTORY_SKEW": 0.0936697405,
+    "DEFAULT_ASH_PARAMS_INVENTORY_CURVE": 1.6532757931
+  },
+  "baseline_scores": {
+    "-2": 97465.0,
+    "-1": 97999.0,
+    "0": 97274.0
+  },
+  "best_scores": {
+    "-2": 97465.0,
+    "-1": 97999.0,
+    "0": 97274.0
+  },
+  "average": 97579.33333333333,
+  "objective": 97579.33333333333,
+  "regression_penalty": 0.0,
+  "imbalance_penalty": 0.0,
+  "drift_penalty": 7.336875978618042e-32,
+  "search": {
+    "max_iter": 2,
+    "population": 4,
+    "parents": 2,
+    "sigma0": 0.08,
+    "seed": 4811,
+    "timeout_seconds": 240.0
+  },
+  "penalties": {
+    "regression": 4.0,
+    "imbalance": 1.0,
+    "drift": 60.0
+  },
+  "total_evaluations": 9,
+  "history": [
+    {
+      "generation": 1,
+      "sigma": 0.0719441961226169,
+      "generation_best_objective": -144959.18623397546,
+      "generation_best_average": 78985.0,
+      "global_best_objective": 97579.33333333333,
+      "global_best_average": 97579.33333333333
+    },
+    {
+      "generation": 2,
+      "sigma": 0.06431695555265095,
+      "generation_best_objective": -144959.10455191534,
+      "generation_best_average": 78985.0,
+      "global_best_objective": 97579.33333333333,
+      "global_best_average": 97579.33333333333
+    }
+  ]
+}

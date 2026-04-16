@@ -1,0 +1,281 @@
+{
+  "ash_attack_tuning": {
+    "description": "Push or soften join/improve spread capture around the local-fair Osmium core.",
+    "strategy_refs": [
+      "1.2 Join / Improve Market Making",
+      "1.4 Spread-Capture Only MM",
+      "3.3 Queue-Aware Market Making"
+    ],
+    "rules": [
+      {
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "BASE_EDGE",
+        "step": 0.45,
+        "lower": -1.5,
+        "upper": 2.5,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "TAKE_L1_EDGE",
+        "step": 0.6,
+        "lower": -1.5,
+        "upper": 3.0,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "TAKE_L2_EDGE",
+        "step": 0.75,
+        "lower": 0.5,
+        "upper": 6.5,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "TAKE_L3_EDGE",
+        "step": 1.0,
+        "lower": 2.0,
+        "upper": 10.0,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "MIN_QUOTE_EDGE",
+        "step": 0.55,
+        "lower": 1.4,
+        "upper": 5.0,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "JOIN_EDGE",
+        "step": 0.35,
+        "lower": 1.0,
+        "upper": 3.0,
+        "int_like": false
+      }
+    ]
+  },
+  "ash_quality_guard": {
+    "description": "Tighten or relax toxicity-sensitive quoting and same-side inventory exposure.",
+    "strategy_refs": [
+      "1.3 Inventory-Skewed Market Making",
+      "3.3 Queue-Aware Market Making"
+    ],
+    "rules": [
+      {
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "ADVERSE_IMBALANCE",
+        "step": 0.03,
+        "lower": 0.12,
+        "upper": 0.3,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "STRONG_IMBALANCE",
+        "step": 0.03,
+        "lower": 0.08,
+        "upper": 0.24,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "SOFT_LIMIT",
+        "step": 3.0,
+        "lower": 55.0,
+        "upper": 75.0,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "FRONT_SIZE",
+        "step": 1.25,
+        "lower": 12.0,
+        "upper": 22.0,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "BACK_SIZE",
+        "step": 0.75,
+        "lower": 2.0,
+        "upper": 8.0,
+        "int_like": true
+      }
+    ]
+  },
+  "ash_local_fair_blend": {
+    "description": "Shift Osmium between anchor, stable/wall-mid, microprice, and depth-aware imbalance.",
+    "strategy_refs": [
+      "1.1 Static Fair-Value Market Making",
+      "1.2 Join / Improve Market Making",
+      "3.2 GLFT (Gu\u00e9ant-Lehalle-Fernandez-Tapia)"
+    ],
+    "rules": [
+      {
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "ANCHOR_WEIGHT",
+        "step": 0.07,
+        "lower": 0.15,
+        "upper": 0.7,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "WALL_MID_BLEND",
+        "step": 0.08,
+        "lower": 0.05,
+        "upper": 0.65,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "LOCAL_MICRO_WEIGHT",
+        "step": 0.08,
+        "lower": 0.05,
+        "upper": 0.85,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "LOCAL_IMBALANCE_BIAS",
+        "step": 0.05,
+        "lower": 0.0,
+        "upper": 0.35,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "DEPTH_IMPACT_SCALE",
+        "step": 10.0,
+        "lower": 20.0,
+        "upper": 130.0,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "INVENTORY_SKEW",
+        "step": 0.01,
+        "lower": 0.05,
+        "upper": 0.16,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_ASH_PARAMS",
+        "key": "INVENTORY_CURVE",
+        "step": 0.45,
+        "lower": 0.2,
+        "upper": 5.0,
+        "int_like": false
+      }
+    ]
+  },
+  "pepper_entry_quality": {
+    "description": "Refine cheap accumulation and anti-chasing on Pepper without changing the drift thesis.",
+    "strategy_refs": [
+      "2.1 Mean Reversion",
+      "2.2 Trend Following / Momentum"
+    ],
+    "rules": [
+      {
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CHEAP_ACCUM_END",
+        "step": 0.04,
+        "lower": 0.35,
+        "upper": 0.68,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CHEAP_ACCUM_TAKE_PENALTY",
+        "step": 0.04,
+        "lower": 0.0,
+        "upper": 0.45,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CHEAP_ACCUM_QUOTE_EDGE_BONUS",
+        "step": 0.12,
+        "lower": 0.0,
+        "upper": 1.0,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CHEAP_ACCUM_Z_RELAX",
+        "step": 0.08,
+        "lower": -1.2,
+        "upper": 0.1,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "CHEAP_ACCUM_TARGET_BUFFER",
+        "step": 2.0,
+        "lower": 10.0,
+        "upper": 28.0,
+        "int_like": true
+      }
+    ]
+  },
+  "pepper_carry_defense": {
+    "description": "Protect or monetize Pepper carry more selectively while keeping the deterministic drift engine.",
+    "strategy_refs": [
+      "2.2 Trend Following / Momentum",
+      "1.3 Inventory-Skewed Market Making"
+    ],
+    "rules": [
+      {
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "EARLY_LONG_BIAS",
+        "step": 2.5,
+        "lower": 34.0,
+        "upper": 52.0,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "ZSCORE_SELL_PENALTY",
+        "step": 0.8,
+        "lower": 4.0,
+        "upper": 14.0,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "OVEREXTENSION_Z",
+        "step": 0.1,
+        "lower": 0.7,
+        "upper": 1.45,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "BULLISH_IMBALANCE",
+        "step": 0.02,
+        "lower": 0.0,
+        "upper": 0.12,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "BASE_TAKE_EDGE",
+        "step": 0.2,
+        "lower": 1.8,
+        "upper": 3.6,
+        "int_like": false
+      },
+      {
+        "container": "DEFAULT_IPR_PARAMS",
+        "key": "BASE_QUOTE_EDGE",
+        "step": 0.3,
+        "lower": 3.8,
+        "upper": 6.4,
+        "int_like": false
+      }
+    ]
+  }
+}

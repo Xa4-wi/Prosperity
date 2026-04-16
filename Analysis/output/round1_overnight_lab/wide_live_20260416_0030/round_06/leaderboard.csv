@@ -1,0 +1,3 @@
+rank,name,parent,families,deterministic_total,delta_vs_safe,delta_vs_attack,min_day_delta_vs_safe,daily_delta_range_vs_safe,deterministic_score,composite_score,day_-2,ash_-2,pepper_-2,trades_-2,day_-1,ash_-1,pepper_-1,trades_-1,day_0,ash_0,pepper_0,trades_0
+1,TradervR1_lab_r06_04_p_carry_defense_p_entry_quality,TradervR1_47_2,"pepper_carry_defense,pepper_entry_quality",289311.5,1269.0,-533.0,216.0,352.0,1316.44,1316.44,96345.5,16701.5,79644.0,821,96702.0,17386.0,79316.0,800,96264.0,16867.0,79397.0,785
+2,TradervR1_lab_r06_05_a_quality_guard_a_local_fair_blend,TradervR1_47,"ash_quality_guard,ash_local_fair_blend",289258.5,1216.0,-586.0,254.0,250.0,1284.9,1284.9,96383.5,16739.5,79644.0,861,96721.0,17353.0,79368.0,834,96154.0,16757.0,79397.0,821

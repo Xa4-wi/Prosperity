@@ -10,6 +10,7 @@ import random
 import re
 import shutil
 import time
+import traceback
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -253,9 +254,15 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     if not rows:
         path.write_text("")
         return
-    fieldnames = list(rows[0].keys())
+    fieldnames: list[str] = []
+    seen: set[str] = set()
+    for row in rows:
+        for key in row.keys():
+            if key not in seen:
+                seen.add(key)
+                fieldnames.append(key)
     with path.open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer = csv.DictWriter(handle, fieldnames=fieldnames, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -789,6 +796,13 @@ def _summary_markdown(
     return "\n".join(lines)
 
 
+def _log_error(path: Path, label: str, exc: BaseException) -> None:
+    with path.open("a") as handle:
+        handle.write(f"[{_now()}] {label}\n")
+        handle.write("".join(traceback.format_exception(type(exc), exc, exc.__traceback__)))
+        handle.write("\n")
+
+
 def _write_session_outputs(
     state: SessionState,
     all_evaluations: list[CandidateEval],
@@ -898,6 +912,7 @@ def main() -> None:
     best_safe: CandidateEval | None = None
     best_robust: CandidateEval | None = None
     latest_round_dir: Path | None = None
+    errors_path = output_dir / "errors.log"
 
     start = time.time()
     round_index = 0
@@ -905,75 +920,111 @@ def main() -> None:
         round_index += 1
         latest_round_dir = ensure_dir(output_dir / f"round_{round_index:02d}")
         candidate_dir = ensure_dir(latest_round_dir / "candidates")
+        round_errors: list[str] = []
 
         round_evaluations: list[CandidateEval] = []
         radius = max(args.min_radius, args.base_radius - args.radius_decay * (round_index - 1))
 
         for candidate_index in range(1, args.candidates_per_round + 1):
-            if rng.random() < args.seed_parent_prob:
-                parent_bot = rng.choice(seed_bots)
-            else:
-                parent_bot = rng.choice(parent_pool)
-            candidate, patched = _candidate_from_parent(
-                round_index=round_index,
-                candidate_index=candidate_index,
-                parent_bot=parent_bot,
-                family_weights=state.family_weights,
-                radius=radius,
-                rng=rng,
-                secondary_prob=args.secondary_family_prob,
-                triple_prob=args.triple_family_prob,
-                exploration_mix=args.family_exploration_mix,
-            )
-            candidate.bot_path = candidate_dir / f"{candidate.name}.py"
-            candidate.bot_path.write_text(patched)
-            evaluation = _run_candidate_deterministic(
-                candidate,
-                round_dir=latest_round_dir,
-                safe_baseline_total=safe_baseline_total,
-                safe_baseline_days=safe_baseline_days,
-                attack_total=attack_total,
-            )
-            round_evaluations.append(evaluation)
-            all_evaluations.append(evaluation)
-            state.candidates_seen += 1
+            try:
+                if rng.random() < args.seed_parent_prob:
+                    parent_bot = rng.choice(seed_bots)
+                else:
+                    parent_bot = rng.choice(parent_pool)
+                candidate, patched = _candidate_from_parent(
+                    round_index=round_index,
+                    candidate_index=candidate_index,
+                    parent_bot=parent_bot,
+                    family_weights=state.family_weights,
+                    radius=radius,
+                    rng=rng,
+                    secondary_prob=args.secondary_family_prob,
+                    triple_prob=args.triple_family_prob,
+                    exploration_mix=args.family_exploration_mix,
+                )
+                candidate.bot_path = candidate_dir / f"{candidate.name}.py"
+                candidate.bot_path.write_text(patched)
+                evaluation = _run_candidate_deterministic(
+                    candidate,
+                    round_dir=latest_round_dir,
+                    safe_baseline_total=safe_baseline_total,
+                    safe_baseline_days=safe_baseline_days,
+                    attack_total=attack_total,
+                )
+                round_evaluations.append(evaluation)
+                all_evaluations.append(evaluation)
+                state.candidates_seen += 1
+            except Exception as exc:
+                label = f"round {round_index} candidate {candidate_index}"
+                round_errors.append(f"{label}: {exc}")
+                _log_error(errors_path, label, exc)
 
         det_sorted = sorted(round_evaluations, key=lambda item: item.deterministic_score, reverse=True)
         mc_pool = det_sorted[: max(1, min(args.mc_top_k, len(det_sorted)))]
         for evaluation in mc_pool:
-            _run_mc_for_candidate(
-                evaluation,
-                round_dir=latest_round_dir,
-                baseline_bot=baseline_bot,
-                samples_per_family=args.mc_samples_per_family,
-            )
-
-        if args.cmaes_every and round_index % args.cmaes_every == 0 and mc_pool:
-            champion = sorted(
-                mc_pool,
-                key=lambda item: item.composite_score if item.composite_score is not None else item.deterministic_score,
-                reverse=True,
-            )[0]
-            focus_family = champion.candidate.families[0]
-            cmaes_eval = _run_cmaes_candidate(
-                champion=champion,
-                focus_family=focus_family,
-                round_index=round_index,
-                round_dir=latest_round_dir,
-                safe_baseline_total=safe_baseline_total,
-                safe_baseline_days=safe_baseline_days,
-                attack_total=attack_total,
-            )
-            if cmaes_eval is not None:
+            try:
                 _run_mc_for_candidate(
-                    cmaes_eval,
+                    evaluation,
                     round_dir=latest_round_dir,
                     baseline_bot=baseline_bot,
                     samples_per_family=args.mc_samples_per_family,
                 )
-                round_evaluations.append(cmaes_eval)
-                all_evaluations.append(cmaes_eval)
-                state.candidates_seen += 1
+            except Exception as exc:
+                label = f"round {round_index} mc {evaluation.candidate.name}"
+                round_errors.append(f"{label}: {exc}")
+                _log_error(errors_path, label, exc)
+
+        if args.cmaes_every and round_index % args.cmaes_every == 0 and mc_pool:
+            try:
+                champion = sorted(
+                    mc_pool,
+                    key=lambda item: item.composite_score if item.composite_score is not None else item.deterministic_score,
+                    reverse=True,
+                )[0]
+                focus_family = champion.candidate.families[0]
+                cmaes_eval = _run_cmaes_candidate(
+                    champion=champion,
+                    focus_family=focus_family,
+                    round_index=round_index,
+                    round_dir=latest_round_dir,
+                    safe_baseline_total=safe_baseline_total,
+                    safe_baseline_days=safe_baseline_days,
+                    attack_total=attack_total,
+                )
+                if cmaes_eval is not None:
+                    try:
+                        _run_mc_for_candidate(
+                            cmaes_eval,
+                            round_dir=latest_round_dir,
+                            baseline_bot=baseline_bot,
+                            samples_per_family=args.mc_samples_per_family,
+                        )
+                    except Exception as exc:
+                        label = f"round {round_index} cmaes-mc {cmaes_eval.candidate.name}"
+                        round_errors.append(f"{label}: {exc}")
+                        _log_error(errors_path, label, exc)
+                    round_evaluations.append(cmaes_eval)
+                    all_evaluations.append(cmaes_eval)
+                    state.candidates_seen += 1
+            except Exception as exc:
+                label = f"round {round_index} cmaes"
+                round_errors.append(f"{label}: {exc}")
+                _log_error(errors_path, label, exc)
+
+        if not round_evaluations:
+            _write_json(
+                latest_round_dir / "feedback.json",
+                {
+                    "round": round_index,
+                    "generated_at": _now(),
+                    "family_weights": state.family_weights,
+                    "family_notes": [],
+                    "errors": round_errors,
+                },
+            )
+            state.rounds_completed = round_index
+            _write_session_outputs(state, all_evaluations, best_safe, best_robust, latest_round_dir)
+            continue
 
         ranked_round = sorted(
             round_evaluations,
@@ -999,6 +1050,7 @@ def main() -> None:
                 "generated_at": _now(),
                 "family_weights": state.family_weights,
                 "family_notes": family_notes,
+                "errors": round_errors,
             },
         )
 

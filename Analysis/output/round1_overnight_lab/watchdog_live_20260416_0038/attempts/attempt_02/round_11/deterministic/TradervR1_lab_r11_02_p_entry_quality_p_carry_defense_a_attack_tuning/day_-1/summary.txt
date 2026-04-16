@@ -1,0 +1,4 @@
+Deterministic engine: rust
+Metrics: /Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_live_20260416_0038/attempts/attempt_02/round_11/deterministic/TradervR1_lab_r11_02_p_entry_quality_p_carry_defense_a_attack_tuning/day_-1/metrics.json
+Submission log: /Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_live_20260416_0038/attempts/attempt_02/round_11/deterministic/TradervR1_lab_r11_02_p_entry_quality_p_carry_defense_a_attack_tuning/day_-1/submission.log
+Final total PnL: 96566.0

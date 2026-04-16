@@ -1,0 +1,60 @@
+{
+  "config_name": "TradervR1_lab_r12_02_p_entry_quality_a_quality_guard short CMA-ES pepper_entry_quality",
+  "config_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_live_20260416_0038/attempts/attempt_08/round_12/cmaes/tradervr1_lab_r12_02_p_entry_quality_a_quality_guard_pepper_entry_quality.json",
+  "source_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_live_20260416_0038/attempts/attempt_08/round_12/candidates/TradervR1_lab_r12_02_p_entry_quality_a_quality_guard.py",
+  "best_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_live_20260416_0038/attempts/attempt_08/round_12/cmaes/TradervR1_lab_r12_02_p_entry_quality_a_quality_guard_pepper_entry_quality/bots/TradervR1_lab_r12_02_p_entry_quality_a_quality_guard_best.py",
+  "parameters": {
+    "DEFAULT_IPR_PARAMS_CHEAP_ACCUM_END": 0.5238999155,
+    "DEFAULT_IPR_PARAMS_CHEAP_ACCUM_TAKE_PENALTY": 0.0170700487,
+    "DEFAULT_IPR_PARAMS_CHEAP_ACCUM_QUOTE_EDGE_BONUS": 0.5194485015,
+    "DEFAULT_IPR_PARAMS_CHEAP_ACCUM_Z_RELAX": -0.47402662929999995,
+    "DEFAULT_IPR_PARAMS_CHEAP_ACCUM_TARGET_BUFFER": 17.0
+  },
+  "baseline_scores": {
+    "-2": 96570.5,
+    "-1": 96975.0,
+    "0": 96439.0
+  },
+  "best_scores": {
+    "-2": 96570.5,
+    "-1": 96975.0,
+    "0": 96439.0
+  },
+  "average": 96661.5,
+  "objective": 96661.5,
+  "regression_penalty": 0.0,
+  "imbalance_penalty": 0.0,
+  "drift_penalty": 2.1880387533866818e-32,
+  "search": {
+    "max_iter": 2,
+    "population": 4,
+    "parents": 2,
+    "sigma0": 0.08,
+    "seed": 4579,
+    "timeout_seconds": 240.0
+  },
+  "penalties": {
+    "regression": 4.0,
+    "imbalance": 1.0,
+    "drift": 60.0
+  },
+  "total_evaluations": 9,
+  "history": [
+    {
+      "generation": 1,
+      "sigma": 0.06688632639507087,
+      "generation_best_objective": 96661.44245241689,
+      "generation_best_average": 96661.5,
+      "global_best_objective": 96661.5,
+      "global_best_average": 96661.5
+    },
+    {
+      "generation": 2,
+      "sigma": 0.056036947067936986,
+      "generation_best_objective": 96661.46025487967,
+      "generation_best_average": 96661.5,
+      "global_best_objective": 96661.5,
+      "global_best_average": 96661.5
+    }
+  ]
+}

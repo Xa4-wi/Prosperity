@@ -1,0 +1,24 @@
+{
+  "started_at": "2026-04-16T01:13:12+02:00",
+  "updated_at": "2026-04-16T01:46:40+02:00",
+  "baseline_bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_34_1.py",
+  "attack_bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_47.py",
+  "seed_bots": [
+    "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_34_1.py",
+    "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_47.py",
+    "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_47_2.py",
+    "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_39_4.py",
+    "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_42_O2_1.py",
+    "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_42_P1_1.py"
+  ],
+  "family_weights": {
+    "ash_attack_tuning": 0.1869901466813216,
+    "ash_quality_guard": 0.21843853506994929,
+    "ash_local_fair_blend": 0.2099698077518108,
+    "pepper_entry_quality": 0.1697971879132759,
+    "pepper_carry_defense": 0.21480432258364246
+  },
+  "rounds_completed": 18,
+  "candidates_seen": 153,
+  "latest_round_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/watchdog_live_20260416_0038/attempts/attempt_01/round_18"
+}

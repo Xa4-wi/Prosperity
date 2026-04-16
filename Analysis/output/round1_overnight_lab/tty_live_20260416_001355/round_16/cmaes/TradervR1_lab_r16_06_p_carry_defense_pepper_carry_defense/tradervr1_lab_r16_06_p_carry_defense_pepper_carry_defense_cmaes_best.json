@@ -1,0 +1,61 @@
+{
+  "config_name": "TradervR1_lab_r16_06_p_carry_defense short CMA-ES pepper_carry_defense",
+  "config_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/tty_live_20260416_001355/round_16/cmaes/tradervr1_lab_r16_06_p_carry_defense_pepper_carry_defense.json",
+  "source_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/tty_live_20260416_001355/round_16/candidates/TradervR1_lab_r16_06_p_carry_defense.py",
+  "best_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_overnight_lab/tty_live_20260416_001355/round_16/cmaes/TradervR1_lab_r16_06_p_carry_defense_pepper_carry_defense/bots/TradervR1_lab_r16_06_p_carry_defense_best.py",
+  "parameters": {
+    "DEFAULT_IPR_PARAMS_EARLY_LONG_BIAS": 43.9092645554,
+    "DEFAULT_IPR_PARAMS_ZSCORE_SELL_PENALTY": 8.1799717627,
+    "DEFAULT_IPR_PARAMS_OVEREXTENSION_Z": 1.006429705,
+    "DEFAULT_IPR_PARAMS_BULLISH_IMBALANCE": 0.049123831,
+    "DEFAULT_IPR_PARAMS_BASE_TAKE_EDGE": 2.7151949832,
+    "DEFAULT_IPR_PARAMS_BASE_QUOTE_EDGE": 5.2660346315
+  },
+  "baseline_scores": {
+    "-2": 96526.0,
+    "-1": 96761.0,
+    "0": 96309.0
+  },
+  "best_scores": {
+    "-2": 96526.0,
+    "-1": 96761.0,
+    "0": 96309.0
+  },
+  "average": 96532.0,
+  "objective": 96532.0,
+  "regression_penalty": 0.0,
+  "imbalance_penalty": 0.0,
+  "drift_penalty": 0.0,
+  "search": {
+    "max_iter": 2,
+    "population": 4,
+    "parents": 2,
+    "sigma0": 0.08,
+    "seed": 4378,
+    "timeout_seconds": 240.0
+  },
+  "penalties": {
+    "regression": 4.0,
+    "imbalance": 1.0,
+    "drift": 60.0
+  },
+  "total_evaluations": 9,
+  "history": [
+    {
+      "generation": 1,
+      "sigma": 0.07864909056282529,
+      "generation_best_objective": 96526.76660271129,
+      "generation_best_average": 96534.33333333333,
+      "global_best_objective": 96532.0,
+      "global_best_average": 96532.0
+    },
+    {
+      "generation": 2,
+      "sigma": 0.08045220732120688,
+      "generation_best_objective": 96526.22376466106,
+      "generation_best_average": 96534.33333333333,
+      "global_best_objective": 96532.0,
+      "global_best_average": 96532.0
+    }
+  ]
+}
