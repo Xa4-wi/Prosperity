@@ -2204,3 +2204,2125 @@ Takeaway:
 - if we keep improving `v47`, it likely needs:
   - a more direct selective rule
   - or a different structural lever than lightweight markout memory
+
+## Robustness Sweep From `v54`
+
+Baseline trunk:
+- `TradervR1_54.py`: `292'520.5`
+- official-style safe control `TradervR1_52.py`: `290'242.5`
+
+Implemented sweep:
+- generated standalone robustness variants under `Bots/Round1/robustness`
+- replayed all candidates on Round 1 days `-2 / -1 / 0`
+- staged sequence:
+  - `R55`: de-risk Osmium aggression
+  - `R56`: coarsen Osmium constants
+  - `R57`: monotonic take ladders
+  - `R58`: slow-fair / fast-signal split
+  - `R59`: regime gating
+  - `R60`: state-dependent sizing
+  - `R61`: light Pepper parameter cleanup
+  - ablations + small sensitivity checks
+
+Stage winners:
+- Stage A: `TradervR1_R56_OC1_clean.py`
+- Stage B: `TradervR1_R58_OF1_blend.py`
+- Stage C: `TradervR1_R61_PC1_light.py`
+
+Final promoted candidate:
+- `TradervR1_55.py`
+- local total: `292'557.5`
+- delta vs `TradervR1_54.py`: `+37.0`
+
+Read:
+- the only robust improvement that clearly survived was the clean Osmium coarsening pass
+- that means slightly rounded Osmium constants were enough to improve the trunk a bit without giving up the edge
+- the later structural branches were locally inert on top of that rounded base
+- the sensitivity checks also came back flat, which suggests the branch is sitting on a very broad local plateau rather than a knife-edge optimum
+
+What `v55` actually changed:
+- kept Pepper behavior effectively unchanged
+- kept the same aggressive Osmium shape
+- rounded the key Osmium constants into cleaner values:
+  - `ANCHOR_WEIGHT 0.5219314046 -> 0.52`
+  - `STABLE_MID_WEIGHT 0.4780685954 -> 0.48`
+  - `WALL_MID_BLEND 0.2473345402 -> 0.25`
+  - `DEPTH_IMPACT_SCALE 33.1754597204 -> 33.18`
+  - `INVENTORY_SKEW 0.071843883 -> 0.07`
+  - `INVENTORY_CURVE 2.4709663647 -> 2.47`
+  - `JOIN_EDGE 1.2583562382 -> 1.26`
+  - `SOFT_LIMIT 64.1555274808 -> 64.16`
+
+Artifacts:
+- sweep summary: `Analysis/output/round1_robustness_sweep_20260416_105344/summary.md`
+- sweep leaderboard: `Analysis/output/round1_robustness_sweep_20260416_105344/leaderboard.csv`
+
+Takeaway:
+- this robustness pass did not uncover a new major structural gain
+- but it did show that the current edge survives cleaner Osmium constants
+- `TradervR1_55.py` is therefore the cleaner and slightly better local continuation of the `v54` branch
+
+## `TradervR1_56.py`
+
+Idea:
+- implement the robustness checklist directly as one standalone bot
+- keep `INTARIAN_PEPPER_ROOT` almost unchanged
+- make `ASH_COATED_OSMIUM` meaningfully less brittle by:
+  - de-risking aggression
+  - forcing a monotonic take ladder
+  - turning on regime routing, size adaptation, and slow-fair / fast-signal separation
+  - coarsening more Osmium constants
+
+Task tracker:
+- see `TradervR1_56_TASKS.md`
+
+What changed:
+- `ASH_COATED_OSMIUM`
+  - `BASE_EDGE` moved toward zero
+  - `MIN_QUOTE_EDGE` increased
+  - `FRONT_SIZE` reduced
+  - `SOFT_LIMIT` lowered
+  - `JOIN_EDGE` made less aggressive
+  - monotonic `TAKE_L1/L2/L3` ladder
+  - `REGIME_STYLE`, `SIZE_STYLE`, and `SPLIT_FAIR_STYLE` turned on
+  - slow fair now drives reservation and inventory
+  - fast signal only nudges taking, quoting, and routing
+  - added ablation-friendly toggles for wall-mid, depth impact, nonlinear inventory, join behavior, and take ladder
+- `INTARIAN_PEPPER_ROOT`
+  - architecture unchanged
+  - only light parameter cleanup
+
+Verified local Rust replay:
+- day `-2`: `83'674.5`
+  - `ASH_COATED_OSMIUM`: `4'030.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `251`
+- day `-1`: `83'506.0`
+  - `ASH_COATED_OSMIUM`: `4'138.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `256`
+- day `0`: `83'835.0`
+  - `ASH_COATED_OSMIUM`: `4'438.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `288`
+
+Comparison vs `TradervR1_54.py`:
+- day `-2`: `-13'594.0`
+- day `-1`: `-14'444.0`
+- day `0`: `-13'467.0`
+- three-day delta: `-41'505.0`
+
+Read:
+- Pepper stayed completely intact
+- the entire giveback is Osmium
+- the robustness architecture itself is now real and active
+- but this first full robustness turn is too conservative and gives away too much normal Osmium spread capture
+
+Takeaway:
+- `TradervR1_56.py` is a good research base for robust Osmium behavior
+- it is not a promotion candidate over `v54` / `v55`
+- the next useful move is probably to re-open some Osmium aggression selectively inside calm / dislocation modes rather than rolling back to the old always-aggressive profile
+
+## `TradervR1_57.py`
+
+Idea:
+- take the robust `v56` branch and simplify Osmium down to just 3 modes:
+  - `calm_mm`
+  - `normal`
+  - `toxic_clear`
+- hardcode the behavior change inside the mode logic instead of adding more parameters:
+  - calm: tighter quotes, slightly larger front size, easier `L1/L2` takes
+  - normal: unchanged `v56`-style behavior
+  - toxic / inventory clear: wider or one-sided, smaller size, stricter takes
+
+What changed:
+- removed the separate `dislocation_take` and `inventory_clear` style branching
+- merged bad states into one `toxic_clear` mode
+- calm mode now gets:
+  - `buy_qe -= 0.35`
+  - `sell_qe -= 0.35`
+  - `front_size *= 1.20`
+  - lower `L1/L2` thresholds
+- toxic_clear now:
+  - widens the dangerous side
+  - cuts size
+  - disables one side when imbalance is strongly adverse
+- Pepper unchanged from `v56`
+
+Verified local Rust replay:
+- day `-2`: `82'432.0`
+  - `ASH_COATED_OSMIUM`: `2'788.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `155`
+- day `-1`: `81'940.0`
+  - `ASH_COATED_OSMIUM`: `2'572.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `153`
+- day `0`: `82'086.0`
+  - `ASH_COATED_OSMIUM`: `2'689.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `173`
+
+Comparison:
+- vs `TradervR1_56.py`
+  - day `-2`: `-1'242.5`
+  - day `-1`: `-1'566.0`
+  - day `0`: `-1'749.0`
+  - three-day delta: `-4'557.5`
+- vs `TradervR1_54.py`
+  - three-day delta: `-46'062.5`
+
+Read:
+- Pepper stayed fully intact again
+- the whole miss is still Osmium
+- the 3-mode simplification made the branch even more defensive than `v56`
+- that means the missing edge is not just “simplify the mode logic”
+- the robust branch still needs some selective re-acceleration in good Osmium states, not another blanket simplification
+
+Takeaway:
+- `v57` is cleaner conceptually than `v56`
+- but it is worse economically
+- the useful lesson is that the robust recovery path needs:
+  - stronger calm-mode aggression
+  - or a separate positive dislocation/attack permission
+  - not only a calm/normal/toxic compression
+
+### `TradervR1_58.py`
+
+Idea:
+- keep the robust `v56` architecture
+- reopen Osmium aggression only in cleaner states instead of restoring the old global aggressive profile
+- use clean rounded changes rather than optimizer-style decimals
+
+What changed:
+- `ASH_COATED_OSMIUM`
+  - lower global quote edges again, but still much cleaner than `v54`
+  - slightly larger front size and slightly higher soft limit
+  - lower monotonic take thresholds
+  - stronger calm-mode attack:
+    - tighter quotes
+    - larger front size
+    - easier `L1/L2` take permission
+    - more willing joining
+  - lighter dislocation take gating
+- `INTARIAN_PEPPER_ROOT`
+  - unchanged from `v56`
+
+Verified local Rust replay:
+- day `-2`: `83'807.5`
+  - `ASH_COATED_OSMIUM`: `4'163.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `272`
+- day `-1`: `83'603.0`
+  - `ASH_COATED_OSMIUM`: `4'235.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `273`
+- day `0`: `83'812.0`
+  - `ASH_COATED_OSMIUM`: `4'415.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `301`
+
+Comparison:
+- vs `TradervR1_56.py`
+  - day `-2`: `+133.0`
+  - day `-1`: `+97.0`
+  - day `0`: `-23.0`
+  - three-day delta: `+207.0`
+- vs `TradervR1_54.py`
+  - three-day delta: `-41'298.0`
+
+Read:
+- Pepper stayed fully intact again
+- the whole change is Osmium
+- this is the first robust-architecture follow-up that actually recovers some Osmium edge versus `v56`
+- but the recovery is still tiny compared with how much `v56` gave up versus `v54`
+
+Takeaway:
+- selective re-acceleration helps
+- but the robust branch is still far too defensive overall
+- the next useful step, if we continue on this line, is not more Pepper work
+- it is to re-open substantially more Osmium aggression inside calm and dislocation states while keeping toxic / inventory-clear behavior intact
+
+### `TradervR1_59.py`
+
+Idea:
+- build a real hybrid between the robust `v56` architecture and the more aggressive `v54` Osmium behavior
+- keep the robust slow-fair / fast-signal / regime / size structure
+- but restore much more aggression in normal, calm, and dislocation states
+
+What changed:
+- `ASH_COATED_OSMIUM`
+  - more aggressive rounded base parameters:
+    - lower `BASE_EDGE`
+    - lower `MIN_QUOTE_EDGE`
+    - lower monotonic take thresholds
+    - larger `FRONT_SIZE`
+    - slightly higher `SOFT_LIMIT`
+  - calmer states attack much harder:
+    - tighter quotes
+    - larger front size
+    - easier take permission
+    - more willing join
+  - normal mode no longer adds extra caution
+  - toxic mode still keeps the structural brakes instead of reverting fully to `v54`
+- `INTARIAN_PEPPER_ROOT`
+  - unchanged from `v56`
+
+Verified local Rust replay:
+- day `-2`: `91'582.5`
+  - `ASH_COATED_OSMIUM`: `11'938.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `565`
+- day `-1`: `92'882.0`
+  - `ASH_COATED_OSMIUM`: `13'514.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `576`
+- day `0`: `91'351.0`
+  - `ASH_COATED_OSMIUM`: `11'954.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `563`
+
+Comparison:
+- vs `TradervR1_58.py`
+  - day `-2`: `+7'775.0`
+  - day `-1`: `+9'279.0`
+  - day `0`: `+7'539.0`
+  - three-day delta: `+24'593.0`
+- vs `TradervR1_56.py`
+  - three-day delta: `+24'800.0`
+- vs `TradervR1_54.py`
+  - three-day delta: `-16'705.0`
+
+Read:
+- Pepper stayed completely stable again
+- the whole gain is recovered Osmium edge
+- this is the first branch in the robust family that gets a meaningful amount of aggression back
+- but it still remains clearly below the full aggressive trunk
+
+Takeaway:
+- the hybrid direction is right
+- the useful seam is:
+  - robust architecture from `v56`
+  - much stronger aggression in normal/calm/dislocation states
+  - toxic and inventory-clear protection kept intact
+- the remaining gap is that the robust branch still backs off too much relative to `v54`
+
+### `TradervR1_60.py`
+
+Idea:
+- continue from `v59`
+- relax normal-mode caution further
+- make dislocation routing easier
+- increase front-size boosts in normal/calm states
+
+What changed:
+- `ASH_COATED_OSMIUM`
+  - lower dislocation trigger
+  - weaker extra signal requirement for dislocation mode
+  - lower normal-mode quote edges and take needs
+  - stronger normal/calm/dislocation size boosts
+  - slightly more willing join in normal mode
+- `INTARIAN_PEPPER_ROOT`
+  - unchanged
+
+Verified local Rust replay:
+- day `-2`: `91'582.5`
+  - `ASH_COATED_OSMIUM`: `11'938.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `565`
+- day `-1`: `92'882.0`
+  - `ASH_COATED_OSMIUM`: `13'514.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `576`
+- day `0`: `91'351.0`
+  - `ASH_COATED_OSMIUM`: `11'954.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `563`
+
+Comparison:
+- vs `TradervR1_59.py`
+  - identical on all three days
+- vs `TradervR1_54.py`
+  - three-day delta: `-16'705.0`
+
+Read:
+- this change set was completely inert on top of `v59`
+- so the current bottleneck is not small additional loosening of normal/dislocation conditions
+- the branch is likely already pinned at the same realized quote/take boundary in the local replay
+
+Takeaway:
+- `v60` confirms the direction from `v59`
+- but these specific extra relaxations do not move realized behavior
+- the next real improvement likely needs either:
+  - stronger base aggression again
+  - or a different structural lever than more small mode loosening
+
+### `TradervR1_61.py`
+
+Idea:
+- keep the robust `v59` hybrid
+- add a selective aggression bridge that only activates in high-quality states
+- move quote, take, join, and size together instead of nudging a single rule at a time
+
+What changed:
+- `ASH_COATED_OSMIUM`
+  - added an `attack_factor` from:
+    - spread
+    - depth
+    - imbalance
+    - toxicity
+    - inventory stretch
+    - regime
+  - in stronger states, the bot now:
+    - lowers quote edges
+    - lowers take needs
+    - raises join tolerance
+    - scales size up slightly
+- `INTARIAN_PEPPER_ROOT`
+  - unchanged
+
+Verified local Rust replay:
+- day `-2`: `91'582.5`
+  - `ASH_COATED_OSMIUM`: `11'938.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `565`
+- day `-1`: `92'882.0`
+  - `ASH_COATED_OSMIUM`: `13'514.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `576`
+- day `0`: `91'371.0`
+  - `ASH_COATED_OSMIUM`: `11'974.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `564`
+
+Comparison:
+- vs `TradervR1_59.py`
+  - day `-2`: `0.0`
+  - day `-1`: `0.0`
+  - day `0`: `+20.0`
+  - three-day delta: `+20.0`
+- vs `TradervR1_54.py`
+  - three-day delta: `-16'685.0`
+
+Read:
+- Pepper stayed perfectly stable again
+- the change is entirely Osmium
+- this is the first non-inert improvement after `v59`, but it is very small
+
+Takeaway:
+- the attack-bridge idea is directionally valid
+- but the current rounded implementation still only opens a tiny amount of extra Osmium edge
+- the next gain probably needs either:
+  - a stronger attack bridge
+  - or a different structural lever than quote/take shaping alone
+
+### `TradervR1_62.py`
+
+Idea:
+- push the structure, not the decimals
+- replace some of the attack-layer parameterization with hardcoded execution profiles
+- let Osmium trade more by changing placement and sizing style, not by relying on more fine-tuned thresholds
+
+What changed:
+- `ASH_COATED_OSMIUM`
+  - removed the extra `ATTACK_*` parameter dependence from execution logic
+  - added structural execution profiles:
+    - `attack`
+    - `press`
+    - `balanced`
+    - `defend`
+  - profiles now jointly control:
+    - take relief
+    - quote-edge relief
+    - size multiplier
+    - join / inside-improve behavior
+  - attack / press profiles can now improve queue position more directly instead of only shaving thresholds
+- `INTARIAN_PEPPER_ROOT`
+  - unchanged
+
+Verified local Rust replay:
+- day `-2`: `91'582.5`
+  - `ASH_COATED_OSMIUM`: `11'938.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `565`
+- day `-1`: `92'892.0`
+  - `ASH_COATED_OSMIUM`: `13'524.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `578`
+- day `0`: `91'371.0`
+  - `ASH_COATED_OSMIUM`: `11'974.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `564`
+
+Comparison:
+- vs `TradervR1_61.py`
+  - day `-2`: `0.0`
+  - day `-1`: `+10.0`
+  - day `0`: `0.0`
+  - three-day delta: `+10.0`
+- vs `TradervR1_59.py`
+  - three-day delta: `+30.0`
+
+Read:
+- Pepper stayed perfectly stable again
+- the gain is still entirely Osmium
+- this is a small result, but it is the cleanest structural improvement in the robust family so far
+- importantly, it came from execution-profile structure rather than more numeric fine-tuning
+
+Takeaway:
+- “better trades and a higher amount” does seem to respond to profile-based execution
+- the effect is still modest, but the direction is credible
+- this branch is a better foundation for further structural work than another round of tiny threshold nudges
+
+### `TradervR1_63.py`
+
+Idea:
+- test whether the extra multi-state regime routing itself was the restraint
+- collapse Osmium into just 2 states:
+  - `normal`
+  - `toxic_defense`
+- let execution profiles carry the rest of the behavior instead of a larger mode tree
+
+What changed:
+- `ASH_COATED_OSMIUM`
+  - removed the live `calm_mm / dislocation_take / inventory_clear` execution branches
+  - folded stretched weak-edge inventory behavior into `toxic_defense`
+  - normal mode now owns all non-toxic trading
+  - execution profiles still decide whether the bot behaves as:
+    - `attack`
+    - `press`
+    - `balanced`
+    - `defend`
+  - normal mode is less restrained:
+    - easier take permission
+    - tighter quotes
+    - more willing joining
+    - larger front sizes through the profile layer
+- `INTARIAN_PEPPER_ROOT`
+  - unchanged
+
+Verified local Rust replay:
+- day `-2`: `94'072.0`
+  - `ASH_COATED_OSMIUM`: `14'428.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `625`
+- day `-1`: `94'921.0`
+  - `ASH_COATED_OSMIUM`: `15'553.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `632`
+- day `0`: `93'987.0`
+  - `ASH_COATED_OSMIUM`: `14'590.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `622`
+
+Comparison:
+- vs `TradervR1_62.py`
+  - day `-2`: `+2'489.5`
+  - day `-1`: `+2'029.0`
+  - day `0`: `+2'616.0`
+  - three-day delta: `+7'134.5`
+- vs `TradervR1_59.py`
+  - three-day delta: `+7'164.5`
+- vs `TradervR1_54.py`
+  - three-day delta: `-9'540.5`
+
+Read:
+- Pepper stayed perfectly stable again
+- the whole gain is Osmium
+- this is the first major structural jump in the robust family
+- the simpler 2-state controller appears to remove a real restraint from the branch
+
+Takeaway:
+- the extra regime complexity was likely holding the robust branch back
+- a simpler `normal / toxic` controller works better with the execution-profile architecture
+- `v63` is still below the full aggressive trunk, but it closes a large part of the gap without falling back into the old fully aggressive design
+
+### `TradervR1_65.py`
+
+Idea:
+- test whether the next gain simply comes from a stronger base aggression step again
+- keep the `v63` two-state structure, but move the base Osmium parameters closer to the older aggressive trunk
+
+What changed:
+- `ASH_COATED_OSMIUM`
+  - lower `BASE_EDGE`
+  - lower `MIN_QUOTE_EDGE`
+  - lower take thresholds
+  - larger `FRONT_SIZE`
+  - slightly higher `SOFT_LIMIT`
+- `INTARIAN_PEPPER_ROOT`
+  - unchanged
+
+Verified local Rust replay:
+- day `-2`: `94'060.5`
+- day `-1`: `94'841.0`
+- day `0`: `94'003.0`
+
+Comparison:
+- vs `TradervR1_63.py`
+  - day `-2`: `-11.5`
+  - day `-1`: `-80.0`
+  - day `0`: `+16.0`
+  - three-day delta: `-75.5`
+
+Read:
+- stronger blanket aggression did not help
+- it traded more, but with worse net quality
+- so the next gain is probably not “just make the whole bot more aggressive again”
+
+### `TradervR1_66.py`
+
+Idea:
+- test a different structural lever than quote/take/join tuning
+- keep `v63` parameters, but concentrate more size at the front in good states instead of splitting across the ladder
+
+What changed:
+- `ASH_COATED_OSMIUM`
+  - added front-size concentration in non-toxic normal / attack / press states
+  - shifted back size into the front quote in those states
+  - reduced ladder fragmentation without broad parameter changes
+- `INTARIAN_PEPPER_ROOT`
+  - unchanged
+
+Verified local Rust replay:
+- day `-2`: `94'072.0`
+- day `-1`: `94'921.0`
+- day `0`: `93'987.0`
+
+Comparison:
+- identical to `TradervR1_63.py` on all three days
+
+Read:
+- the front-concentration structural lever was completely inert in local replay
+- that means the live execution boundary did not move from this change alone
+
+Takeaway:
+- `v65` says stronger base aggression again is not the next answer
+- `v66` says this particular alternative structural lever is inert
+- so `v63` remains the best branch from this round of tests
+
+### `TradervR1_67.py`
+
+Idea:
+- test whether the bottleneck is weaker early/mid Oscmium monetization on the exit side
+- in normal non-toxic states, prioritize the inventory-reducing side a bit more
+
+What changed:
+- `ASH_COATED_OSMIUM`
+  - added a normal-mode exit-priority bias
+  - when long, sells get:
+    - slightly tighter quote edge
+    - slightly larger front size
+    - slightly more inside improvement
+  - symmetric behavior on the buy side when short
+- `INTARIAN_PEPPER_ROOT`
+  - unchanged
+
+Verified local Rust replay:
+- day `-2`: `94'099.0`
+- day `-1`: `94'921.0`
+- day `0`: `93'959.0`
+
+Comparison:
+- vs `TradervR1_63.py`
+  - day `-2`: `+27.0`
+  - day `-1`: `0.0`
+  - day `0`: `-28.0`
+  - three-day delta: `-1.0`
+
+Read:
+- the idea is directionally plausible
+- but in local replay it is effectively neutral
+
+### `TradervR1_68.py`
+
+Idea:
+- test whether the remaining restraint is entering `toxic_defense` too early
+- only go defensive when toxicity actually threatens current inventory, or when the market is both wide and toxic
+
+What changed:
+- `ASH_COATED_OSMIUM`
+  - toxicity routing became inventory-aware:
+    - `bid_toxic` only forces defense when we are meaningfully long
+    - `ask_toxic` only forces defense when we are meaningfully short
+    - or when spread is wide and the book is toxic
+  - otherwise the bot stays in `normal` and keeps monetizing
+- `INTARIAN_PEPPER_ROOT`
+  - unchanged
+
+Verified local Rust replay:
+- day `-2`: `94'383.5`
+  - `ASH_COATED_OSMIUM`: `14'739.5`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `647`
+- day `-1`: `94'960.0`
+  - `ASH_COATED_OSMIUM`: `15'592.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `653`
+- day `0`: `94'181.0`
+  - `ASH_COATED_OSMIUM`: `14'784.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `634`
+
+Comparison:
+- vs `TradervR1_63.py`
+  - day `-2`: `+311.5`
+  - day `-1`: `+39.0`
+  - day `0`: `+194.0`
+  - three-day delta: `+544.5`
+- vs `TradervR1_54.py`
+  - three-day delta: `-8'996.0`
+
+### `TradervR1_69.py`
+
+Idea:
+- replace the broad toxic-mode switch with side-specific toxic levels
+- treat bid-side and ask-side toxicity separately, with mild and severe severity instead of one global defense state
+
+What changed:
+- `ASH_COATED_OSMIUM`
+  - toxicity is now per side:
+    - `bid_toxic_level in {0, 1, 2}`
+    - `ask_toxic_level in {0, 1, 2}`
+  - mild toxicity:
+    - widens that side a bit
+    - trims same-side add/take permission slightly
+    - keeps the other side monetizing
+  - severe toxicity:
+    - widens that side more
+    - can shut down only that side when inventory is exposed
+  - toxic pressure now helps the exit side:
+    - if we are long and bids are toxic, asks get a small extra push
+    - if we are short and asks are toxic, bids get a small extra push
+  - global `toxic_defense` was removed from the live routing
+    - only `inventory_clear` remains as a true defensive mode
+- `INTARIAN_PEPPER_ROOT`
+  - unchanged
+
+Verified local Rust replay:
+- day `-2`: `96'507.0`
+  - `ASH_COATED_OSMIUM`: `16'863.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `656`
+- day `-1`: `97'390.0`
+  - `ASH_COATED_OSMIUM`: `18'022.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `672`
+- day `0`: `96'482.0`
+  - `ASH_COATED_OSMIUM`: `17'085.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `655`
+
+Comparison:
+- vs `TradervR1_68.py`
+  - day `-2`: `+2'123.5`
+  - day `-1`: `+2'430.0`
+  - day `0`: `+2'301.0`
+  - three-day delta: `+6'854.5`
+- vs `TradervR1_63.py`
+  - three-day delta: `+7'399.0`
+- vs `TradervR1_54.py`
+  - day `-2`: `-761.5`
+  - day `-1`: `-560.0`
+  - day `0`: `-820.0`
+  - three-day delta: `-2'141.5`
+
+Read:
+- this is a real bottleneck release
+- the problem was not “too little global defense” or “too little aggression everywhere”
+- the problem was that whole-engine toxic switching was still too broad
+- once toxicity became side-specific and severity-based, Osmium could keep trading the safe side while backing off only where needed
+
+### `TradervR1_70.py`
+
+Idea:
+- keep the side-specific toxic levels from `v69`
+- add light toxic memory so severe toxicity usually needs persistence or real inventory exposure, instead of triggering off one noisy snapshot
+
+What changed:
+- `ASH_COATED_OSMIUM`
+  - side-specific toxic levels now flow through a small persistent score in `traderData`
+  - mild toxicity can still appear immediately
+  - severe toxicity now usually requires:
+    - repeated same-side toxic pressure, or
+    - clearly exposed inventory on that side
+  - toxic scores decay when the book calms down, so the engine can re-arm naturally
+- `INTARIAN_PEPPER_ROOT`
+  - unchanged
+
+Verified local Rust replay:
+- day `-2`: `97'553.0`
+  - `ASH_COATED_OSMIUM`: `17'909.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `681`
+- day `-1`: `98'521.0`
+  - `ASH_COATED_OSMIUM`: `19'153.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `685`
+- day `0`: `97'509.0`
+  - `ASH_COATED_OSMIUM`: `18'112.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `667`
+
+Comparison:
+- vs `TradervR1_69.py`
+  - day `-2`: `+1'046.0`
+  - day `-1`: `+1'131.0`
+  - day `0`: `+1'027.0`
+  - three-day delta: `+3'204.0`
+- vs `TradervR1_54.py`
+  - day `-2`: `+284.5`
+  - day `-1`: `+571.0`
+  - day `0`: `+207.0`
+  - three-day delta: `+1'062.5`
+
+Read:
+- this keeps the `v69` idea, but removes some of the snap-to-defense behavior
+- the toxic layer is now less jumpy and more side-aware over time
+- the gain is entirely Osmium again; Pepper remains identical
+
+### `TradervR1_71.py`
+
+Idea:
+- keep the side-specific toxic memory from `v70`
+- make the toxic score actively accelerate exits when inventory is exposed
+
+What changed:
+- `ASH_COATED_OSMIUM`
+  - if long and bid-side toxic pressure is elevated:
+    - new buys are restrained more
+    - asks get more aggressive
+    - ask front size increases
+    - exit-side joining becomes easier
+  - mirror logic for short inventory under ask-side toxic pressure
+- `INTARIAN_PEPPER_ROOT`
+  - unchanged
+
+Verified local Rust replay:
+- day `-2`: `97'540.0`
+  - `ASH_COATED_OSMIUM`: `17'896.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `682`
+- day `-1`: `98'513.0`
+  - `ASH_COATED_OSMIUM`: `19'145.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `686`
+- day `0`: `97'509.0`
+  - `ASH_COATED_OSMIUM`: `18'112.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `667`
+
+Comparison:
+- vs `TradervR1_70.py`
+  - day `-2`: `-13.0`
+  - day `-1`: `-8.0`
+  - day `0`: `0.0`
+  - three-day delta: `-21.0`
+
+Read:
+- the idea is directionally reasonable
+- but this version exits a little too eagerly
+- Pepper stayed identical, and the small giveback is entirely Osmium
+
+### `TradervR1_72.py`
+
+Idea:
+- keep the side-specific toxic memory from `v70`
+- add real hysteresis to toxic severity:
+  - mild toxicity can appear immediately
+  - severe toxicity should usually require persistence or real inventory exposure
+  - once severe toxicity is active, it decays more slowly instead of snapping off
+
+What changed:
+- `ASH_COATED_OSMIUM`
+  - side-specific toxic scores now use asymmetric enter/exit behavior
+  - severe toxic levels are harder to trigger from one noisy snapshot
+  - severe levels also unwind more gradually, reducing flip-flop behavior
+- `INTARIAN_PEPPER_ROOT`
+  - unchanged
+
+Verified local Rust replay:
+- day `-2`: `97'717.0`
+  - `ASH_COATED_OSMIUM`: `18'073.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `668`
+- day `-1`: `98'509.0`
+  - `ASH_COATED_OSMIUM`: `19'141.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `681`
+- day `0`: `97'529.0`
+  - `ASH_COATED_OSMIUM`: `18'132.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `658`
+
+Comparison:
+- vs `TradervR1_70.py`
+  - day `-2`: `+164.0`
+  - day `-1`: `-12.0`
+  - day `0`: `+20.0`
+  - three-day delta: `+172.0`
+
+Read:
+- this is a small but clean improvement
+- it comes entirely from Osmium
+- the gain comes with fewer trades, which is a good sign that the toxic layer is behaving more selectively rather than just becoming more active
+
+### `TradervR1_72` toxicity sweep
+
+Goal:
+- test *directional* changes to the `v72` toxic-memory idea instead of doing tiny local nudges
+
+Variants:
+- `TradervR1_72_s1.py`
+  - harder defense
+  - faster toxic build
+  - slower decay
+  - lower severe thresholds
+- `TradervR1_72_s2.py`
+  - softer defense
+  - slower severe entry
+  - faster decay
+  - higher severe thresholds
+- `TradervR1_72_s3.py`
+  - inventory-biased severity
+  - easier severe entry only when exposure is already meaningful
+  - harder severe entry otherwise
+- `TradervR1_72_s4.py`
+  - sticky severe
+  - slower severe decay after activation
+- `TradervR1_72_s5.py`
+  - remove mild persistence
+  - only let raw toxic reads or severe persistence keep the state alive
+
+Results:
+- `TradervR1_72.py`: `293'755.0`
+- `TradervR1_72_s1.py`: `291'237.5`
+- `TradervR1_72_s2.py`: `294'139.0`
+- `TradervR1_72_s3.py`: `293'846.0`
+- `TradervR1_72_s4.py`: `293'564.0`
+- `TradervR1_72_s5.py`: `293'892.0`
+
+Read:
+- the worst direction was `s1`
+  - making toxicity harsher and stickier too early clearly hurt
+- the best direction was `s2`
+  - softer severe entry
+  - faster decay
+  - higher severe thresholds
+- `s3` and `s5` were both mildly positive
+  - inventory-biased severity helped a bit
+  - removing mild persistence also helped a bit
+- `s4` showed that “stickier severe” is not the answer by itself
+
+Conclusion:
+- the branch still wants toxicity to be selective
+- the next gains come from avoiding overclassification into severe toxic states, not from pushing defense harder
+
+### `TradervR1_73.py`
+
+Idea:
+- promote the best sweep direction from `TradervR1_72_s2.py` into a clean candidate
+
+What changed vs `TradervR1_72.py`:
+- severe toxicity enters more slowly
+- severe toxicity decays faster
+- severe thresholds are higher
+- mild toxic behavior remains intact
+
+Verified local Rust replay:
+- day `-2`: `97'798.0`
+  - `ASH_COATED_OSMIUM`: `18'154.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'644.0`
+  - trades: `669`
+- day `-1`: `98'735.0`
+  - `ASH_COATED_OSMIUM`: `19'367.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'368.0`
+  - trades: `686`
+- day `0`: `97'606.0`
+  - `ASH_COATED_OSMIUM`: `18'209.0`
+  - `INTARIAN_PEPPER_ROOT`: `79'397.0`
+  - trades: `661`
+
+Comparison:
+- vs `TradervR1_72.py`
+  - day `-2`: `+81.0`
+  - day `-1`: `+226.0`
+  - day `0`: `+77.0`
+  - three-day delta: `+384.0`
+
+Read:
+- this is the best local candidate from the toxicity sweep
+- the gain is entirely Osmium
+- the best direction was not “more defense,” but more selective severe defense
+
+### `TradervR1_74.py`
+
+Idea:
+- use the full fill graph to test a `wide_safe_harvest` overlay
+- in wide, clean states:
+  - improve the front quote more aggressively
+  - keep a tiny third wing quote to catch outer-edge fills
+
+What changed:
+- `ASH_COATED_OSMIUM`
+  - added a wide-spread, low-toxicity harvest branch
+  - front quote became more competitive in those states
+  - added a tiny wing quote beyond the back quote
+- `INTARIAN_PEPPER_ROOT`
+  - unchanged
+
+Verified local Rust replay:
+- day `-2`: `97'553.0`
+- day `-1`: `98'521.0`
+- day `0`: `97'509.0`
+
+Comparison:
+- exactly identical to `TradervR1_70.py`
+
+Read:
+- the graph-based idea was directionally plausible
+- but this implementation was completely inert
+- that means the missing edge is probably not “quote an extra outer wing” by itself
+
+### `TradervR1_75.py`
+
+Idea:
+- use `state.own_trades` directly to react to same-side passive fills
+- after a safe buy fill, keep bids slightly more aggressive for a short window
+- after a safe sell fill, do the same on asks
+
+What changed:
+- `ASH_COATED_OSMIUM`
+  - added per-side decaying reload scores from `own_trades`
+  - reload only activates in benign states:
+    - normal mode
+    - low toxicity
+    - moderate imbalance
+  - same-side take need, quote edge, join tolerance, and front size get a small temporary boost
+- `INTARIAN_PEPPER_ROOT`
+  - unchanged
+
+Verified local Rust replay:
+- day `-2`: `97'553.0`
+- day `-1`: `98'521.0`
+- day `0`: `97'509.0`
+
+Comparison:
+- exactly identical to `TradervR1_70.py`
+
+Read:
+- the fill-reactive continuation idea is structurally reasonable
+- but this first implementation was too soft to change realized behavior
+- so the branch is still sitting on the same effective execution boundary as `v70`
+
+### `TradervR1_80` to `TradervR1_83` behavior-jump sweep
+
+Goal:
+- try genuinely different execution behaviors on top of `TradervR1_70.py`, not more smooth threshold tuning
+
+Variants:
+- `TradervR1_80.py`
+  - discrete safe-state quote placement
+  - explicit touch vs one-tick-inside behavior in benign states
+- `TradervR1_81.py`
+  - safe-state take jump
+  - easier `L1` taking only in clean states
+- `TradervR1_82.py`
+  - front-size concentration
+  - push more size to the front and less to the back in benign states
+- `TradervR1_83.py`
+  - inventory-aware safe-state exit bias
+  - stronger quote/join preference on the exit side when carrying inventory
+
+Results:
+- `TradervR1_70.py`: `293'583.0`
+- `TradervR1_80.py`: `293'583.0`
+- `TradervR1_81.py`: `293'619.5`
+- `TradervR1_82.py`: `284'281.5`
+- `TradervR1_83.py`: `292'536.5`
+
+Read:
+- `TradervR1_81.py` is the only behavior jump that helped
+  - three-day delta vs `TradervR1_70.py`: `+36.5`
+  - the gain is entirely Osmium
+  - trades also increased: `2058` vs `2033`
+- `TradervR1_80.py` was completely inert
+- `TradervR1_82.py` was clearly harmful
+  - front concentration damaged Osmium heavily
+- `TradervR1_83.py` was directionally plausible but still worse than the trunk
+
+Conclusion:
+- the only live family from this sweep is **safe-state make/take hybridization**
+- the branch still does not want:
+  - more front concentration
+  - or stronger exit bias by itself
+- if we continue from here, `TradervR1_81.py` is the right donor branch
+
+### `TradervR1_70` lever sweep
+
+Goal:
+- test several different execution levers on top of `TradervR1_70.py`
+- find out whether the next edge is in quote placement, taking, front-size concentration, or inventory-aware exit bias
+
+Variants:
+- `TradervR1_76.py`
+  - discrete safe-state quote placement
+  - more inside/improve behavior in benign normal states
+- `TradervR1_77.py`
+  - safe-state `L1` take relief
+  - easier small takes when the book is clean
+- `TradervR1_78.py`
+  - front-size concentration
+  - bigger front, smaller back in safe states
+- `TradervR1_79.py`
+  - inventory-aware safe-state exit bias
+  - stronger exit-side quote / join / size preference
+
+Results:
+- `TradervR1_70.py`: `293'583.0`
+- `TradervR1_76.py`: `293'583.0`
+- `TradervR1_77.py`: `293'583.0`
+- `TradervR1_78.py`: `293'583.0`
+- `TradervR1_79.py`: `293'583.0`
+
+Read:
+- all four lever families were completely inert in local replay
+- this strongly suggests the current branch is pinned at one effective execution boundary
+- small quote/take/size/join adjustments are no longer crossing real fill boundaries
+
+Conclusion:
+- the next gain probably does not come from another soft modifier
+- it likely needs a more discrete behavior jump, for example:
+  - explicit touch-vs-inside quoting
+  - explicit side shutdown / side permission
+  - or a different inventory/state transition rule
+
+Read:
+- Pepper stayed perfectly stable again
+- the gain is entirely Osmium
+- this is the strongest new bottleneck release after `v63`
+
+Takeaway:
+- the robust branch was still going defensive too broadly
+- making toxicity inventory-aware lets the bot keep monetizing normal states longer
+- this looks like a stronger next trunk than `v63`
+
+### `TradervR1_81` family follow-up
+
+Goal:
+- keep pushing the only live family from the recent execution sweep
+- test whether the edge comes from:
+  - a narrower but stronger benign-state taker
+  - inventory-aware asymmetric safe-state taking
+  - or coupling the safe state to front-quote placement
+
+Variants:
+- `TradervR1_84.py`
+  - narrower / cleaner safe-state filter
+  - stronger mini-takes and slightly stronger benign exit recycle
+- `TradervR1_85.py`
+  - inventory-aware asymmetric safe-state make/take hybrid
+  - gives more relief to the exit side when already carrying inventory
+- `TradervR1_86.py`
+  - quote-coupled safe-state hybrid
+  - keeps the `v81` extra takes but also makes front quotes more competitive in the same state
+
+Results:
+- `TradervR1_70.py`: `293'583.0`
+- `TradervR1_81.py`: `293'619.5`
+- `TradervR1_84.py`: `293'583.0`
+- `TradervR1_85.py`: `293'656.5`
+- `TradervR1_86.py`: `293'619.5`
+
+Read:
+- `TradervR1_85.py` is the best continuation of this family
+  - delta vs `TradervR1_70.py`: `+73.5`
+  - delta vs `TradervR1_81.py`: `+37.0`
+  - the gain is entirely Osmium
+  - Pepper stayed fixed at `238'409.0`
+  - trades rose to `2060` vs `2058` in `v81`
+- `TradervR1_84.py` fell back to the exact `v70` boundary
+  - the narrower / stronger benign filter was too restrictive overall
+- `TradervR1_86.py` was exactly identical to `v81`
+  - coupling the same safe state to quote placement did not change realized fills
+
+Conclusion:
+- this family still has some life
+- the useful direction is not “cleaner but narrower”
+- it is **inventory-aware asymmetric safe-state taking**
+- if we keep going from this branch, `TradervR1_85.py` is the right donor
+
+### `TradervR1_87.x` basic Osmium strategy matrix
+
+Goal:
+- test the basic market-making families directly on `ASH_COATED_OSMIUM`
+- keep Pepper fixed
+- find out where the product becomes "real" and where the logic is still too naive
+
+Variants:
+- `TradervR1_87_1.py`
+  - Version A
+  - pure anchor maker
+  - fair = `10000`, fixed symmetric spread
+- `TradervR1_87_2.py`
+  - Version B
+  - anchor + inventory skew maker
+  - fair = `10000`, reservation shifted by inventory
+- `TradervR1_87_3.py`
+  - Version C
+  - local-fair symmetric maker
+  - fair = anchor + stable mid + wall-mid + micro/imbalance adjustment
+- `TradervR1_87_4.py`
+  - Version D
+  - local-fair + inventory skew maker
+- `TradervR1_87_5.py`
+  - Version E
+  - local-fair + skew + toxicity gate
+- `TradervR1_87_6.py`
+  - Version F
+  - local-fair + skew + hybrid stale-quote taking
+
+Results:
+- `TradervR1_87_1.py`: `257'486.0`
+- `TradervR1_87_2.py`: `259'732.5`
+- `TradervR1_87_3.py`: `263'593.0`
+- `TradervR1_87_4.py`: `261'862.5`
+- `TradervR1_87_5.py`: `261'049.5`
+- `TradervR1_87_6.py`: `270'535.0`
+
+Reference:
+- `TradervR1_70.py`: `293'583.0`
+- `TradervR1_85.py`: `293'656.5`
+
+Read:
+- the family ranking is very clean:
+  - best basic version: `TradervR1_87_6.py`
+  - next best: `TradervR1_87_3.py`
+  - worst: `TradervR1_87_1.py`
+- every single variant kept Pepper fixed at `238'409.0`
+- so the whole test is a pure Osmium read
+- the product clearly wants more than a dumb anchored maker
+- local fair helps materially:
+  - `v87_3` beat `v87_1` by `+6'107.0`
+- hybrid taking helps materially:
+  - `v87_6` beat `v87_4` by `+8'672.5`
+- simple toxicity gating on top of the basic engine did not help here:
+  - `v87_5` was worse than `v87_4`
+- surprisingly, the simple linear inventory skew versions were not better than the equivalent no-skew version in this stripped-down family
+
+Conclusion:
+- the matrix confirms the product identity pretty strongly:
+  - **local fair matters**
+  - **selective hybrid taking matters**
+  - **a basic anchor maker is far too weak**
+- but it also confirms that the current edge in the live branch is not coming from the basic family alone
+- the gap from `v87_6` to `TradervR1_70.py` is still huge, so the real value is in:
+  - smarter execution
+  - richer toxicity handling
+  - and the more evolved Osmium control logic we built later
+
+### `TradervR1_88.py`
+
+Goal:
+- test the hypothesis that Osmium has a real microstructure pattern in one-sided / half-empty books
+- instead of ignoring those states, treat them as temporary vacuum states and handle the refill explicitly
+
+What changed:
+- based on the `TradervR1_73` / `TradervR1_70` family
+- `ASH_COATED_OSMIUM` now:
+  - detects one-sided books (`bid_only` / `ask_only`)
+  - stores the last good two-sided fair in memory
+  - uses a frozen fair blend during vacuum states
+  - only quotes the missing side lightly, and only when it helps flatten inventory
+  - dampens fair / signal usage on the first normal book after a vacuum refill
+- `INTARIAN_PEPPER_ROOT` unchanged
+
+Results:
+- `TradervR1_70.py`: `293'583.0`
+- `TradervR1_88.py`: `294'073.0`
+
+By day:
+- `TradervR1_88.py`: `97'738.0 / 98'730.0 / 97'605.0`
+- delta vs `TradervR1_70.py`: `+185.0 / +209.0 / +96.0`
+
+Read:
+- this is a real local improvement
+- the gain is entirely Osmium:
+  - `TradervR1_70.py` Ash: `55'174.0`
+  - `TradervR1_88.py` Ash: `55'664.0`
+- Pepper stayed fixed at `238'409.0`
+- trades actually fell a bit:
+  - `TradervR1_70.py`: `2033`
+  - `TradervR1_88.py`: `2007`
+
+Conclusion:
+- the one-sided book / refill pattern looks actionable, not just descriptive
+- Osmium seems to benefit from:
+  - not trusting vacuum states as true fair value
+  - and not dropping those states entirely either
+- `TradervR1_88.py` is the new best local branch from this line of research
+
+### `TradervR1_89.py`
+
+Goal:
+- improve the vacuum-state branch by calculating a more explicit side-specific fair in one-sided books
+- test whether the bot can safely participate on the visible side as well, instead of using vacuum states only defensively
+
+What changed:
+- built on `TradervR1_88.py`
+- added a side-specific synthetic vacuum fair:
+  - `bid_only`: visible bid + recent half-spread estimate
+  - `ask_only`: visible ask - recent half-spread estimate
+- blended that synthetic fair with the frozen last-good fair
+- used the synthetic vacuum fair to:
+  - stabilize the first refill tick more directly
+  - allow tiny visible-side participation in vacuum states when the refill edge is large enough
+- kept the missing-side flattening logic from `v88`
+
+Results:
+- `TradervR1_88.py`: `294'073.0`
+- `TradervR1_89.py`: `294'346.0`
+
+By day:
+- `TradervR1_89.py`: `97'891.0 / 98'781.0 / 97'674.0`
+- delta vs `TradervR1_88.py`: `+153.0 / +51.0 / +69.0`
+
+Read:
+- this is another real local improvement
+- all of the gain is Osmium:
+  - `TradervR1_88.py` Ash: `55'664.0`
+  - `TradervR1_89.py` Ash: `55'937.0`
+- Pepper stayed fixed at `238'409.0`
+- trades rose slightly:
+  - `TradervR1_88.py`: `2007`
+  - `TradervR1_89.py`: `2047`
+
+Conclusion:
+- the vacuum branch improves further when the bot calculates a side-specific refill fair instead of only freezing the last healthy fair
+- light visible-side participation in vacuum states appears to be helping rather than hurting
+- `TradervR1_89.py` is the new best local version from the vacuum / refill branch
+
+### `TradervR1_89` official read and `v90` follow-up
+
+Official `TradervR1_89.log` vs `TradervR1_70.log`:
+- `TradervR1_70.log`: `10'383.59375`
+- `TradervR1_89.log`: `10'403.15625`
+- delta: `+19.5625`
+
+Read from the official log:
+- the gain is entirely Osmium
+  - `v70` Ash: `2'797.59375`
+  - `v89` Ash: `2'817.15625`
+- Pepper is identical at `7'586.0`
+- drawdown is identical at `173.0`
+- `v89` buys Osmium slightly cheaper, but sells only slightly worse
+- this suggested the vacuum edge was real, but maybe stronger on the `bid_only` side than on the `ask_only` side
+
+Follow-up variants:
+- `TradervR1_90.py`
+  - asymmetric vacuum thresholds / blends
+  - stronger `bid_only` participation, stricter `ask_only`
+- `TradervR1_90_1.py`
+  - `bid_only` visible participation only
+  - `ask_only` visible-side participation disabled
+- `TradervR1_90_2.py`
+  - inventory-aligned `ask_only` visible participation
+  - only sell the visible ask when already long
+
+Local replay:
+- `TradervR1_89.py`: `294'346.0`
+- `TradervR1_90.py`: `294'362.0`
+- `TradervR1_90_1.py`: `294'062.5`
+- `TradervR1_90_2.py`: `294'323.0`
+
+Read:
+- `TradervR1_90.py` is only `+16.0` over `v89` locally
+- `TradervR1_90_1.py` is clearly worse
+- `TradervR1_90_2.py` is slightly worse
+- the stricter / more one-sided interpretations of the vacuum edge do not look stronger than `v89`
+
+Conclusion:
+- the official `v89` gain looks real
+- but the edge does not seem to want a much harsher asymmetric rewrite
+- `TradervR1_89.py` remains the best branch to upload from this family unless a future official test shows `v90` transfers the tiny local gain
+
+### `TradervR1_92.py`
+
+Pattern-driven Osmium rewrite from the new book-structure research:
+- reduced anchor reliance in the slow fair
+- promoted the top-3 stable book into the main local-fair center
+- in tight books, let microprice and imbalance dominate the fast signal
+- if stable-book fair and imbalance agree, increase conviction
+- if they disagree, trust imbalance / microprice over stable-book pull
+- use public trades only as a confirmation layer when they align with imbalance
+- kept the `v89` vacuum handling and Pepper unchanged
+
+Local replay:
+- `TradervR1_89.py`: `294'346.0`
+- `TradervR1_92.py`: `294'366.0`
+
+By day:
+- `TradervR1_92.py`: `97'774.0 / 98'763.0 / 97'829.0`
+- delta vs `v89`: `-117.0 / -18.0 / +155.0`
+
+Read:
+- this is a real full-stack Osmium signal rewrite, not another threshold tweak
+- total gain is small but positive: `+20.0`
+- Pepper stayed identical
+- the new hierarchy seems most helpful on day `0`, while days `-2` and `-1` gave back a little
+
+Conclusion:
+- the local-fair / imbalance hierarchy looks directionally right
+- but the added conviction machinery is still only a modest improvement over `v89`
+- `TradervR1_92.py` is a valid research continuation, but not yet a clear new champion
+
+### `TradervR1_92` research branch
+
+I opened a proper research branch off `v92` to isolate which part of the rewrite was actually helping:
+
+- `TradervR1_93.py`
+  - kept the new hierarchy
+  - removed the extra conviction spillover into attack, quote relief, take relief, and size
+- `TradervR1_94.py`
+  - kept `v92`
+  - removed trade-print confirmation entirely
+- `TradervR1_95.py`
+  - softer full hierarchy
+  - more anchor in the slow fair
+  - lighter agreement / magnet bonuses
+  - no stable-book pull at all in disagreement states
+  - lighter conviction spillover
+- `TradervR1_96.py`
+  - mid-ground hierarchy
+  - slightly more anchor
+  - no trade confirmation
+  - no stable-book pull in disagreement states
+
+Local replay:
+- `TradervR1_89.py`: `294'346.0`
+- `TradervR1_92.py`: `294'366.0`
+- `TradervR1_93.py`: `294'458.0`
+- `TradervR1_94.py`: `294'366.0`
+- `TradervR1_95.py`: `294'773.0`
+- `TradervR1_96.py`: `294'482.0`
+
+Read:
+- the rewrite absolutely still has life
+- removing trade confirmation did nothing:
+  - `TradervR1_94.py` was exactly the same as `v92`
+- pure hierarchy without conviction spillover helped:
+  - `TradervR1_93.py` beat `v92` by `+92.0`
+- the best version was the softer hierarchy:
+  - `TradervR1_95.py` beat `v92` by `+407.0`
+  - `TradervR1_95.py` beat `v89` by `+427.0`
+- `TradervR1_96.py` also improved, but less than `v95`
+
+Best interpretation:
+- the stable-book / imbalance rewrite is good
+- the part that was too blunt in `v92` was the heavy conviction machinery
+- trade prints were not contributing meaningful edge here
+- disagreement states should trust imbalance cleanly, without keeping a residual stable-book pull
+- the rewrite works better when it stays more anchored and more selective
+
+Conclusion:
+- `TradervR1_95.py` is the new best research continuation from this branch
+- the surviving idea is:
+  - slow fair = anchor + stable-book
+  - fast signal = micro / imbalance
+  - agreement boosts conviction
+  - disagreement follows imbalance
+  - keep the extra conviction effects light
+
+### `TradervR1_97.py`
+
+Promoted the winning `v95` research shape into a clean next mainline version:
+- same surviving hierarchy as `TradervR1_95.py`
+- no trade-print confirmation
+- more anchor in the slow fair
+- lighter agreement / magnet bonuses
+- no residual stable-book pull in disagreement states
+- lighter conviction spillover into execution
+
+Local replay:
+- `TradervR1_97.py`: `97'914.0 / 98'906.0 / 97'953.0`
+- three-day total: `294'773.0`
+
+Reference:
+- `TradervR1_89.py`: `294'346.0`
+- `TradervR1_92.py`: `294'366.0`
+- `TradervR1_95.py`: `294'773.0`
+
+Read:
+- `TradervR1_97.py` is exactly the promoted production version of the best research candidate
+- delta vs `TradervR1_89.py`: `+427.0`
+- delta vs `TradervR1_92.py`: `+407.0`
+- the improvement is entirely Osmium; Pepper stays unchanged
+
+Conclusion:
+- `TradervR1_97.py` is the right trunk to test next from the stable-book / imbalance rewrite branch
+
+### `TradervR1_98.py`
+
+Next continuation off `TradervR1_97.py`:
+- removed the remaining trade-print confirmation dependency entirely
+- made stable-book agreement explicitly thresholded
+- made disagreement states lean harder into imbalance / micro instead of any residual stable-book pull
+
+Local replay:
+- `TradervR1_97.py`: `97'914.0 / 98'906.0 / 97'953.0`
+- `TradervR1_98.py`: `97'914.0 / 98'906.0 / 97'941.0`
+
+Three-day total:
+- `TradervR1_97.py`: `294'773.0`
+- `TradervR1_98.py`: `294'761.0`
+
+Read:
+- `v98` is effectively the same bot on days `-2` and `-1`
+- it gave back `12.0` on day `0`
+- so the explicit thresholding / harder disagreement override did not improve on the softer `v97` balance
+
+Conclusion:
+- `TradervR1_97.py` remains the better mainline version
+- the rewrite still seems to want a softer treatment than a more discrete threshold controller
+
+### `TradervR1_99.py`
+
+Tried the refill-state decision layer on top of `TradervR1_97.py`:
+- classify the first valid post-vacuum book as:
+  - `strong`
+  - `weak`
+  - `unstable`
+- `strong`: re-arm normal behavior quickly
+- `weak`: bias toward the exit side
+- `unstable`: suppress taking for one tick and shrink size slightly
+
+Local replay:
+- `TradervR1_97.py`: `97'914.0 / 98'906.0 / 97'953.0`
+- `TradervR1_99.py`: `97'607.5 / 98'730.0 / 97'579.0`
+
+Three-day total:
+- `TradervR1_97.py`: `294'773.0`
+- `TradervR1_99.py`: `293'916.5`
+
+Read:
+- `v99` is clearly worse than `v97`
+- the refill-state controller made the bot too cautious
+- the whole giveback is Osmium; Pepper stayed unchanged
+
+Conclusion:
+- the refill transition is important conceptually
+- but this first strong/weak/unstable controller over-damped good post-vacuum trading
+- `TradervR1_97.py` remains the better trunk
+
+### `TradervR1_100.py`
+
+Plateau / fill-drought experiment on top of `TradervR1_97.py`:
+- detect long no-fill stretches while:
+  - inventory is near flat
+  - the book is still normal / benign
+  - no vacuum is active
+  - toxicity is low
+- in those stretches:
+  - ease quote edges slightly
+  - join a bit more aggressively
+  - lift front size by a tiny amount
+  - relax take needs slightly
+
+Local replay:
+- `TradervR1_97.py`: `97'914.0 / 98'906.0 / 97'953.0`
+- `TradervR1_100.py`: `97'914.0 / 98'904.0 / 97'953.0`
+
+Three-day total:
+- `TradervR1_97.py`: `294'773.0`
+- `TradervR1_100.py`: `294'771.0`
+
+Read:
+- essentially inert
+- no meaningful gain on the plateau idea in this first form
+- only `-2.0` on day `-1`
+- so a soft anti-plateau mode does not seem to cross a new fill boundary yet
+
+Conclusion:
+- the plateau diagnosis was reasonable
+- but the first no-fill harvester was too mild to unlock extra PnL
+- `TradervR1_97.py` remains the stronger trunk
+
+### Plateau Sweep from `TradervR1_97.py`
+
+I explored the flat sections more directly and tried three discrete anti-plateau variants:
+
+- `TradervR1_101.py`
+  - plateau touch-maker
+  - after a benign no-fill drought, collapse to single-front touch-style quoting
+- `TradervR1_102.py`
+  - plateau taker pulse
+  - after a benign no-fill drought, relax take needs more aggressively
+- `TradervR1_103.py`
+  - combination of touch-maker and taker-pulse
+
+Plateau read from official logs:
+- the biggest late flat section in `TradervR1_95.log` around `62.7k–65.7k` happened in a still-normal book
+- inventory was near flat
+- almost no trades occurred
+- so the plateau looked like a benign no-fill drought, not a clearly dead or toxic market
+
+Local replay:
+- `TradervR1_97.py`: `97'914.0 / 98'906.0 / 97'953.0`
+- `TradervR1_101.py`: `97'914.0 / 98'906.0 / 97'953.0`
+- `TradervR1_102.py`: `97'914.0 / 98'906.0 / 97'953.0`
+- `TradervR1_103.py`: `97'914.0 / 98'906.0 / 97'953.0`
+
+Read:
+- all three plateau variants were completely inert
+- neither touch-style passive harvesting nor a small taker pulse changed realized fills
+- this strongly suggests the branch is pinned at the same effective execution boundary in those plateau states
+
+Conclusion:
+- the plateau phenomenon is real
+- but these first discrete anti-plateau actions do not unlock it
+- the next plateau idea would need a deeper execution jump than these mild drought handlers
+
+### Stronger Plateau Sweep from `TradervR1_97.py`
+
+I pushed the plateau idea harder with three more discrete variants:
+
+- `TradervR1_104.py`
+  - queue-priority plateau maker
+  - after a benign no-fill drought, force one-tick-inside quotes and drop the back layer
+- `TradervR1_105.py`
+  - plateau taker pulse
+  - after a benign no-fill drought, cross small size on the signal side
+- `TradervR1_106.py`
+  - combined plateau maker + taker pulse
+
+Local replay:
+- `TradervR1_97.py`: `97'914.0 / 98'906.0 / 97'953.0`
+- `TradervR1_104.py`: `97'914.0 / 98'906.0 / 97'953.0`
+- `TradervR1_105.py`: `97'575.0 / 98'475.0 / 97'592.0`
+- `TradervR1_106.py`: `97'688.0 / 98'649.0 / 97'782.0`
+
+Three-day totals:
+- `TradervR1_97.py`: `294'773.0`
+- `TradervR1_104.py`: `294'773.0`
+- `TradervR1_105.py`: `293'642.0`
+- `TradervR1_106.py`: `294'119.0`
+
+Read:
+- forcing one-tick-inside plateau quotes was completely inert
+- the only thing that really changed behavior was small taker aggression
+- and that was clearly harmful
+- so the plateau is not solved by “trade a bit harder” or “cross a bit when bored”
+
+Conclusion:
+- the branch already seems to be near its passive fill frontier
+- when we try to break the plateau by taking, PnL gets worse
+- if there is still a plateau edge, it likely requires a better queue-position / catalyst model, not simple extra aggression
+
+### Queue-Position / Catalyst Sweep from `TradervR1_97.py`
+
+I tested the two deeper levers suggested by the plateau work:
+
+- `TradervR1_107.py`
+  - queue-priority maker
+  - choose between stepping back, joining touch, and improving one tick inside based on visible queue crowding and signal quality
+- `TradervR1_108.py`
+  - catalyst detector
+  - only wake up when tight-book microprice, imbalance, and stable-book structure line up as a real short-horizon event
+- `TradervR1_109.py`
+  - combined queue-priority + catalyst branch
+
+Local replay:
+- `TradervR1_97.py`: `97'914.0 / 98'906.0 / 97'953.0`
+- `TradervR1_107.py`: `95'432.0 / 96'353.0 / 95'298.0`
+- `TradervR1_108.py`: `97'914.0 / 98'906.0 / 97'953.0`
+- `TradervR1_109.py`: `95'432.0 / 96'353.0 / 95'298.0`
+
+Three-day totals:
+- `TradervR1_97.py`: `294'773.0`
+- `TradervR1_107.py`: `287'083.0`
+- `TradervR1_108.py`: `294'773.0`
+- `TradervR1_109.py`: `287'083.0`
+
+Product split:
+- `TradervR1_97.py`
+  - `ASH_COATED_OSMIUM`: `56'364.0`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_107.py`
+  - `ASH_COATED_OSMIUM`: `48'674.0`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_108.py`
+  - `ASH_COATED_OSMIUM`: `56'364.0`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_109.py`
+  - `ASH_COATED_OSMIUM`: `48'674.0`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+
+Read:
+- the queue-priority model did change realized behavior, but clearly for the worse
+- it reduced Osmium trades and gave up spread capture on all three days
+- the catalyst detector, as implemented here, was completely inert
+- the combined branch collapsed exactly to the queue-priority result, which means the catalyst layer did not add any extra fill boundary on top
+
+Conclusion:
+- a naive visible-queue heuristic is too blunt for this product
+- a “genuine catalyst” layer is still plausible, but the first version here was not strong or discrete enough to matter
+- the best current trunk remains `TradervR1_97.py`
+
+### `TradervR1_110.py`
+
+No-fill reactivation branch on top of `TradervR1_97.py`:
+- track `ash_no_fill_ticks` from `state.own_trades`
+- after `8+` quiet ticks in normal, non-stretched, non-vacuum states with toxicity at most level `1`:
+  - tighten the signal-side quote edge by `0.15 + extra`
+  - slightly lift signal-side front size
+- also decay smoothed toxicity faster after quiet non-toxic stretches
+
+Local replay:
+- `TradervR1_97.py`: `97'914.0 / 98'906.0 / 97'953.0`
+- `TradervR1_110.py`: `97'957.0 / 98'906.0 / 97'953.0`
+
+Three-day totals:
+- `TradervR1_97.py`: `294'773.0`
+- `TradervR1_110.py`: `294'816.0`
+
+Product split:
+- `TradervR1_97.py`
+  - `ASH_COATED_OSMIUM`: `56'364.0`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_110.py`
+  - `ASH_COATED_OSMIUM`: `56'407.0`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+
+Read:
+- small but real improvement: `+43.0`
+- entirely Osmium-led
+- Pepper stayed unchanged
+- only day `-2` moved, but it did so with slightly more Ash trades rather than a broad aggression jump
+
+Conclusion:
+- low-risk re-entry after quiet periods looks more promising than plateau taker pulses
+- this is still a small local edge, not a breakthrough
+- but it is the first plateau-style refinement in this area that actually improved the trunk
+
+### `TradervR1_111.py`
+
+Smarter silent-period re-entry on top of `TradervR1_110.py`:
+- keep `ash_no_fill_ticks`
+- add signal persistence tracking:
+  - signal-side direction
+  - short EMA of quote signal
+  - consecutive same-direction ticks
+- only reactivate when the same favored side has persisted for several ticks
+- then let that side join a little closer and scale front size by persistence strength
+
+Local replay:
+- `TradervR1_110.py`: `97'957.0 / 98'906.0 / 97'953.0`
+- `TradervR1_111.py`: `97'957.0 / 98'906.0 / 97'953.0`
+
+Three-day totals:
+- `TradervR1_110.py`: `294'816.0`
+- `TradervR1_111.py`: `294'816.0`
+
+Read:
+- completely identical to `v110`
+- same Osmium PnL
+- same Pepper PnL
+- same trade count
+
+Conclusion:
+- adding persistence-based re-entry logic did not cross a new fill boundary on top of `v110`
+- the simpler no-fill reactivation branch remains just as good
+
+### Plateau Influence Sweep from `TradervR1_110.py`
+
+I tested three more discrete ways to try to break the silent Ash plateaus:
+
+- `TradervR1_112.py`
+  - concentrated single-front presence
+  - during silent reactivation, drop the same-side back quote and concentrate more size at the front
+- `TradervR1_113.py`
+  - asymmetric silent leaning
+  - during silent reactivation, tighten the favored side and widen the opposite side a bit more explicitly
+- `TradervR1_114.py`
+  - micro-catalyst nibble
+  - after a longer quiet period, if the signal is strong, toxicity is zero, spread is tight, and inventory is flat-ish, cross tiny size (`2`) on the favored side before resuming passive quoting
+
+Local replay:
+- `TradervR1_110.py`: `97'957.0 / 98'906.0 / 97'953.0`
+- `TradervR1_112.py`: `97'957.0 / 98'906.0 / 97'953.0`
+- `TradervR1_113.py`: `97'957.0 / 98'906.0 / 97'953.0`
+- `TradervR1_114.py`: `97'999.5 / 98'939.0 / 97'937.0`
+
+Three-day totals:
+- `TradervR1_110.py`: `294'816.0`
+- `TradervR1_112.py`: `294'816.0`
+- `TradervR1_113.py`: `294'816.0`
+- `TradervR1_114.py`: `294'875.5`
+
+Product split:
+- `TradervR1_110.py`
+  - `ASH_COATED_OSMIUM`: `56'407.0`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_114.py`
+  - `ASH_COATED_OSMIUM`: `56'466.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+
+Read:
+- the passive “shape the book” plateau ideas were completely inert
+- a tiny, highly selective catalyst nibble was the only thing that actually moved the boundary
+- the gain is small but real: `+59.5` vs `v110`
+- all of it is Osmium
+- trade count rose from `2209` to `2368`, so the bot is doing more work, but in a much narrower and more controlled way than the earlier bad taker pulses
+
+Conclusion:
+- the promising plateau strategy is not broader passive presence
+- it is a very selective make/take hybrid only after quiet periods, in tight non-toxic books, with strong same-side signal
+- `TradervR1_114.py` is the new best branch from this plateau-influence family
+
+### `TradervR1_115.py`
+
+Inventory-layer / reserve-age / plateau-harvest experiment on top of `TradervR1_114.py`:
+- split Ash inventory into:
+  - neutral
+  - working
+  - reserve
+  - danger
+- only keep building reserve inventory when the side still looks feasible relative to local fair
+- track reserve age
+- switch quiet working/reserve inventory into a passive harvest mode during plateaus
+
+Local replay:
+- `TradervR1_114.py`: `97'999.5 / 98'939.0 / 97'937.0`
+- `TradervR1_115.py`: `95'974.5 / 96'516.0 / 95'244.0`
+
+Three-day totals:
+- `TradervR1_114.py`: `294'875.5`
+- `TradervR1_115.py`: `287'734.5`
+
+Product split:
+- `TradervR1_114.py`
+  - `ASH_COATED_OSMIUM`: `56'466.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_115.py`
+  - `ASH_COATED_OSMIUM`: `49'325.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+
+Read:
+- the whole giveback is Osmium
+- trade count fell from `2368` to `2118`
+- the layered inventory controller became too restrictive and shut down too much normal Ash monetization
+
+Conclusion:
+- the idea is directionally interesting
+- but in this first full form it is too heavy for the current branch
+- the better live edge is still the lighter `TradervR1_114.py` approach:
+  a narrow catalyst nibble after silence, not a broad inventory-management overlay
+
+### `TradervR1_116.py`
+
+Bar-corrected plateau re-entry rewrite on top of `TradervR1_114.py`:
+- convert silent re-entry timing from raw timestamp delta into actual bar count
+- make re-entry move the real front quote, not just the theoretical edge
+- add a neutral two-sided drip-maker when the book is tradable but `quote_signal` is near zero
+- relax join behavior slightly during quiet reactivation
+- allow a small re-entry boost shortly after vacuum recovery instead of blocking it entirely
+
+Local replay:
+- `TradervR1_114.py`: `97'999.5 / 98'939.0 / 97'937.0`
+- `TradervR1_116.py`: `98'009.5 / 98'903.0 / 97'877.0`
+
+Three-day totals:
+- `TradervR1_114.py`: `294'875.5`
+- `TradervR1_110.py`: `294'816.0`
+- `TradervR1_116.py`: `294'789.5`
+
+Product split:
+- `TradervR1_116.py`
+  - `ASH_COATED_OSMIUM`: `56'380.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+
+Read:
+- the fixes were real and did change behavior
+- day `-2` improved slightly, but day `0` gave back more than that gain
+- all movement was in Osmium; Pepper stayed unchanged
+- versus the current plateau trunk, this is:
+  - `-86.0` vs `TradervR1_114.py`
+  - `-26.5` vs `TradervR1_110.py`
+
+Conclusion:
+- the diagnosis was directionally right:
+  - raw timestamps were the wrong unit
+  - the old re-entry often changed intent more than posted price
+- but the stronger bar-corrected re-entry still did not beat the simpler catalyst-nibble branch
+- `TradervR1_114.py` remains the better plateau-focused trunk for now
+
+### Split Re-entry Sweep from `TradervR1_114.py`
+
+I split the stronger re-entry idea into isolated branches so the silence handling would not interfere across unrelated quiet regimes:
+
+- `TradervR1_117_1.py`
+  - timer / bar-count fix only
+  - keep the `v114` logic shape, but convert the re-entry and toxicity-release timing into actual bars
+- `TradervR1_117_2.py`
+  - side-specific stale-side re-entry
+  - track buy-side and sell-side silence separately
+  - only reactivate the side that has actually gone stale
+- `TradervR1_117_3.py`
+  - quiet-book toxicity release only
+  - separate quiet non-toxic decay from fill silence without changing the re-entry logic
+
+Local replay:
+- `TradervR1_114.py`: `97'999.5 / 98'939.0 / 97'937.0`
+- `TradervR1_117_1.py`: `98'009.5 / 98'899.0 / 97'885.0`
+- `TradervR1_117_2.py`: `98'009.5 / 98'908.0 / 97'941.0`
+- `TradervR1_117_3.py`: `97'975.0 / 98'930.0 / 97'949.0`
+
+Three-day totals:
+- `TradervR1_114.py`: `294'875.5`
+- `TradervR1_117_1.py`: `294'793.5`
+- `TradervR1_117_2.py`: `294'858.5`
+- `TradervR1_117_3.py`: `294'854.0`
+
+Product split:
+- `TradervR1_117_1.py`
+  - `ASH_COATED_OSMIUM`: `56'384.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_117_2.py`
+  - `ASH_COATED_OSMIUM`: `56'449.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_117_3.py`
+  - `ASH_COATED_OSMIUM`: `56'445.0`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+
+Read:
+- splitting the idea helped compared with the heavier `TradervR1_116.py` rewrite
+- the best slice is `TradervR1_117_2.py`, the side-specific stale-side re-entry branch
+- that means the promising part of the re-entry idea is:
+  - wake up only the side that actually went stale
+  - do not let generic silence handling spill into all quiet states
+- the timer fix alone was not enough
+- the separate quiet-book toxicity release also helped, but slightly less than side-specific stale-side handling
+
+Conclusion:
+- the good direction is narrower, side-specific silence handling
+- the re-entry idea becomes stronger when it stops treating all quiet periods as the same
+- `TradervR1_114.py` is still the best overall plateau trunk right now, but `TradervR1_117_2.py` is the best donor branch from this split experiment
+
+### `TradervR1_118.py`
+
+Surgical hybrid:
+- keep `TradervR1_114.py` as the plateau trunk
+- keep the `v114` micro-catalyst nibble exactly as-is
+- import only the side-specific stale-side wake-up from `TradervR1_117_2.py`
+
+Local replay:
+- `TradervR1_114.py`: `97'999.5 / 98'939.0 / 97'937.0`
+- `TradervR1_118.py`: `97'999.5 / 98'939.0 / 97'937.0`
+
+Three-day totals:
+- `TradervR1_114.py`: `294'875.5`
+- `TradervR1_118.py`: `294'875.5`
+
+Product split:
+- `TradervR1_118.py`
+  - `ASH_COATED_OSMIUM`: `56'466.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+
+Read:
+- the hybrid is completely identical to `v114` in local replay
+- same total PnL
+- same Ash PnL
+- same Pepper PnL
+- same trade count
+
+Conclusion:
+- the side-specific stale-side wake-up is directionally compatible with the `v114` trunk
+- but in this exact merged form it does not cross a new fill boundary
+- `TradervR1_114.py` remains the active plateau trunk
+
+### Pepper Push Sweep from `TradervR1_118.py`
+
+I tried three small Pepper-only variants to see whether we could push the current `INTARIAN_PEPPER_ROOT` split higher without disturbing the Osmium trunk:
+
+- `TradervR1_119_1.py`
+  - more patient Pepper taking
+  - slightly lower lookahead
+  - stronger cheap-accum take penalty
+  - slightly stronger cheap-accum quote bonus
+- `TradervR1_119_2.py`
+  - passive-first early accumulation
+  - early Pepper buys stay passive unless the book looks clearly cheap
+- `TradervR1_119_3.py`
+  - lighter chase / entry-quality version
+  - slightly lower lookahead, lower early-long bias, lower edge-target scale
+  - modestly more patient cheap accumulation
+
+Local replay:
+- `TradervR1_118.py`: `97'999.5 / 98'939.0 / 97'937.0`
+- `TradervR1_119_1.py`: `97'982.5 / 98'935.0 / 97'932.0`
+- `TradervR1_119_2.py`: `97'957.5 / 98'905.0 / 97'881.0`
+- `TradervR1_119_3.py`: `97'984.5 / 98'942.0 / 97'934.0`
+
+Three-day totals:
+- `TradervR1_118.py`: `294'875.5`
+- `TradervR1_119_1.py`: `294'849.5`
+- `TradervR1_119_2.py`: `294'743.5`
+- `TradervR1_119_3.py`: `294'860.5`
+
+Product split:
+- `TradervR1_118.py`
+  - `ASH_COATED_OSMIUM`: `56'466.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_119_1.py`
+  - `ASH_COATED_OSMIUM`: `56'466.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'383.0`
+- `TradervR1_119_2.py`
+  - `ASH_COATED_OSMIUM`: `56'466.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'277.0`
+- `TradervR1_119_3.py`
+  - `ASH_COATED_OSMIUM`: `56'466.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'394.0`
+
+Read:
+- all of the movement was in Pepper; Osmium stayed exactly unchanged
+- none of the tested Pepper nudges improved the trunk
+- the least-bad version was `TradervR1_119_3.py`, but it still gave back `-15.0`
+- the current Pepper engine still sits at the same local `238'409.0` line
+
+Conclusion:
+- this particular “be a bit more patient on Pepper entry” family does not unlock a better split
+- if there is still extra Pepper edge left, it is probably not in broad parameter nudges around cheap accumulation
+- `TradervR1_118.py` / `TradervR1_114.py` remain the better trunks
+
+### Pepper Entry-Structure Sweep from `TradervR1_118.py`
+
+I tried three more genuinely different Pepper entry structures while keeping Osmium untouched:
+
+- `TradervR1_119_1.py`
+  - patient-taker Pepper
+  - smaller lookahead, stricter early taking, slightly stronger passive cheap accumulation
+- `TradervR1_119_2.py`
+  - passive-first early accumulation
+  - in the early session, Pepper only crosses when the book looks clearly cheap; otherwise it waits to accumulate passively
+- `TradervR1_119_3.py`
+  - lighter-chase entry-quality Pepper
+  - lower lookahead, lower early-long bias, lower edge-target scale, and slightly more patient cheap accumulation
+
+Local replay:
+- `TradervR1_118.py`: `97'999.5 / 98'939.0 / 97'937.0`
+- `TradervR1_119_1.py`: `97'982.5 / 98'935.0 / 97'932.0`
+- `TradervR1_119_2.py`: `97'957.5 / 98'905.0 / 97'881.0`
+- `TradervR1_119_3.py`: `97'984.5 / 98'942.0 / 97'934.0`
+
+Three-day totals:
+- `TradervR1_118.py`: `294'875.5`
+- `TradervR1_119_1.py`: `294'849.5`
+- `TradervR1_119_2.py`: `294'743.5`
+- `TradervR1_119_3.py`: `294'860.5`
+
+Product split:
+- `TradervR1_118.py`
+  - `ASH_COATED_OSMIUM`: `56'466.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_119_1.py`
+  - `ASH_COATED_OSMIUM`: `56'466.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'383.0`
+- `TradervR1_119_2.py`
+  - `ASH_COATED_OSMIUM`: `56'466.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'277.0`
+- `TradervR1_119_3.py`
+  - `ASH_COATED_OSMIUM`: `56'466.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'394.0`
+
+Read:
+- all three variants changed only Pepper
+- Osmium stayed exactly unchanged in every case
+- none of the entry-structure variants improved the current Pepper line
+- the least-bad version was `TradervR1_119_3.py`, but it still gave back `-15.0`
+
+Conclusion:
+- Pepper is still very saturated on this structure
+- there does not appear to be an easy gain left from small early-entry reshaping around the current engine
+- if we revisit Pepper, it likely needs a meaningfully different structural entry family, not another local modification of cheap accumulation
+
+### Osmium Lever Sweep from `TradervR1_118.py`
+
+I cleaned the active `TradervR1_118.py` trunk by removing stale Osmium parameters from the old calm/dislocation regime work:
+
+- removed unused `CALM_DEPTH_MIN`
+- removed unused `CALM_SPREAD_MAX`
+- removed unused `CALM_IMBALANCE_MAX`
+- removed unused `DISLOCATION_EDGE`
+
+That cleanup was clarity-only. Then I tested the five candidate Ash levers separately:
+
+- `TradervR1_120_1.py`
+  - markout-aware net edge
+  - adds side-specific markout memory and uses effective edge after expected markout
+- `TradervR1_120_2.py`
+  - true multi-level sweep
+  - in high-conviction states, take through levels 1-3 while edge stays positive after inventory re-evaluation
+- `TradervR1_120_3.py`
+  - side-specific re-entry only
+  - removes the broad global no-fill gate and reactivates only the starved side when its signal is favorable
+- `TradervR1_120_4.py`
+  - stronger conviction regime
+  - when all signals line up, conviction becomes a real throughput regime with tighter favored-side quoting, more join, and larger front size
+- `TradervR1_120_5.py`
+  - low-conviction inventory recycler
+  - starts flattening moderately stretched inventory earlier when conviction is weak
+
+Local replay:
+- `TradervR1_118.py`: `97'999.5 / 98'939.0 / 97'937.0`
+- `TradervR1_120_1.py`: `97'987.5 / 98'947.0 / 97'911.0`
+- `TradervR1_120_2.py`: `97'998.5 / 98'939.0 / 97'937.0`
+- `TradervR1_120_3.py`: `97'968.5 / 98'934.0 / 98'008.0`
+- `TradervR1_120_4.py`: `97'988.5 / 98'931.0 / 97'923.0`
+- `TradervR1_120_5.py`: `97'992.5 / 98'886.0 / 97'930.0`
+
+Three-day totals:
+- `TradervR1_118.py`: `294'875.5`
+- `TradervR1_120_1.py`: `294'845.5`
+- `TradervR1_120_2.py`: `294'874.5`
+- `TradervR1_120_3.py`: `294'910.5`
+- `TradervR1_120_4.py`: `294'842.5`
+- `TradervR1_120_5.py`: `294'808.5`
+
+Product split:
+- `TradervR1_118.py`
+  - `ASH_COATED_OSMIUM`: `56'466.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_120_1.py`
+  - `ASH_COATED_OSMIUM`: `56'436.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_120_2.py`
+  - `ASH_COATED_OSMIUM`: `56'465.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_120_3.py`
+  - `ASH_COATED_OSMIUM`: `56'501.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_120_4.py`
+  - `ASH_COATED_OSMIUM`: `56'433.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_120_5.py`
+  - `ASH_COATED_OSMIUM`: `56'399.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+
+Trade counts:
+- `TradervR1_118.py`: `2368`
+- `TradervR1_120_1.py`: `2365`
+- `TradervR1_120_2.py`: `2368`
+- `TradervR1_120_3.py`: `2850`
+- `TradervR1_120_4.py`: `2374`
+- `TradervR1_120_5.py`: `2378`
+
+Read:
+- the only clear new live lever here is `TradervR1_120_3.py`
+- pure side-specific re-entry improved Ash by `+35.0` total without touching Pepper
+- multi-level sweep was effectively inert in this first form
+- markout-aware net edge, stronger conviction regime, and the early recycler all made the trunk worse
+
+Conclusion:
+- the best next lever from this sweep is not broader aggression; it is cleaner side-specific re-entry
+- the current best test from this family is `TradervR1_120_3.py`
+- if we keep pushing, `TradervR1_120_3.py` is the right donor branch for a promoted next version

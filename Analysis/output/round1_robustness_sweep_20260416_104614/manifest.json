@@ -1,0 +1,20 @@
+{
+  "base": "TradervR1_54",
+  "safe": "TradervR1_52",
+  "stage_winners": [
+    [
+      "StageA",
+      "TradervR1_R56_OC1_clean"
+    ],
+    [
+      "StageB",
+      "TradervR1_R58_OF1_blend"
+    ],
+    [
+      "StageC",
+      "TradervR1_R61_PC1_light"
+    ]
+  ],
+  "final": "TradervR1_R61_PC1_light",
+  "promoted": "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_55.py"
+}

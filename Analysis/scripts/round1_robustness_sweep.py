@@ -447,7 +447,7 @@ def parse_submission_log(run_dir: Path) -> Dict[str, object]:
     }
     for line in activities.splitlines()[1:]:
         parts = line.split(";")
-        if len(parts) < 18:
+        if len(parts) < 17:
             continue
         timestamp = int(parts[1])
         product = parts[2]
@@ -458,9 +458,12 @@ def parse_submission_log(run_dir: Path) -> Dict[str, object]:
     timestamps = sorted({ts for rows in product_series.values() for ts, _ in rows})
     total_series: List[Tuple[int, float]] = []
     by_product = {prod: dict(rows) for prod, rows in product_series.items()}
+    carry = {prod: 0.0 for prod in by_product}
     for ts in timestamps:
-        total = sum(by_product[prod].get(ts, 0.0) for prod in by_product)
-        total_series.append((ts, total))
+        for prod in by_product:
+            if ts in by_product[prod]:
+                carry[prod] = by_product[prod][ts]
+        total_series.append((ts, sum(carry.values())))
 
     def max_drawdown(series: List[Tuple[int, float]]) -> float:
         peak = -10**18
