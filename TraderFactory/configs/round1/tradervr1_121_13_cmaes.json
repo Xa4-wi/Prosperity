@@ -1,0 +1,80 @@
+{
+  "name": "TradervR1_121_13 Round 1 Focused Ash CMA-ES",
+  "source_bot": "../../../Bots/Round1/TradervR1_121_13.py",
+  "default_dict_block": "DEFAULT_ASH_PARAMS",
+  "baselines": {
+    "-2": 97973.5,
+    "-1": 98932.0,
+    "0": 98008.0
+  },
+  "search": {
+    "max_iter": 3,
+    "population": 6,
+    "parents": 3,
+    "sigma0": 0.05,
+    "seed": 12113,
+    "timeout_seconds": 240
+  },
+  "penalties": {
+    "regression": 6.0,
+    "imbalance": 1.0,
+    "drift": 120.0
+  },
+  "output_prefix": "round1_tradervr1_121_13_cmaes",
+  "output_dir": "../../../Analysis/output/round1_tradervr1_121_13_cmaes",
+  "data_root": "../../../Data/ROUND_1",
+  "dataset_tag": "round_1",
+  "engine": "rust",
+  "parameters": [
+    {
+      "name": "BASE_EDGE",
+      "lower": -0.90,
+      "upper": -0.20
+    },
+    {
+      "name": "JOIN_EDGE",
+      "lower": 1.05,
+      "upper": 1.65
+    },
+    {
+      "name": "MIN_QUOTE_EDGE",
+      "lower": 1.75,
+      "upper": 2.25
+    },
+    {
+      "name": "TAKE_L1_EDGE",
+      "lower": 0.75,
+      "upper": 1.20
+    },
+    {
+      "name": "TAKE_L2_EDGE",
+      "lower": 1.15,
+      "upper": 1.75
+    },
+    {
+      "name": "MARKOUT_ALPHA",
+      "lower": 0.10,
+      "upper": 0.28
+    },
+    {
+      "name": "SOFT_BAD_MARKOUT",
+      "lower": -0.65,
+      "upper": -0.25
+    },
+    {
+      "name": "HARD_BAD_MARKOUT",
+      "lower": -1.20,
+      "upper": -0.65
+    },
+    {
+      "name": "MARKOUT_EDGE_PENALTY",
+      "lower": 0.08,
+      "upper": 0.35
+    },
+    {
+      "name": "MARKOUT_SIZE_PENALTY",
+      "lower": 0.08,
+      "upper": 0.30
+    }
+  ]
+}

@@ -4326,3 +4326,333 @@ Conclusion:
 - the best next lever from this sweep is not broader aggression; it is cleaner side-specific re-entry
 - the current best test from this family is `TradervR1_120_3.py`
 - if we keep pushing, `TradervR1_120_3.py` is the right donor branch for a promoted next version
+
+### Combination Sweep of The Five Osmium Levers
+
+I generated and tested every combination of the five isolated Ash levers from the `TradervR1_120_*` family:
+
+- `1`: markout-aware net edge
+- `2`: multi-level high-conviction sweep
+- `3`: side-specific re-entry
+- `4`: stronger conviction regime
+- `5`: low-conviction inventory recycler
+
+References:
+- `TradervR1_118.py`: `294'875.5`
+- `TradervR1_120_3.py`: `294'910.5`
+
+Important constant:
+- every combination left Pepper unchanged at `238'409.0`
+- all movement in this sweep was purely `ASH_COATED_OSMIUM`
+
+Two-way combinations:
+- `TradervR1_121_13.py`: `294'913.5`
+- `TradervR1_121_23.py`: `294'890.5`
+- `TradervR1_121_34.py`: `294'878.0`
+- `TradervR1_121_24.py`: `294'864.5`
+- `TradervR1_121_12.py`: `294'844.5`
+- `TradervR1_121_14.py`: `294'818.5`
+- `TradervR1_121_25.py`: `294'808.5`
+- `TradervR1_121_45.py`: `294'771.5`
+- `TradervR1_121_15.py`: `294'762.5`
+- `TradervR1_121_35.py`: `294'743.5`
+
+Three-way combinations:
+- `TradervR1_121_134.py`: `294'909.5`
+- `TradervR1_121_123.py`: `294'905.5`
+- `TradervR1_121_234.py`: `294'842.0`
+- `TradervR1_121_124.py`: `294'840.5`
+- `TradervR1_121_245.py`: `294'793.5`
+- `TradervR1_121_135.py`: `294'771.5`
+- `TradervR1_121_1235.py`: `294'763.5`
+- `TradervR1_121_125.py`: `294'762.5`
+- `TradervR1_121_345.py`: `294'738.5`
+- `TradervR1_121_235.py`: `294'723.5`
+
+Four-way combinations:
+- `TradervR1_121_1234.py`: `294'861.5`
+- `TradervR1_121_1235.py`: `294'763.5`
+- `TradervR1_121_1345.py`: `294'790.5`
+- `TradervR1_121_1245.py`: `294'753.5`
+- `TradervR1_121_2345.py`: `294'690.5`
+
+Five-way combination:
+- `TradervR1_121_12345.py`: `294'742.5`
+
+Best performers:
+- `TradervR1_121_13.py`: `294'913.5`
+- `TradervR1_120_3.py`: `294'910.5`
+- `TradervR1_121_134.py`: `294'909.5`
+- `TradervR1_121_123.py`: `294'905.5`
+
+Read:
+- the clean winner is `TradervR1_121_13.py`, which combines:
+  - markout-aware net edge
+  - side-specific re-entry
+- that beat `TradervR1_120_3.py` by `+3.0`
+- and beat the `TradervR1_118.py` trunk by `+38.0`
+- the side-specific re-entry lever is still the main driver
+- markout becomes slightly useful only when paired with that re-entry lever
+- the stronger conviction regime can help a little when stacked on top of `1+3`, but not enough to beat `1+3`
+- the multi-level sweep remains mostly inert
+- the low-conviction recycler is the most consistently harmful lever in combined form
+
+Trade count pattern:
+- `TradervR1_118.py`: `2368`
+- `TradervR1_120_3.py`: `2850`
+- `TradervR1_121_13.py`: `2848`
+- `TradervR1_121_134.py`: `2862`
+
+Conclusion:
+- the best merge from the full subset sweep is `TradervR1_121_13.py`
+- the current live donor stack is:
+  - side-specific re-entry
+  - plus a light markout-aware net-edge memory
+- if we promote one next mainline from this matrix, `TradervR1_121_13.py` is the right candidate
+
+### Focused Optimization Sweep from `TradervR1_121_13.py`
+
+I ran a tight local optimization pass around the only two live levers in `TradervR1_121_13.py`:
+
+- side-specific re-entry
+- markout-aware net edge
+
+Tested variants:
+- `TradervR1_122_1.py`
+  - softer markout memory plus slightly stronger re-entry
+- `TradervR1_122_2.py`
+  - firmer / harsher markout protection
+- `TradervR1_122_3.py`
+  - stronger re-entry only
+- `TradervR1_122_4.py`
+  - later / cleaner re-entry only
+- `TradervR1_122_5.py`
+  - softer markout only
+- `TradervR1_122_6.py`
+  - middle-ground blended markout + re-entry
+
+Local replay:
+- `TradervR1_121_13.py`: `97'973.5 / 98'932.0 / 98'008.0`
+- `TradervR1_122_1.py`: `97'968.5 / 98'934.0 / 98'008.0`
+- `TradervR1_122_2.py`: `97'973.5 / 98'890.0 / 97'958.0`
+- `TradervR1_122_3.py`: `97'973.5 / 98'932.0 / 98'008.0`
+- `TradervR1_122_4.py`: `97'961.5 / 98'901.0 / 97'976.0`
+- `TradervR1_122_5.py`: `97'968.5 / 98'934.0 / 98'008.0`
+- `TradervR1_122_6.py`: `97'973.5 / 98'932.0 / 98'008.0`
+
+Three-day totals:
+- `TradervR1_121_13.py`: `294'913.5`
+- `TradervR1_122_1.py`: `294'910.5`
+- `TradervR1_122_2.py`: `294'821.5`
+- `TradervR1_122_3.py`: `294'913.5`
+- `TradervR1_122_4.py`: `294'838.5`
+- `TradervR1_122_5.py`: `294'910.5`
+- `TradervR1_122_6.py`: `294'913.5`
+
+Product split:
+- `TradervR1_121_13.py`
+  - `ASH_COATED_OSMIUM`: `56'504.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_122_1.py`
+  - `ASH_COATED_OSMIUM`: `56'501.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_122_2.py`
+  - `ASH_COATED_OSMIUM`: `56'412.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_122_3.py`
+  - `ASH_COATED_OSMIUM`: `56'504.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_122_4.py`
+  - `ASH_COATED_OSMIUM`: `56'429.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_122_5.py`
+  - `ASH_COATED_OSMIUM`: `56'501.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_122_6.py`
+  - `ASH_COATED_OSMIUM`: `56'504.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+
+Read:
+- no focused local variant beat `TradervR1_121_13.py`
+- `TradervR1_122_3.py` and `TradervR1_122_6.py` were completely identical to the trunk
+- softer markout variants (`122_1`, `122_5`) were very slightly worse
+- harsher markout (`122_2`) clearly hurt
+- later / cleaner re-entry (`122_4`) also hurt
+
+Conclusion:
+- the current `TradervR1_121_13.py` branch is locally saturated under small parameter nudges
+- the next gain probably will not come from another tiny markout/re-entry retune
+- if we keep pushing, we likely need a new structural Osmium lever rather than a local optimization of this pair
+
+### Larger-Fill Sweep from `TradervR1_121_13.py`
+
+I tested whether simply making Ash fill more size would improve the current best branch:
+
+- `TradervR1_123_1.py`
+  - larger passive sizes only
+  - `FRONT_SIZE 16 -> 18`
+  - `BACK_SIZE 5 -> 6`
+- `TradervR1_123_2.py`
+  - larger take clips only
+  - `TAKE_L1_SIZE 4 -> 5`
+  - `TAKE_L2_SIZE 8 -> 10`
+  - `TAKE_L3_SIZE 14 -> 18`
+- `TradervR1_123_3.py`
+  - larger size only in high-conviction states
+  - adds front/back size only on the favored side when conviction is high and toxicity is low
+- `TradervR1_123_4.py`
+  - larger size only during side-specific re-entry
+  - micro-nibbles and reactivation front size were both increased
+
+Local replay:
+- `TradervR1_121_13.py`: `97'973.5 / 98'932.0 / 98'008.0`
+- `TradervR1_123_1.py`: `97'973.5 / 98'932.0 / 98'008.0`
+- `TradervR1_123_2.py`: `97'978.0 / 98'939.0 / 97'926.0`
+- `TradervR1_123_3.py`: `97'973.5 / 98'932.0 / 98'008.0`
+- `TradervR1_123_4.py`: `97'882.0 / 98'901.0 / 97'945.0`
+
+Three-day totals:
+- `TradervR1_121_13.py`: `294'913.5`
+- `TradervR1_123_1.py`: `294'913.5`
+- `TradervR1_123_2.py`: `294'843.0`
+- `TradervR1_123_3.py`: `294'913.5`
+- `TradervR1_123_4.py`: `294'728.0`
+
+Product split:
+- `TradervR1_121_13.py`
+  - `ASH_COATED_OSMIUM`: `56'504.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_123_1.py`
+  - `ASH_COATED_OSMIUM`: `56'504.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_123_2.py`
+  - `ASH_COATED_OSMIUM`: `56'434.0`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_123_3.py`
+  - `ASH_COATED_OSMIUM`: `56'504.5`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+- `TradervR1_123_4.py`
+  - `ASH_COATED_OSMIUM`: `56'319.0`
+  - `INTARIAN_PEPPER_ROOT`: `238'409.0`
+
+Read:
+- larger passive sizes were completely inert
+- larger high-conviction passive sizes were also completely inert
+- larger take clips made the bot worse
+- larger re-entry / micro-nibble size was clearly worse
+
+Conclusion:
+- simply asking Ash to trade more size is not enough
+- the current best branch appears pinned at the same execution boundary for passive size
+- when size changes do matter, they currently hurt rather than help
+- the next gain is more likely to come from a different execution decision, not a larger order size by itself
+
+### CMA-ES on `TradervR1_121_13.py`
+
+I ran a focused CMA-ES pass on the current best bot using:
+- [tradervr1_121_13_cmaes.json](/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_121_13_cmaes.json)
+- search space:
+  - `BASE_EDGE`
+  - `JOIN_EDGE`
+  - `MIN_QUOTE_EDGE`
+  - `TAKE_L1_EDGE`
+  - `TAKE_L2_EDGE`
+  - `MARKOUT_ALPHA`
+  - `SOFT_BAD_MARKOUT`
+  - `HARD_BAD_MARKOUT`
+  - `MARKOUT_EDGE_PENALTY`
+  - `MARKOUT_SIZE_PENALTY`
+
+Artifacts:
+- best bot: [TradervR1_121_13_best.py](/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_121_13_cmaes/bots/TradervR1_121_13_best.py)
+- report: [round1_tradervr1_121_13_cmaes_report.md](/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_121_13_cmaes/round1_tradervr1_121_13_cmaes_report.md)
+
+Result:
+- baseline replay: `97'973.5 / 98'932.0 / 98'008.0`
+- best candidate replay: `97'973.5 / 98'932.0 / 98'008.0`
+- best objective: `98'304.5`
+- total evaluations: `19`
+
+Read:
+- CMA-ES did not find a robust improvement over `TradervR1_121_13.py`
+- the winning artifact is effectively the same bot; the only textual diff is float formatting (`-0.90 -> -0.9`)
+- generation history showed tiny raw-average bumps inside the search, but they were not good enough under the regularized objective
+
+Conclusion:
+- the exposed `121_13` parameter surface looks locally saturated for this objective
+- if we want CMA-ES to matter on this branch, we probably need to expose the side-specific re-entry constants rather than only the existing dict parameters
+
+### CMA-ES on `TradervR1_110.py`
+
+I also ran a broader CMA-ES pass on the older `TradervR1_110.py` branch using:
+- [tradervr1_110_cmaes.json](/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_110_cmaes.json)
+- search space:
+  - `ANCHOR_WEIGHT`
+  - `STABLE_MID_WEIGHT`
+  - `WALL_MID_BLEND`
+  - `LOCAL_MICRO_WEIGHT`
+  - `DEPTH_IMPACT_SCALE`
+  - `BASE_EDGE`
+  - `JOIN_EDGE`
+  - `MIN_QUOTE_EDGE`
+  - `TAKE_L1_EDGE`
+  - `TAKE_L2_EDGE`
+  - `FAST_TAKE_WEIGHT`
+  - `FAST_QUOTE_WEIGHT`
+
+Artifacts:
+- best bot: [TradervR1_110_best.py](/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_110_cmaes/bots/TradervR1_110_best.py)
+- report: [round1_tradervr1_110_cmaes_report.md](/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_110_cmaes/round1_tradervr1_110_cmaes_report.md)
+
+Result:
+- baseline replay: `97'957.0 / 98'906.0 / 97'953.0`
+- best candidate replay: `97'957.0 / 98'906.0 / 97'953.0`
+- best objective: `98'272.0`
+- total evaluations: `19`
+
+Read:
+- CMA-ES also failed to improve `TradervR1_110.py`
+- unlike `121_13`, the broader `110` search mostly wandered into bad regions; generation-best candidates had much worse averages and were heavily penalized
+- the winning artifact again collapsed back to the source defaults, with only cosmetic float-format diffs
+
+Conclusion:
+- `TradervR1_110.py` has a broader but much less stable parameter surface
+- CMA-ES on the old exposed knobs is not a shortcut to catching up with the newer branch
+
+### `TradervR1_121_*` Targeted Fix Branches
+
+I tested three clean corrective branches off `TradervR1_121_13.py`:
+
+- [TradervR1_121_fixDecay.py](/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_121_fixDecay.py)
+  - changes `quiet_non_toxic_ticks` to use a bar-based measure (`no_fill_ticks // 100`) instead of raw timestamp distance
+  - same intent as the old `bars_since_fill` correction, but isolated to toxicity decay only
+- [TradervR1_121_fixReentryExecution.py](/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_121_fixReentryExecution.py)
+  - keeps side-specific `bars_since_buy_fill` / `bars_since_sell_fill`
+  - restores the `v116`-style execution fix:
+    - wider `join_edge` during reactivation
+    - front quote pushed toward the book on the reactivating side
+- [TradervR1_121_markoutPassiveOnly.py](/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_121_markoutPassiveOnly.py)
+  - removes markout from aggressive take gating
+  - keeps markout only in passive quote edge and passive quote size penalties
+
+Local replay:
+- `TradervR1_121_13.py`: `97'973.5 / 98'932.0 / 98'008.0`
+- `TradervR1_121_fixDecay.py`: `97'973.5 / 98'932.0 / 98'008.0`
+- `TradervR1_121_fixReentryExecution.py`: `97'973.5 / 98'932.0 / 98'008.0`
+- `TradervR1_121_markoutPassiveOnly.py`: `97'968.5 / 98'934.0 / 98'008.0`
+
+Three-day totals:
+- `TradervR1_121_13.py`: `294'913.5`
+- `TradervR1_121_fixDecay.py`: `294'913.5`
+- `TradervR1_121_fixReentryExecution.py`: `294'913.5`
+- `TradervR1_121_markoutPassiveOnly.py`: `294'910.5`
+
+Read:
+- the decay correction is clean but locally inert
+- the re-entry execution correction is also clean but locally inert
+- de-overlapping markout changed behavior, but only slightly and in the wrong direction overall (`-3.0`)
+
+Conclusion:
+- these three branches improve code clarity and isolate real levers, which is useful
+- but none of them opens a new local edge over `TradervR1_121_13.py`
+- the most interesting one structurally is still `TradervR1_121_markoutPassiveOnly.py`, because it is the only branch that changed realized behavior at all
