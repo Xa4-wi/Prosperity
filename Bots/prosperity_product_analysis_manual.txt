@@ -1,0 +1,690 @@
+PROSPERITY PRODUCT ANALYSIS MANUAL
+A reusable playbook for approaching new products, extracting edge, avoiding bad local optima, and restarting when stuck.
+
+Purpose
+-------
+This manual distills recurring research and trading patterns that appear across strong public IMC Prosperity repositories from Prosperity 1, 2, and 3. It is written as an execution guide for an agent that must analyze a new product quickly, decide which strategy families fit it, test them in a disciplined order, and avoid wasting cycles on pretty but invalid ideas.
+
+Core principle
+--------------
+Do not start by choosing a model.
+Start by classifying the product.
+
+Most bad optima happen because teams force a product into the wrong family:
+- treating a fixed-fair market-making product like a predictor problem
+- treating a noisy local-fair product like a flat-anchor product
+- treating an ETF spread like a single-symbol forecaster
+- treating an option like a pure directional asset instead of an implied-volatility object
+- trying to fit exogenous features before understanding the trading mechanism
+
+A strong workflow is:
+1. Understand the mechanism.
+2. Build a product taxonomy.
+3. Define candidate fair values.
+4. Define candidate execution styles.
+5. Test simple baselines first.
+6. Only then add sophistication.
+7. If stuck, restart from a different product family, not from different constants.
+
+PART I — WHAT THE PUBLIC REPOS REPEATEDLY TEACH
+===============================================
+
+1) Tooling is not optional
+--------------------------
+Across top repos, the strongest recurring edge is not a specific formula, but having the right development loop.
+
+Repeated motifs:
+- Build or fork a backtester early.
+- Build a visualization dashboard that can inspect a single timestamp deeply.
+- Archive logs and old submissions.
+- Parameterize the trader so hypotheses can be swept quickly.
+- Use different backtesting tools for different tasks.
+
+Practical rule:
+- If the strategy mostly depends on taking or simple quoting logic, local/open-source backtesting is usually enough.
+- If the strategy depends heavily on bot behavior, trader identities, or queue interaction, official or higher-fidelity simulation matters more.
+
+What to implement before serious research:
+- event-by-event backtester
+- per-product pnl decomposition
+- timestamp sync dashboard
+- orderbook replay
+- fill attribution
+- position path chart
+- markout chart (1-step, 5-step, end-of-day)
+- parameter dictionary interface for sweeping
+
+If you do not have these, do not optimize. Build them first.
+
+2) Product families appear again and again
+------------------------------------------
+The public repos keep rediscovering a small number of product families.
+
+Family A — Fixed-anchor market-making products
+Examples in past competitions:
+- PEARLS / AMETHYSTS / Rainforest Resin / Emerald-like products
+
+Signature:
+- fair is essentially constant
+- edge comes from buying below fair and selling above fair
+- main problem is execution and inventory clearing, not forecasting
+
+Best fits:
+- hard anchor fair
+- market taking around fair
+- market making around fair
+- zero-edge inventory clearing when limits bind
+
+Family B — Local-fair market-making products
+Examples:
+- BANANAS / STARFRUIT / Kelp-like products / your current Osmium family
+
+Signature:
+- long-run center exists, but local fair moves
+- raw mid is noisy
+- stable quote levels or wall levels contain information
+- imbalance and microprice matter
+
+Best fits:
+- filtered fair (rolling mean, market-maker mid, wall mid, stable mid)
+- local mean reversion or random-walk fair tracking
+- maker/taker hybrid execution
+- toxicity filtering
+- inventory recycling
+
+Family C — Spread / ETF / basket products
+Examples:
+- PINA/COCONUT, GIFT_BASKET, PICNIC_BASKET, basket vs synthetic
+
+Signature:
+- single-symbol direction is less important than relative mispricing
+- spread often mean-reverts around a stable premium/discount
+- sometimes one leg leads and the other follows
+
+Best fits:
+- synthetic-value construction
+- spread z-score trading
+- mean-reversion thresholds
+- dynamic spread volatility estimate
+- sometimes trading only the most informative leg
+
+Family D — Options / vol products
+Examples:
+- Coconut coupons / volcanic vouchers
+
+Signature:
+- value depends on underlying, strike, expiry, and implied vol
+- direct price level is misleading
+- implied vol often oscillates around a regime center
+
+Best fits:
+- Black-Scholes or another baseline pricing model
+- implied volatility extraction
+- IV mean reversion
+- delta hedging if capacity allows
+- cross-strike relative-value checks
+
+Family E — Time-curve / schedule products
+Examples:
+- BERRIES-style or seasonal intraday products
+
+Signature:
+- price path follows recurring time-of-day pattern
+- extrema often occur in stable windows
+- forecasting is mostly timing, not state estimation
+
+Best fits:
+- time-scheduled positioning
+- hardcoded or spline curve fair
+- local override from day-specific drift
+- event windows for entry/exit
+
+Family F — Event / external-signal products
+Examples:
+- DOLPHIN/DIVING GEAR-style products, sunlight/humidity/tariffs/shipping markets
+
+Signature:
+- one or more external signals are available
+- challenge is deciding whether those signals are real, lagged, noisy, or merely distractors
+- mechanism comprehension often matters more than brute-force regressions
+
+Best fits:
+- threshold event filters
+- lag testing
+- mechanism-first reverse engineering
+- low-dimensional interpretable models
+
+Family G — Bot-behavior / trader-ID products
+Examples:
+- Olivia / named trader exploitation / repeated maker-vs-small-taker patterns
+
+Signature:
+- certain participants act in recurring, highly structured ways
+- trader IDs or inferred trade clusters can dominate the edge
+
+Best fits:
+- participant clustering
+- heuristic behavior detection
+- event-following or anticipatory logic
+- fallback path if the identifiable behavior disappears
+
+3) The strongest repos use the simplest valid fair first
+-------------------------------------------------------
+A recurring winner pattern:
+- start with the cheapest valid fair
+- only upgrade the fair if diagnostics prove it is materially wrong
+
+Examples from public writeups:
+- fixed-fair products: use 10000 directly
+- random-walk local products: use rolling mean / market-maker mid / wall mid
+- spread products: use basket minus synthetic
+- options: use BS + implied vol baseline
+
+Rule:
+Never jump directly to a complex model unless the residual from a simple model clearly contains structure.
+
+4) Execution often matters more than alpha discovery
+----------------------------------------------------
+A repeated lesson in top repos:
+- many products have easy-to-state alpha but hard-to-monetize execution
+
+Typical execution levers:
+- passive vs aggressive taking
+- queue position
+- inventory skew
+- zero-edge clearing
+- quoting only one side in toxic states
+- trading only the leading leg in a pair
+- risk-aware half hedging instead of theoretical full hedge
+
+When your fair is already good, more profit usually comes from:
+- better fill quality
+- better inventory turnover
+- fewer bad passive fills
+- trading capacity management under position limits
+
+5) Cross-product structure matters
+----------------------------------
+The best public teams repeatedly look for:
+- synthetic relations
+- lead/lag
+- cross-day analogues
+- cross-year analogues
+- common bot behavior across competitions
+
+But this must be handled carefully:
+- cross-product signal that explains the mechanism is strong
+- cross-year or cross-competition analogies can be useful, but they may be exploit-specific and need fallbacks
+
+Rule:
+Use cross-product structure as a hypothesis generator, not as proof.
+
+PART II — THE AGENT WORKFLOW FOR A NEW PRODUCT
+==============================================
+
+Step 1 — Mechanism audit before modeling
+----------------------------------------
+For every new product, answer these first:
+- Is there a fixed conversion or replication formula?
+- Is there an external venue or conversion process?
+- Is there expiry?
+- Is there an exogenous signal?
+- Are there trader IDs or repeated participant patterns?
+- Are orders ephemeral or persistent?
+- Is fair likely fixed, local, relative, scheduled, or event-driven?
+
+Output:
+A one-page mechanism memo.
+
+If the mechanism is unclear, do not do ML yet.
+Reverse-engineer the market first.
+
+Step 2 — Product classification
+-------------------------------
+Assign the product to one primary family and one backup family.
+
+Example format:
+- Primary family: local-fair market making
+- Backup family: weak mean-reversion predictor
+
+If classification confidence is low, run shallow tests for the top 2–3 families in parallel.
+
+Step 3 — Build the minimum viable fair
+--------------------------------------
+For each likely family, define the cheapest plausible fair:
+- fixed anchor
+- rolling mid / EMA
+- market-maker mid
+- wall mid
+- synthetic basket value
+- BS price / implied vol center
+- scheduled curve
+- external-event threshold state
+
+Do not optimize yet.
+First answer: does this fair explain price action better than naive mid/anchor?
+
+Step 4 — Run family-specific diagnostics
+----------------------------------------
+A. Fixed-anchor diagnostics
+- average deviation from anchor
+- next-move correlation with anchor deviation
+- spread and depth stability
+- pnl of take-at-anchor baseline
+
+B. Local-fair diagnostics
+- rolling-mid residual autocorrelation
+- wall-mid vs raw-mid noise comparison
+- microprice / imbalance predictive power
+- markout by side after passive fills
+
+C. Spread diagnostics
+- synthetic construction residual
+- spread mean stability across days
+- rolling-vol normalized spread
+- lead/lag tests between legs
+- whether one leg alone captures most edge
+
+D. Options diagnostics
+- implied vol time series
+- realized vs implied relationship
+- cross-strike consistency
+- hedge ratio feasibility under position limits
+
+E. Schedule diagnostics
+- average intraday path by day
+- local extrema timing consistency
+- day-to-day shift in level or slope
+
+F. Event diagnostics
+- event threshold versus noise threshold
+- lagged impact curve
+- robustness of same-day versus lagged regression
+- mechanism-consistent versus spurious features
+
+G. Trader-ID diagnostics
+- PnL by counterparty or inferred trader cluster
+- repeated trade sizes
+- repeated times of entry/exit
+- maker/small taker/informed trader decomposition
+
+Step 5 — Choose strategy family only after diagnostics
+------------------------------------------------------
+Map from finding to strategy.
+
+If fair is fixed:
+- anchored MM + take + zero-edge clearing
+
+If fair is local but noisy:
+- filtered fair maker/taker hybrid
+- use wall mid / stable mid / market-maker mid
+
+If spread is stationary:
+- spread mean reversion
+- z-score over rolling sigma
+
+If synthetic leads and ETF lags:
+- trade ETF on synthetic signal
+- maybe avoid trading noisy legs directly
+
+If option IV oscillates:
+- IV mean reversion + delta hedge if feasible
+
+If event shocks dominate:
+- threshold-based reaction, not generic regression
+
+If strong bot pattern exists:
+- dedicated exploit module with fallback path
+
+PART III — WHICH BASIC STRATEGIES FIT WHICH BEHAVIOR
+====================================================
+
+Behavior: “price is flat around one level”
+Fit:
+- fixed-anchor MM
+Tweak:
+- edge width
+- passive size
+- aggressive taking threshold
+- zero-edge clearing
+
+Behavior: “price random-walks slowly but quote walls look stable”
+Fit:
+- local fair MM with wall/stable mid
+Tweak:
+- fair smoothing
+- micro/imbalance weight
+- toxicity gating
+- inventory skew
+
+Behavior: “mid is noisy but one size class seems informed”
+Fit:
+- market-maker-mid or filtered-fair MM
+Tweak:
+- which size levels define fair
+- whether to use wall mid or volume-weighted stable mid
+
+Behavior: “basket minus synthetic oscillates around constant premium”
+Fit:
+- spread mean reversion
+Tweak:
+- fixed premium vs dynamic mean
+- rolling sigma window
+- entry/exit z thresholds
+- whether to leg with all constituents or only ETF
+
+Behavior: “underlying and option imply stable IV band”
+Fit:
+- IV mean reversion
+Tweak:
+- IV center estimate
+- hedge frequency
+- risk appetite when full delta hedge impossible
+
+Behavior: “price path has stable time-of-day shape”
+Fit:
+- schedule trading
+Tweak:
+- absolute curve vs curve + day drift correction
+- window widths
+- exit discipline
+
+Behavior: “external features exist but correlations are weak/noisy”
+Fit:
+- mechanism-first and threshold event models
+Tweak:
+- feature engineering only after mechanism validation
+- use lag structure, not blind multivariate fit
+
+Behavior: “a named or inferred participant repeatedly buys lows / sells highs”
+Fit:
+- trader-behavior exploit
+Tweak:
+- detection quality
+- false positive control
+- fallback if behavior vanishes
+
+PART IV — HOW TO AVOID BAD LOCAL OPTIMA
+=======================================
+
+These are the main traps the public repos implicitly warn about.
+
+Trap 1 — optimizing constants before validating the family
+----------------------------------------------------------
+Symptom:
+- dozens of parameter sweeps around a weak base idea
+
+Fix:
+- compare across families first
+- only optimize after at least one family clearly dominates naive baselines
+
+Trap 2 — forcing alpha where the edge is execution
+--------------------------------------------------
+Symptom:
+- increasingly complicated predictors, no pnl improvement
+
+Fix:
+- freeze fair
+- inspect fill quality, inventory path, missed fills, bad passive fills, limit saturation
+
+Trap 3 — using raw mid when the real fair is a filtered mid
+-----------------------------------------------------------
+Symptom:
+- fair estimates look noisy
+- residuals are unstable
+- website/backtest markouts feel inconsistent
+
+Fix:
+- test wall mid, stable mid, maker mid, popular mid, top-k weighted mid
+
+Trap 4 — overfitting spread thresholds
+--------------------------------------
+Symptom:
+- beautiful in-sample z-score thresholds, poor live performance
+
+Fix:
+- use adaptive volatility and fixed economic mean
+- test on multiple days separately
+- inspect slippage and position limit interactions
+
+Trap 5 — using every signal everywhere
+--------------------------------------
+Symptom:
+- one bad state shuts down taking, quoting, and sizing all at once
+
+Fix:
+- separate modules:
+  - fair estimation
+  - aggression / execution
+  - toxicity / risk
+  - inventory recycling
+
+Trap 6 — treating exploit edges as permanent truths
+---------------------------------------------------
+Symptom:
+- a strategy depends on bot identity or reused historical behavior
+
+Fix:
+- build fallback normal strategy
+- maintain exploit module separately
+- test with exploit off
+
+Trap 7 — tuning against wrong simulator behavior
+------------------------------------------------
+Symptom:
+- live result diverges from local backtest unexpectedly
+
+Fix:
+- validate mark-to-market assumptions
+- validate fill attribution
+- validate conversions and special mechanics
+- use official replay when behavior interaction matters
+
+PART V — THE RESTART PLAYBOOK WHEN STUCK
+========================================
+
+If you are stuck and every new version feels like noise, do not keep tweaking the same architecture.
+Run one of these restarts.
+
+Restart A — the Family Reset
+----------------------------
+Ask:
+- what if this product is not the family I assumed?
+
+Do:
+- reclassify into top 2 alternative families
+- test one simple baseline per family
+
+Restart B — the Fair Reset
+--------------------------
+Ask:
+- is the fair wrong, or is execution wrong?
+
+Do:
+- swap raw mid for wall/stable/maker mid
+- or replace a dynamic fair with a constant anchor baseline
+
+Restart C — the Execution Reset
+-------------------------------
+Ask:
+- is the edge known but monetization poor?
+
+Do:
+- freeze fair
+- compare:
+  - take-only
+  - make-only
+  - hybrid
+  - hybrid + zero-edge clearing
+  - one-sided toxicity-aware maker
+
+Restart D — the Position-Limit Reset
+------------------------------------
+Ask:
+- are limits blocking profitable trades?
+
+Do:
+- simulate ideal unconstrained pnl
+- inspect how often capacity is exhausted
+- add clearing or faster recycling
+
+Restart E — the Counterparty Reset
+----------------------------------
+Ask:
+- is another bot creating most opportunities?
+
+Do:
+- cluster trade sizes / trader IDs / quote size fingerprints
+- test strategy with and without bot-conditioned filters
+
+Restart F — the Time-Structure Reset
+------------------------------------
+Ask:
+- is the product schedule-driven rather than state-driven?
+
+Do:
+- average path by day
+- search for stable intraday extrema
+- compare schedule strategy versus signal strategy
+
+Restart G — the Simplicity Reset
+--------------------------------
+Ask:
+- did complexity outrun understanding?
+
+Do:
+- write the smallest valid trader for the product family
+- then add one feature at a time
+
+PART VI — THE MANDATORY ABLATIONS
+=================================
+
+Before trusting any strategy, run these ablations.
+
+1. Fair ablation
+- current fair vs raw mid vs anchor vs stable/wall fair
+
+2. Execution ablation
+- take-only / make-only / hybrid
+
+3. Inventory ablation
+- with and without zero-edge clearing
+
+4. Signal ablation
+- each signal on/off individually
+
+5. Toxicity ablation
+- with and without passive-fill protection
+
+6. Exploit ablation
+- with and without trader-ID or bot-pattern logic
+
+7. Day-by-day split
+- report pnl per day, not just total
+
+A valid edge should survive at least some of these.
+
+PART VII — HOW TO DECIDE WHAT TO OPTIMIZE
+=========================================
+
+Optimize only after structure is validated.
+
+Good parameters to optimize:
+- quote edges
+- taking thresholds
+- inventory skew
+- rolling window lengths
+- z-score thresholds
+- hedge ratios under capacity constraints
+
+Do NOT optimize first:
+- product family
+- whether fair is anchor or wall-mid or spread
+- whether exploit logic exists at all
+- complicated logic branches that have not been ablated
+
+Rule:
+Use optimization to refine a good idea, not to discover the idea.
+
+PART VIII — THE OUTPUT FORMAT THE AGENT SHOULD PRODUCE
+======================================================
+
+For each new product, the agent should output:
+
+1. Product family hypothesis
+- primary family
+- backup family
+- confidence
+
+2. Mechanism memo
+- what the environment implies
+- hidden mechanical constraints
+
+3. Minimal fair candidates
+- list and formulas
+
+4. Diagnostics
+- key plots and statistics
+
+5. Candidate strategies
+- 2 to 4 only
+- one paragraph each
+
+6. Risk map
+- overfit risk
+- slippage risk
+- simulator mismatch risk
+- exploit-dependence risk
+
+7. Next experiments
+- ordered by expected information gain, not by complexity
+
+8. Restart trigger
+- clear condition for abandoning current path
+
+PART IX — A PRACTICAL CHECKLIST FOR THE FIRST 24 HOURS
+======================================================
+
+Hour 1–3
+- parse data
+- build replay
+- compute basic stats
+- inspect orderbook visually
+
+Hour 3–6
+- classify product family
+- build 2–3 minimal fair candidates
+- run naive baselines
+
+Hour 6–10
+- choose best family
+- implement minimal valid strategy
+- inspect fills and position path
+
+Hour 10–16
+- add execution improvements
+- add inventory logic
+- add one advanced signal only if residual structure remains
+
+Hour 16–24
+- run ablations
+- report robust edge vs likely overfit edge
+- decide whether to optimize, expand, or restart
+
+FINAL SUMMARY
+=============
+
+Across strong public Prosperity repos, the winning pattern is not “use the fanciest model.”
+It is:
+- classify the product correctly
+- choose the cheapest valid fair
+- match the execution style to the product family
+- build strong tooling
+- separate structural edge from exploit edge
+- optimize only after you know why the strategy works
+- and restart from a new family when progress turns into parameter noise
+
+If stuck, the highest-value question is usually not:
+"Which constant should I tweak next?"
+It is:
+"What kind of product is this really?"
