@@ -1,0 +1,2540 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Round 2 Backtester Dashboard</title>
+  <style>
+    :root {
+      --bg: #eef2f4;
+      --bg-soft: #f9fbfc;
+      --ink: #10222f;
+      --muted: #5e7180;
+      --line: rgba(16, 34, 47, 0.12);
+      --line-strong: rgba(16, 34, 47, 0.18);
+      --panel: rgba(255, 255, 255, 0.86);
+      --panel-strong: rgba(255, 255, 255, 0.96);
+      --accent: #ff7a45;
+      --accent-deep: #d85e2f;
+      --teal: #1f8ea3;
+      --teal-soft: rgba(31, 142, 163, 0.14);
+      --blue: #3366cc;
+      --green: #1f8f63;
+      --gold: #b98923;
+      --red: #cc4f57;
+      --shadow: 0 18px 48px rgba(18, 38, 53, 0.12);
+      --shadow-soft: 0 10px 28px rgba(18, 38, 53, 0.08);
+      --radius-lg: 28px;
+      --radius-md: 20px;
+      --radius-sm: 14px;
+      --display: "Space Grotesk", "Avenir Next", "Segoe UI", sans-serif;
+      --sans: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(255, 122, 69, 0.18), transparent 22rem),
+        radial-gradient(circle at 86% 12%, rgba(31, 142, 163, 0.16), transparent 24rem),
+        linear-gradient(180deg, #f8fafb 0%, #edf2f4 42%, #e7eef1 100%);
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(0);
+    }
+
+    body::before {
+      top: 28vh;
+      right: -8rem;
+      width: 18rem;
+      height: 18rem;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(51, 102, 204, 0.1), transparent 72%);
+    }
+
+    body::after {
+      bottom: -4rem;
+      left: -6rem;
+      width: 20rem;
+      height: 20rem;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(31, 143, 99, 0.1), transparent 70%);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      align-self: start;
+      height: 100vh;
+      overflow: auto;
+      padding: 22px 18px;
+      background:
+        linear-gradient(180deg, rgba(250, 252, 252, 0.9) 0%, rgba(240, 246, 247, 0.92) 100%);
+      border-right: 1px solid var(--line);
+      backdrop-filter: blur(18px);
+    }
+
+    .workspace {
+      padding: 28px;
+      display: grid;
+      gap: 18px;
+      align-content: start;
+    }
+
+    .brand-card,
+    .sidebar-card,
+    .hero,
+    .control-deck,
+    .insight-strip,
+    .panel {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand-card,
+    .sidebar-card,
+    .hero,
+    .control-deck,
+    .panel {
+      border-radius: var(--radius-lg);
+    }
+
+    .brand-card {
+      padding: 20px 20px 18px;
+      background:
+        linear-gradient(140deg, rgba(18, 34, 47, 0.98), rgba(28, 58, 79, 0.94));
+      color: white;
+      box-shadow: 0 24px 52px rgba(12, 27, 38, 0.24);
+      margin-bottom: 14px;
+    }
+
+    .eyebrow {
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.72rem;
+      color: var(--accent);
+      font-family: var(--display);
+    }
+
+    .brand-card .eyebrow {
+      color: rgba(255, 180, 148, 0.92);
+    }
+
+    .brand-card h1,
+    .hero h2,
+    .section-heading h3 {
+      margin: 0;
+      font-family: var(--display);
+      letter-spacing: -0.03em;
+    }
+
+    .brand-card h1 {
+      font-size: 1.95rem;
+      line-height: 0.95;
+      max-width: 8ch;
+    }
+
+    .brand-card p {
+      margin: 12px 0 0;
+      color: rgba(236, 242, 247, 0.82);
+      line-height: 1.48;
+      font-size: 0.92rem;
+    }
+
+    .sidebar-card {
+      padding: 16px;
+      margin-bottom: 14px;
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .section-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      font-family: var(--display);
+      margin-bottom: 10px;
+    }
+
+    .field-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .field label,
+    .field span {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-family: var(--display);
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 11px 13px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel-strong);
+      color: var(--ink);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+
+    input:focus,
+    select:focus,
+    button:focus-visible {
+      outline: 2px solid rgba(255, 122, 69, 0.4);
+      outline-offset: 2px;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .button {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 11px 13px;
+      background: var(--panel-strong);
+      color: var(--ink);
+      transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+      box-shadow: 0 12px 24px rgba(18, 38, 53, 0.1);
+    }
+
+    .button.primary {
+      background: linear-gradient(180deg, var(--accent) 0%, var(--accent-deep) 100%);
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 16px 32px rgba(216, 94, 47, 0.24);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--muted);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      line-height: 1;
+      transition: background 120ms ease, border-color 120ms ease, color 120ms ease, transform 120ms ease;
+    }
+
+    .chip:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+      color: var(--ink);
+    }
+
+    .chip.active {
+      background: rgba(255, 122, 69, 0.14);
+      border-color: rgba(255, 122, 69, 0.44);
+      color: var(--accent-deep);
+    }
+
+    .chip.alt.active {
+      background: var(--teal-soft);
+      border-color: rgba(31, 142, 163, 0.36);
+      color: var(--teal);
+    }
+
+    .chip.muted.active {
+      background: rgba(16, 34, 47, 0.08);
+      border-color: var(--line-strong);
+      color: var(--ink);
+    }
+
+    .run-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .run-card {
+      width: 100%;
+      text-align: left;
+      padding: 14px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(248, 251, 252, 0.75));
+      box-shadow: var(--shadow-soft);
+      transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+    }
+
+    .run-card:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255, 122, 69, 0.34);
+    }
+
+    .run-card.active {
+      border-color: rgba(255, 122, 69, 0.5);
+      box-shadow: 0 0 0 4px rgba(255, 122, 69, 0.12), var(--shadow);
+    }
+
+    .run-card-top,
+    .hero-top,
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .run-card h3 {
+      margin: 8px 0 6px;
+      font-size: 1rem;
+      line-height: 1.18;
+    }
+
+    .run-card .bot {
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.36;
+    }
+
+    .run-card .statline {
+      margin-top: 10px;
+      display: grid;
+      gap: 4px;
+      color: var(--ink);
+      font-size: 0.88rem;
+    }
+
+    .run-card .footnote {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .hero {
+      overflow: hidden;
+      position: relative;
+      padding: 24px;
+      background:
+        linear-gradient(135deg, rgba(16, 34, 47, 0.96), rgba(24, 58, 73, 0.92) 62%, rgba(255, 122, 69, 0.9) 170%);
+      color: white;
+      box-shadow: 0 30px 60px rgba(13, 26, 37, 0.24);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -70px;
+      top: -50px;
+      width: 260px;
+      height: 260px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent 66%);
+      pointer-events: none;
+    }
+
+    .hero h2 {
+      font-size: clamp(2rem, 3vw, 3rem);
+      line-height: 0.92;
+      max-width: 14ch;
+    }
+
+    .hero-copy {
+      margin-top: 10px;
+      max-width: 70ch;
+      color: rgba(242, 247, 250, 0.86);
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+
+    .hero-pills,
+    .hero-side,
+    .control-grid,
+    .metric-grid,
+    .insight-grid,
+    .mini-metrics {
+      display: grid;
+      gap: 12px;
+    }
+
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 6px 11px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: rgba(244, 248, 251, 0.88);
+      font-size: 0.8rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-side {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      min-width: min(100%, 400px);
+    }
+
+    .hero-stat {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.11);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .hero-stat .label,
+    .metric-card .label,
+    .insight-card .label,
+    .mini-metric .label {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.74rem;
+      color: var(--muted);
+      font-family: var(--display);
+    }
+
+    .hero-stat .label {
+      color: rgba(244, 248, 251, 0.68);
+    }
+
+    .hero-stat .value {
+      margin-top: 10px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: white;
+    }
+
+    .hero-stat .sub {
+      margin-top: 6px;
+      color: rgba(244, 248, 251, 0.72);
+      font-size: 0.84rem;
+      line-height: 1.4;
+    }
+
+    .control-deck {
+      position: sticky;
+      top: 18px;
+      z-index: 5;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: var(--shadow);
+    }
+
+    .control-grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      align-items: start;
+    }
+
+    .control-group {
+      grid-column: span 12;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+    }
+
+    .control-group.span-6 {
+      grid-column: span 6;
+    }
+
+    .control-group.span-4 {
+      grid-column: span 4;
+    }
+
+    .control-group h3 {
+      margin: 0 0 8px;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+
+    .control-group p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      line-height: 1.42;
+      font-size: 0.86rem;
+    }
+
+    .insight-strip {
+      border-radius: var(--radius-lg);
+      padding: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+    }
+
+    .insight-grid {
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    }
+
+    .insight-card,
+    .metric-card,
+    .mini-metric {
+      padding: 16px 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .insight-card .value,
+    .metric-card .value,
+    .mini-metric .value {
+      margin-top: 10px;
+      font-size: 1.34rem;
+      line-height: 1;
+      font-weight: 800;
+    }
+
+    .insight-card p,
+    .metric-card .sub,
+    .mini-metric .sub {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .section-block {
+      display: grid;
+      gap: 16px;
+    }
+
+    .section-heading {
+      display: grid;
+      gap: 6px;
+      padding: 0 2px;
+    }
+
+    .section-heading h3 {
+      font-size: 1.3rem;
+      color: var(--ink);
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 78ch;
+      line-height: 1.5;
+      font-size: 0.92rem;
+    }
+
+    .panel-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .panel {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+      animation: rise-in 180ms ease;
+    }
+
+    @keyframes rise-in {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .span-12 {
+      grid-column: span 12;
+    }
+
+    .span-8 {
+      grid-column: span 8;
+    }
+
+    .span-7 {
+      grid-column: span 7;
+    }
+
+    .span-6 {
+      grid-column: span 6;
+    }
+
+    .span-5 {
+      grid-column: span 5;
+    }
+
+    .span-4 {
+      grid-column: span 4;
+    }
+
+    .panel-title h4 {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: 0.02em;
+    }
+
+    .panel-copy {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 0.9rem;
+    }
+
+    .panel-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .chart {
+      min-height: 300px;
+      border-radius: 20px;
+      padding: 10px;
+      background:
+        linear-gradient(180deg, rgba(248, 251, 252, 0.9), rgba(241, 246, 248, 0.84));
+      border: 1px solid rgba(16, 34, 47, 0.08);
+    }
+
+    .chart.tall {
+      min-height: 340px;
+    }
+
+    .chart svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .chart-hint {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.74);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th,
+    td {
+      padding: 11px 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(16, 34, 47, 0.08);
+      vertical-align: top;
+      white-space: nowrap;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: rgba(245, 249, 250, 0.96);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.74rem;
+      font-family: var(--display);
+    }
+
+    .kv-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+    }
+
+    .kv-item {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid var(--line);
+    }
+
+    .kv-item dt {
+      margin-bottom: 6px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.74rem;
+      font-family: var(--display);
+    }
+
+    .kv-item dd {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .metric-grid,
+    .mini-metrics {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .empty {
+      min-height: 140px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.5;
+      padding: 18px;
+    }
+
+    .footer-note {
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 0.86rem;
+    }
+
+    .mono {
+      font-family: var(--mono);
+    }
+
+    @media (max-width: 1200px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: relative;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .control-deck {
+        position: relative;
+        top: 0;
+      }
+    }
+
+    @media (max-width: 960px) {
+      .workspace {
+        padding: 18px;
+      }
+
+      .span-8,
+      .span-7,
+      .span-6,
+      .span-5,
+      .span-4,
+      .control-group.span-6,
+      .control-group.span-4 {
+        grid-column: span 12;
+      }
+
+      .button-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <section class="brand-card">
+        <div class="eyebrow">Prosperity Round 2</div>
+        <h1>Backtester Dashboard</h1>
+        <p>Browse saved replays, switch analysis lenses, and decide which charts deserve screen space instead of fighting a fixed layout.</p>
+      </section>
+
+      <section class="sidebar-card">
+        <div class="field-stack">
+          <div class="field">
+            <label for="searchInput">Search Runs</label>
+            <input id="searchInput" type="search" placeholder="Bot, run name, mode, queue model">
+          </div>
+          <div class="field">
+            <span>Run Type</span>
+            <div id="kindFilterChips" class="chip-row"></div>
+          </div>
+          <div class="field">
+            <label for="sortSelect">Sort By</label>
+            <select id="sortSelect">
+              <option value="recent">Most recent</option>
+              <option value="pnl">Best PnL</option>
+              <option value="access">Highest access edge</option>
+              <option value="fills">Most fills</option>
+              <option value="name">Name</option>
+            </select>
+          </div>
+          <div class="button-row">
+            <button id="refreshButton" class="button primary" type="button">Refresh Runs</button>
+            <button id="resetViewButton" class="button" type="button">Reset View</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="sidebar-card">
+        <div class="section-label">Saved Outputs</div>
+        <div id="runList" class="run-list"></div>
+      </section>
+    </aside>
+
+    <main class="workspace">
+      <section id="hero" class="hero"></section>
+      <section id="controlDeck" class="control-deck"></section>
+      <section id="insightStrip" class="insight-strip"></section>
+      <div id="compareSection"></div>
+      <div id="overviewSection"></div>
+      <div id="executionSection"></div>
+      <div id="productSection"></div>
+      <div id="diagnosticsSection"></div>
+    </main>
+  </div>
+
+  <script>
+    const palette = {
+      accent: "#ff7a45",
+      accentDeep: "#d85e2f",
+      teal: "#1f8ea3",
+      blue: "#3366cc",
+      green: "#1f8f63",
+      gold: "#b98923",
+      red: "#cc4f57",
+      ink: "#10222f",
+      muted: "#5e7180",
+      grid: "rgba(16, 34, 47, 0.14)",
+      fill: "rgba(255, 122, 69, 0.12)",
+      band: "rgba(51, 102, 204, 0.14)",
+    };
+
+    const WINDOW_OPTIONS = [
+      { key: "full", label: "Full run" },
+      { key: "first_half", label: "First half" },
+      { key: "last_half", label: "Last half" },
+      { key: "last_quarter", label: "Last quarter" },
+    ];
+
+    const KIND_OPTIONS = [
+      { key: "all", label: "All" },
+      { key: "compare", label: "Compare" },
+      { key: "single", label: "Single" },
+    ];
+
+    const EXECUTION_CATEGORY_OPTIONS = [
+      { key: "fillTypes", label: "Fill type mix" },
+      { key: "accessSources", label: "Access source mix" },
+      { key: "bookOrigins", label: "Book origin mix" },
+      { key: "sideMix", label: "Buy vs sell" },
+      { key: "toxicityBuckets", label: "Toxicity buckets" },
+      { key: "convictionBuckets", label: "Conviction buckets" },
+      { key: "agreementStates", label: "Agreement states" },
+      { key: "spreadBuckets", label: "Spread buckets" },
+    ];
+
+    const EXECUTION_HISTOGRAM_OPTIONS = [
+      { key: "markoutAll", label: "Markout distribution", color: palette.green },
+      { key: "residualAll", label: "Residual to trend", color: palette.accent },
+      { key: "microGapAll", label: "Micro gap distribution", color: palette.blue },
+      { key: "imbalanceAll", label: "Imbalance distribution", color: palette.gold },
+    ];
+
+    const PRODUCT_STATE_OPTIONS = [
+      { key: "pnl", label: "Product PnL", color: palette.accent },
+      { key: "position", label: "Position", color: palette.blue },
+      { key: "signal", label: "Signal", color: palette.green },
+      { key: "imbalance", label: "Imbalance", color: palette.gold },
+      { key: "accessLevels", label: "Access levels", color: palette.teal },
+    ];
+
+    const PRODUCT_DISTRIBUTION_OPTIONS = [
+      { key: "spreadHistogram", label: "Spread distribution", color: palette.blue },
+      { key: "signalHistogram", label: "Signal distribution", color: palette.accent },
+      { key: "markoutHistogram", label: "Markout distribution", color: palette.green },
+      { key: "imbalanceHistogram", label: "Imbalance distribution", color: palette.gold },
+      { key: "residualHistogram", label: "Residual distribution", color: palette.teal },
+    ];
+
+    const PRODUCT_CATEGORY_OPTIONS = [
+      { key: "fillTypes", label: "Fill type mix" },
+      { key: "agreementStates", label: "Agreement states" },
+      { key: "sideMix", label: "Buy vs sell" },
+    ];
+
+    const PRODUCT_CONTRIBUTION_OPTIONS = [
+      { key: "finalPnl", label: "Final PnL" },
+      { key: "fills", label: "Fill count" },
+      { key: "finalPosition", label: "End position" },
+      { key: "meanMarkout", label: "Mean markout" },
+    ];
+
+    const state = {
+      runs: [],
+      filteredRuns: [],
+      selectedRun: null,
+      selectedPayload: null,
+      selectedChild: null,
+      childPayload: null,
+      activeProduct: null,
+      filters: {
+        search: "",
+        kind: "all",
+        sort: "recent",
+      },
+      controls: {
+        focusWindow: "full",
+        compareDistribution: "deltaHistogram",
+        executionCategory: "fillTypes",
+        executionHistogram: "markoutAll",
+        productStateMetric: "pnl",
+        productDistribution: "spreadHistogram",
+        productCategory: "fillTypes",
+        productContributionMetric: "finalPnl",
+        sectionVisibility: {
+          compare: true,
+          overview: true,
+          execution: true,
+          product: true,
+          diagnostics: true,
+        },
+        compareEnvelope: {
+          baseline: true,
+          mean: true,
+          band: true,
+        },
+        activity: {
+          submitted: true,
+          fills: true,
+          pending: true,
+        },
+        productPrice: {
+          mid: true,
+          buy: true,
+          sell: true,
+        },
+      },
+    };
+
+    function fmtNumber(value, digits = 2) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "—";
+      return Number(value).toLocaleString(undefined, {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits,
+      });
+    }
+
+    function fmtInteger(value) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "—";
+      return Math.round(Number(value)).toLocaleString();
+    }
+
+    function fmtSigned(value, digits = 2) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "—";
+      const number = Number(value);
+      const prefix = number > 0 ? "+" : "";
+      return `${prefix}${fmtNumber(number, digits)}`;
+    }
+
+    function fmtCompact(value) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "—";
+      return Number(value).toLocaleString(undefined, {
+        notation: "compact",
+        maximumFractionDigits: 2,
+      });
+    }
+
+    function fmtAxis(value) {
+      if (Math.abs(value) >= 1000) {
+        return fmtCompact(value);
+      }
+      return fmtNumber(value, 1);
+    }
+
+    function fmtRelativeTime(ms) {
+      if (!ms) return "unknown";
+      const diff = Date.now() - Number(ms);
+      const abs = Math.abs(diff);
+      const minute = 60_000;
+      const hour = 60 * minute;
+      const day = 24 * hour;
+      if (abs < hour) return `${Math.max(1, Math.round(abs / minute))}m ago`;
+      if (abs < day) return `${Math.max(1, Math.round(abs / hour))}h ago`;
+      return `${Math.max(1, Math.round(abs / day))}d ago`;
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    function optionLabel(options, key) {
+      return options.find((item) => item.key === key)?.label || key;
+    }
+
+    function buttonChip(label, action, value, active, extra = "") {
+      return `<button type="button" class="chip ${active ? "active" : ""} ${extra}" data-action="${action}" data-value="${escapeHtml(value)}">${escapeHtml(label)}</button>`;
+    }
+
+    async function fetchJson(url) {
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) {
+        throw new Error(`Request failed: ${response.status}`);
+      }
+      return response.json();
+    }
+
+    function currentSinglePayload() {
+      if (!state.selectedPayload) return null;
+      return state.selectedPayload.kind === "compare" ? state.childPayload : state.selectedPayload;
+    }
+
+    function activeProductPayload() {
+      const payload = currentSinglePayload();
+      if (!payload) return null;
+      const products = payload.products || {};
+      if (!state.activeProduct || !products[state.activeProduct]) {
+        state.activeProduct = Object.keys(products)[0] || null;
+      }
+      return state.activeProduct ? products[state.activeProduct] : null;
+    }
+
+    function applyWindow(points) {
+      if (!Array.isArray(points) || !points.length) return [];
+      const sorted = points.slice().sort((a, b) => Number(a.x || 0) - Number(b.x || 0));
+      if (state.controls.focusWindow === "full" || sorted.length < 3) return sorted;
+      const xMin = Number(sorted[0].x);
+      const xMax = Number(sorted[sorted.length - 1].x);
+      const span = xMax - xMin;
+      let start = xMin;
+      let end = xMax;
+      if (state.controls.focusWindow === "first_half") {
+        end = xMin + span * 0.5;
+      } else if (state.controls.focusWindow === "last_half") {
+        start = xMax - span * 0.5;
+      } else if (state.controls.focusWindow === "last_quarter") {
+        start = xMax - span * 0.25;
+      }
+      const filtered = sorted.filter((point) => Number(point.x) >= start && Number(point.x) <= end);
+      return filtered.length ? filtered : sorted;
+    }
+
+    function applyWindowBand(points) {
+      return applyWindow(points);
+    }
+
+    function resetControls() {
+      state.controls.focusWindow = "full";
+      state.controls.compareDistribution = "deltaHistogram";
+      state.controls.executionCategory = "fillTypes";
+      state.controls.executionHistogram = "markoutAll";
+      state.controls.productStateMetric = "pnl";
+      state.controls.productDistribution = "spreadHistogram";
+      state.controls.productCategory = "fillTypes";
+      state.controls.productContributionMetric = "finalPnl";
+      state.controls.sectionVisibility = {
+        compare: true,
+        overview: true,
+        execution: true,
+        product: true,
+        diagnostics: true,
+      };
+      state.controls.compareEnvelope = {
+        baseline: true,
+        mean: true,
+        band: true,
+      };
+      state.controls.activity = {
+        submitted: true,
+        fills: true,
+        pending: true,
+      };
+      state.controls.productPrice = {
+        mid: true,
+        buy: true,
+        sell: true,
+      };
+    }
+
+    function runScore(run, sortKey) {
+      if (sortKey === "pnl") {
+        return run.kind === "compare" ? Number(run.baselineNoAccessPnl || -Infinity) : Number(run.totalPnl || -Infinity);
+      }
+      if (sortKey === "access") {
+        return Number(run.deltaAccessMean || -Infinity);
+      }
+      if (sortKey === "fills") {
+        return run.kind === "compare" ? Number(run.accessRunCount || 0) : Number(run.fills || 0);
+      }
+      if (sortKey === "recent") {
+        return Number(run.mtimeMs || 0);
+      }
+      return 0;
+    }
+
+    function applyRunFilters() {
+      const query = state.filters.search.trim().toLowerCase();
+      const filtered = state.runs.filter((run) => {
+        const matchesKind = state.filters.kind === "all" || run.kind === state.filters.kind;
+        if (!matchesKind) return false;
+        if (!query) return true;
+        const haystack = [
+          run.name,
+          run.botName,
+          run.botPath,
+          run.kind,
+          run.mode,
+          run.queueModel,
+        ].join(" ").toLowerCase();
+        return haystack.includes(query);
+      });
+      if (state.filters.sort === "name") {
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+      } else {
+        filtered.sort((a, b) => runScore(b, state.filters.sort) - runScore(a, state.filters.sort));
+      }
+      state.filteredRuns = filtered;
+      renderSidebarFilters();
+      renderRunList();
+    }
+
+    async function loadRuns() {
+      const payload = await fetchJson("/api/runs");
+      state.runs = payload.runs || [];
+      applyRunFilters();
+      if (!state.runs.length) {
+        state.selectedRun = null;
+        state.selectedPayload = null;
+        state.childPayload = null;
+        renderAll();
+        return;
+      }
+      if (state.selectedRun && state.runs.some((run) => run.name === state.selectedRun.name)) {
+        await selectRun(state.selectedRun.name);
+        return;
+      }
+      await selectRun(state.filteredRuns[0]?.name || state.runs[0].name);
+    }
+
+    async function selectRun(runName) {
+      if (!runName) return;
+      state.selectedRun = state.runs.find((run) => run.name === runName) || null;
+      state.selectedPayload = await fetchJson(`/api/run?name=${encodeURIComponent(runName)}`);
+      state.selectedChild = null;
+      state.childPayload = null;
+      if (state.selectedPayload.kind === "compare") {
+        const defaultChild = state.selectedPayload.defaultChild || state.selectedPayload.children?.[0]?.name || null;
+        if (defaultChild) {
+          await selectChild(defaultChild, false);
+        }
+      } else {
+        const products = Object.keys(state.selectedPayload.products || {});
+        state.activeProduct = products[0] || null;
+      }
+      renderAll();
+    }
+
+    async function selectChild(childName, rerender = true) {
+      if (!state.selectedRun || !childName) return;
+      state.selectedChild = childName;
+      state.childPayload = await fetchJson(
+        `/api/run?name=${encodeURIComponent(state.selectedRun.name)}&child=${encodeURIComponent(childName)}`
+      );
+      const products = Object.keys(state.childPayload.products || {});
+      state.activeProduct = products[0] || null;
+      if (rerender) renderAll();
+    }
+
+    function renderSidebarFilters() {
+      const chipHost = document.getElementById("kindFilterChips");
+      chipHost.innerHTML = KIND_OPTIONS.map((option) =>
+        buttonChip(option.label, "set-kind-filter", option.key, state.filters.kind === option.key, "muted")
+      ).join("");
+      document.getElementById("sortSelect").value = state.filters.sort;
+      document.getElementById("searchInput").value = state.filters.search;
+    }
+
+    function renderRunList() {
+      const container = document.getElementById("runList");
+      if (!state.filteredRuns.length) {
+        container.innerHTML = `<div class="run-card"><h3>No matching runs</h3><div class="bot">Try a different filter or generate a new backtest output.</div></div>`;
+        return;
+      }
+      container.innerHTML = state.filteredRuns.map((run) => {
+        const active = state.selectedRun && state.selectedRun.name === run.name;
+        const primary = run.kind === "compare"
+          ? `Δ access mean ${fmtSigned(run.deltaAccessMean, 1)}`
+          : `PnL ${fmtSigned(run.totalPnl, 0)}`;
+        const secondary = run.kind === "compare"
+          ? `${fmtInteger(run.accessRunCount)} access seeds`
+          : `${fmtInteger(run.fills)} fills`;
+        return `
+          <button type="button" class="run-card ${active ? "active" : ""}" data-action="select-run" data-value="${escapeHtml(run.name)}">
+            <div class="run-card-top">
+              <div class="pill">${escapeHtml(run.kind)}</div>
+              <div class="footnote">${escapeHtml(fmtRelativeTime(run.mtimeMs))}</div>
+            </div>
+            <h3>${escapeHtml(run.name)}</h3>
+            <div class="bot">${escapeHtml(run.botName || "Unknown bot")}</div>
+            <div class="statline">
+              <div>${escapeHtml(primary)}</div>
+              <div>${escapeHtml(secondary)}</div>
+            </div>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function heroMetrics(payload) {
+      const summary = payload?.summary || {};
+      if (!payload) return [];
+      if (payload.kind === "compare") {
+        return [
+          { label: "Baseline", value: fmtSigned(summary.baseline_no_access_pnl, 0), sub: "No-access replay" },
+          { label: "Mean uplift", value: fmtSigned(summary.delta_access_mean, 1), sub: "Across access seeds" },
+          { label: "Median uplift", value: fmtSigned(summary.delta_access_median, 1), sub: "Middle seed outcome" },
+          { label: "P25 uplift", value: fmtSigned(summary.delta_access_p25, 1), sub: "Conservative estimate" },
+          { label: "P10 uplift", value: fmtSigned(summary.delta_access_p10, 1), sub: "Tail stress bound" },
+        ];
+      }
+      return [
+        { label: "Final PnL", value: fmtSigned(summary.total_pnl, 0), sub: `Mode ${summary.mode || "single"}` },
+        { label: "Total fills", value: fmtInteger(summary.total_fills), sub: `${fmtInteger(summary.aggressive_fills)} aggressive / ${fmtInteger(summary.passive_fills)} passive` },
+        { label: "Max drawdown", value: fmtCompact(summary.max_drawdown), sub: "Peak to trough" },
+        { label: "Best path", value: fmtCompact(summary.best_total_pnl), sub: "Best replay equity" },
+        { label: "Worst path", value: fmtCompact(summary.worst_total_pnl), sub: "Worst replay equity" },
+      ];
+    }
+
+    function heroNarrative() {
+      if (!state.selectedPayload || !state.selectedRun) {
+        return "Choose a saved run to start exploring replay behavior, access uplift, and product-level execution patterns.";
+      }
+      if (state.selectedPayload.kind === "compare") {
+        const bestProduct = (state.selectedPayload.charts?.perProductDelta || []).slice().sort((a, b) => Number(b.mean || 0) - Number(a.mean || 0))[0];
+        if (bestProduct) {
+          return `${bestProduct.label.replaceAll("_", " ")} is carrying the strongest average access uplift in this run, while the compare view lets you decide how much variability across access seeds you want to trust.`;
+        }
+        return "Compare mode highlights the gap between public-book replay and access-enabled replay, then lets you drill into any child run for full detail.";
+      }
+      const payload = currentSinglePayload();
+      const productRows = payload?.tables?.productExecution || [];
+      const leader = productRows.slice().sort((a, b) => Number(b.final_pnl || 0) - Number(a.final_pnl || 0))[0];
+      if (leader) {
+        return `${leader.product.replaceAll("_", " ")} is the current lead contributor. Use the product lab below to see whether that edge comes from price timing, inventory shape, or fill quality.`;
+      }
+      return "Single-run mode shows the replay path, execution mix, and per-product behavior for the currently selected child run.";
+    }
+
+    function renderHero() {
+      const hero = document.getElementById("hero");
+      if (!state.selectedPayload || !state.selectedRun) {
+        hero.innerHTML = `
+          <div class="hero-top">
+            <div>
+              <div class="eyebrow">No Run Selected</div>
+              <h2>Load a Saved Backtest</h2>
+              <div class="hero-copy">Refresh the output folder, then pick a run from the sidebar to populate the workspace.</div>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      const payload = state.selectedPayload;
+      const activeSingle = currentSinglePayload();
+      const summary = payload.summary || {};
+      const heroStats = heroMetrics(payload);
+      const pills = [
+        payload.kind,
+        state.selectedRun.botName,
+        summary.queue_model,
+        payload.kind === "compare" ? `child ${state.selectedChild || "—"}` : (activeSingle?.summary?.mode || null),
+      ].filter(Boolean);
+
+      hero.innerHTML = `
+        <div class="hero-top">
+          <div>
+            <div class="eyebrow">${payload.kind === "compare" ? "Compare Run" : "Single Replay"}</div>
+            <h2>${escapeHtml(state.selectedRun.name)}</h2>
+            <div class="hero-copy">${escapeHtml(heroNarrative())}</div>
+            <div class="hero-pills">
+              ${pills.map((pill) => `<div class="pill">${escapeHtml(String(pill))}</div>`).join("")}
+            </div>
+          </div>
+          <div class="hero-side">
+            ${heroStats.slice(0, 2).map((card) => `
+              <div class="hero-stat">
+                <div class="label">${escapeHtml(card.label)}</div>
+                <div class="value">${card.value}</div>
+                <div class="sub">${escapeHtml(card.sub)}</div>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+        <div class="metric-grid">
+          ${heroStats.map((card) => `
+            <div class="metric-card">
+              <div class="label">${escapeHtml(card.label)}</div>
+              <div class="value">${card.value}</div>
+              <div class="sub">${escapeHtml(card.sub)}</div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function renderControlDeck() {
+      const deck = document.getElementById("controlDeck");
+      if (!state.selectedPayload) {
+        deck.innerHTML = `<div class="empty">Analysis controls appear here once a run is selected.</div>`;
+        return;
+      }
+      const payload = state.selectedPayload;
+      const single = currentSinglePayload();
+      const productNames = Object.keys(single?.products || {});
+      deck.innerHTML = `
+        <div class="control-grid">
+          <div class="control-group span-4">
+            <h3>Focus Window</h3>
+            <p>Trim time-series charts to a specific part of the run without touching the saved replay data.</p>
+            <div class="chip-row">
+              ${WINDOW_OPTIONS.map((option) => buttonChip(option.label, "set-focus-window", option.key, state.controls.focusWindow === option.key, "alt")).join("")}
+            </div>
+          </div>
+
+          <div class="control-group span-4">
+            <h3>Visible Sections</h3>
+            <p>Hide sections you do not need right now and keep the page focused on the current question.</p>
+            <div class="chip-row">
+              ${payload.kind === "compare" ? buttonChip("Compare", "toggle-section", "compare", state.controls.sectionVisibility.compare) : ""}
+              ${buttonChip("Overview", "toggle-section", "overview", state.controls.sectionVisibility.overview)}
+              ${buttonChip("Execution", "toggle-section", "execution", state.controls.sectionVisibility.execution)}
+              ${buttonChip("Product", "toggle-section", "product", state.controls.sectionVisibility.product)}
+              ${buttonChip("Diagnostics", "toggle-section", "diagnostics", state.controls.sectionVisibility.diagnostics)}
+            </div>
+          </div>
+
+          <div class="control-group span-4">
+            <h3>Reset The View</h3>
+            <p>Jump back to the default dashboard layout if you want a clean baseline after exploring.</p>
+            <div class="button-row">
+              <button class="button" type="button" data-action="reset-controls">Reset analysis</button>
+              <button class="button" type="button" data-action="scroll-top">Back to top</button>
+            </div>
+          </div>
+
+          ${payload.kind === "compare" ? `
+            <div class="control-group span-6">
+              <h3>Child Replay</h3>
+              <p>Switch between the baseline no-access replay and individual access seeds for the sections below.</p>
+              <div class="chip-row">
+                ${(payload.children || []).map((child) =>
+                  buttonChip(child.name, "select-child", child.name, state.selectedChild === child.name, "muted")
+                ).join("")}
+              </div>
+            </div>
+          ` : ""}
+
+          ${productNames.length ? `
+            <div class="control-group ${payload.kind === "compare" ? "span-6" : "span-12"}">
+              <h3>Product Context</h3>
+              <p>Change the active product for the product lab without leaving the selected run.</p>
+              <select id="productSelect">
+                ${productNames.map((product) => `<option value="${escapeHtml(product)}" ${product === state.activeProduct ? "selected" : ""}>${escapeHtml(product.replaceAll("_", " "))}</option>`).join("")}
+              </select>
+            </div>
+          ` : ""}
+        </div>
+      `;
+    }
+
+    function buildInsightCards() {
+      if (!state.selectedPayload) return [];
+      if (state.selectedPayload.kind === "compare") {
+        const accessRuns = state.selectedPayload.summary?.access_runs || [];
+        const bestSeed = accessRuns.slice().sort((a, b) => Number(b.total_pnl || 0) - Number(a.total_pnl || 0))[0];
+        const deltas = (state.selectedPayload.summary?.delta_access_values || []).map(Number);
+        const perProduct = state.selectedPayload.charts?.perProductDelta || [];
+        const leadProduct = perProduct.slice().sort((a, b) => Number(b.mean || 0) - Number(a.mean || 0))[0];
+        const spread = deltas.length ? Math.max(...deltas) - Math.min(...deltas) : null;
+        return [
+          {
+            label: "Best access seed",
+            value: bestSeed ? `seed ${bestSeed.access_seed}` : "—",
+            copy: bestSeed ? `Top total PnL ${fmtSigned(bestSeed.total_pnl, 0)}.` : "No access seed runs were recorded.",
+          },
+          {
+            label: "Seed dispersion",
+            value: spread === null ? "—" : fmtSigned(spread, 1),
+            copy: "Difference between the weakest and strongest access uplifts.",
+          },
+          {
+            label: "Lead product uplift",
+            value: leadProduct ? fmtSigned(leadProduct.mean, 1) : "—",
+            copy: leadProduct ? `${leadProduct.label.replaceAll("_", " ")} is leading the access edge.` : "No product delta stats available.",
+          },
+          {
+            label: "Active child",
+            value: state.selectedChild || "—",
+            copy: currentSinglePayload()?.summary?.mode ? `Currently showing the ${currentSinglePayload().summary.mode} replay.` : "Drill into any child replay below.",
+          },
+        ];
+      }
+
+      const payload = currentSinglePayload();
+      const productExecution = payload?.tables?.productExecution || [];
+      const leader = productExecution.slice().sort((a, b) => Number(b.final_pnl || 0) - Number(a.final_pnl || 0))[0];
+      const summary = payload?.summary || {};
+      const totalFills = Number(summary.total_fills || 0);
+      const passiveShare = totalFills ? Number(summary.passive_fills || 0) / totalFills : null;
+      const endInventory = Object.entries(summary.final_positions || {}).reduce((acc, [product, position]) => {
+        if (Math.abs(Number(position || 0)) > Math.abs(Number(acc.position || 0))) {
+          return { product, position: Number(position || 0) };
+        }
+        return acc;
+      }, { product: null, position: 0 });
+      return [
+        {
+          label: "Lead contributor",
+          value: leader ? leader.product.replaceAll("_", " ") : "—",
+          copy: leader ? `${fmtSigned(leader.final_pnl, 0)} final PnL from the strongest product.` : "No product breakdown available.",
+        },
+        {
+          label: "Passive share",
+          value: passiveShare === null ? "—" : `${fmtNumber(passiveShare * 100, 1)}%`,
+          copy: "Passive fills as a share of all realized fills.",
+        },
+        {
+          label: "Buy markout",
+          value: summary.average_markout_by_side?.BUY !== undefined ? fmtSigned(summary.average_markout_by_side.BUY, 1) : "—",
+          copy: "Average markout recorded after buys.",
+        },
+        {
+          label: "Largest close inventory",
+          value: endInventory.product ? `${endInventory.product.replaceAll("_", " ")} ${fmtSigned(endInventory.position, 0)}` : "—",
+          copy: "Product carrying the heaviest end-of-run exposure.",
+        },
+      ];
+    }
+
+    function renderInsightStrip() {
+      const host = document.getElementById("insightStrip");
+      const cards = buildInsightCards();
+      if (!cards.length) {
+        host.innerHTML = "";
+        return;
+      }
+      host.innerHTML = `
+        <div class="insight-grid">
+          ${cards.map((card) => `
+            <article class="insight-card">
+              <div class="label">${escapeHtml(card.label)}</div>
+              <div class="value">${escapeHtml(card.value)}</div>
+              <p>${escapeHtml(card.copy)}</p>
+            </article>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function productContributionItems(payload) {
+      const rows = payload?.tables?.productExecution || [];
+      const key = state.controls.productContributionMetric;
+      return rows.map((row) => ({
+        label: row.product.replaceAll("_", " "),
+        value: row[key === "finalPnl" ? "final_pnl" : key === "finalPosition" ? "final_position" : key === "meanMarkout" ? "mean_markout" : "fills"] || 0,
+      }));
+    }
+
+    function compareSeedRows(payload) {
+      const baseline = Number(payload.summary?.baseline_no_access_pnl || 0);
+      return (payload.children || []).map((child) => ({
+        child: child.name,
+        access_seed: child.summary?.access_seed,
+        mode: child.summary?.mode,
+        total_pnl: child.summary?.total_pnl,
+        delta_vs_baseline: Number(child.summary?.total_pnl || 0) - baseline,
+        total_fills: child.summary?.total_fills,
+        max_drawdown: child.summary?.max_drawdown,
+      }));
+    }
+
+    function sectionHeader(eyebrow, title, copy) {
+      return `
+        <div class="section-heading">
+          <div class="eyebrow">${escapeHtml(eyebrow)}</div>
+          <h3>${escapeHtml(title)}</h3>
+          <p>${escapeHtml(copy)}</p>
+        </div>
+      `;
+    }
+
+    function renderCompareSection() {
+      const host = document.getElementById("compareSection");
+      if (!state.selectedPayload || state.selectedPayload.kind !== "compare" || !state.controls.sectionVisibility.compare) {
+        host.innerHTML = "";
+        return;
+      }
+      const payload = state.selectedPayload;
+      const selectedDist = state.controls.compareDistribution;
+      const distributionLabel = selectedDist === "accessPnlHistogram" ? "Access total PnL" : "Access uplift";
+      host.innerHTML = `
+        <section class="section-block">
+          ${sectionHeader("Access Lens", "Compare Mode Analysis", "Assess how much incremental edge access creates, how unstable that edge is across seeds, and which products are carrying the uplift.")}
+          <div class="panel-grid">
+            <article class="panel span-5">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Distribution Lens</h4>
+                  <div class="panel-copy">Switch between uplift and total access outcomes.</div>
+                </div>
+                <div class="panel-tools">
+                  <select id="compareDistributionSelect">
+                    <option value="deltaHistogram">Access uplift</option>
+                    <option value="accessPnlHistogram">Access total PnL</option>
+                  </select>
+                </div>
+              </div>
+              <div class="chart" id="compareDistributionChart"></div>
+              <div class="chart-hint">Currently showing ${escapeHtml(distributionLabel.toLowerCase())}.</div>
+            </article>
+
+            <article class="panel span-7">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>PnL Envelope</h4>
+                  <div class="panel-copy">Overlay the baseline replay with the access mean and optional seed band.</div>
+                </div>
+                <div class="panel-tools">
+                  ${buttonChip("Baseline", "toggle-envelope", "baseline", state.controls.compareEnvelope.baseline, "alt")}
+                  ${buttonChip("Mean", "toggle-envelope", "mean", state.controls.compareEnvelope.mean, "alt")}
+                  ${buttonChip("Band", "toggle-envelope", "band", state.controls.compareEnvelope.band, "alt")}
+                </div>
+              </div>
+              <div class="chart tall" id="compareEnvelopeChart"></div>
+              <div class="chart-hint">The global focus window applies here too, so you can isolate early or late replay behavior.</div>
+            </article>
+
+            <article class="panel span-7">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Seed Outcomes</h4>
+                  <div class="panel-copy">Compare the baseline and access child runs directly on total PnL.</div>
+                </div>
+              </div>
+              <div class="chart" id="compareSeedChart"></div>
+            </article>
+
+            <article class="panel span-5">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Per Product Uplift</h4>
+                  <div class="panel-copy">Mean access uplift per product, with the full seed range shown behind each point.</div>
+                </div>
+              </div>
+              <div class="chart" id="compareProductDeltaChart"></div>
+            </article>
+
+            <article class="panel span-12">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Child Replay Ledger</h4>
+                  <div class="panel-copy">Use this table to see fills and drawdown beside each child before drilling into one.</div>
+                </div>
+              </div>
+              <div class="table-wrap" id="compareChildTable"></div>
+            </article>
+          </div>
+        </section>
+      `;
+
+      document.getElementById("compareDistributionSelect").value = state.controls.compareDistribution;
+      renderHistogramChart(
+        document.getElementById("compareDistributionChart"),
+        payload.charts?.[selectedDist] || {},
+        { color: selectedDist === "accessPnlHistogram" ? palette.blue : palette.accent }
+      );
+      renderEnvelopeChart(document.getElementById("compareEnvelopeChart"), payload.charts?.aggregateSeries || {});
+      renderBarChart(
+        document.getElementById("compareSeedChart"),
+        compareSeedRows(payload).map((row) => ({
+          label: row.child === "no_access" ? "baseline" : `seed ${row.access_seed}`,
+          value: row.total_pnl,
+          delta: row.delta_vs_baseline,
+        })),
+        { valueKey: "value", subtitleKey: "delta", color: palette.teal }
+      );
+      renderRangeMeanChart(document.getElementById("compareProductDeltaChart"), payload.charts?.perProductDelta || []);
+      renderTable(
+        document.getElementById("compareChildTable"),
+        compareSeedRows(payload),
+        ["child", "mode", "access_seed", "total_pnl", "delta_vs_baseline", "total_fills", "max_drawdown"]
+      );
+    }
+
+    function renderOverviewSection() {
+      const host = document.getElementById("overviewSection");
+      const payload = currentSinglePayload();
+      if (!payload || !state.controls.sectionVisibility.overview) {
+        host.innerHTML = "";
+        return;
+      }
+      host.innerHTML = `
+        <section class="section-block">
+          ${sectionHeader("Run Overview", "Replay Path And Product Contribution", "Use this layer to judge whether the selected run is attractive before diving into detailed execution diagnostics.")}
+          <div class="panel-grid">
+            <article class="panel span-8">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Total Equity Curve</h4>
+                  <div class="panel-copy">Replay PnL through time for the current child run.</div>
+                </div>
+              </div>
+              <div class="chart tall" id="overviewPnlChart"></div>
+            </article>
+
+            <article class="panel span-4">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Drawdown Curve</h4>
+                  <div class="panel-copy">How far the run falls away from its previous peak.</div>
+                </div>
+              </div>
+              <div class="chart" id="overviewDrawdownChart"></div>
+            </article>
+
+            <article class="panel span-4">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Product Contribution</h4>
+                  <div class="panel-copy">Switch between PnL, fill count, end inventory, and markout to see which product is actually driving the run.</div>
+                </div>
+                <div class="panel-tools">
+                  <select id="productContributionSelect">
+                    ${PRODUCT_CONTRIBUTION_OPTIONS.map((option) => `<option value="${option.key}">${escapeHtml(option.label)}</option>`).join("")}
+                  </select>
+                </div>
+              </div>
+              <div class="chart" id="overviewContributionChart"></div>
+            </article>
+
+            <article class="panel span-8">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Current Run Snapshot</h4>
+                  <div class="panel-copy">A compact summary of the currently selected replay child.</div>
+                </div>
+              </div>
+              <div class="mini-metrics" id="overviewSnapshot"></div>
+            </article>
+          </div>
+        </section>
+      `;
+
+      document.getElementById("productContributionSelect").value = state.controls.productContributionMetric;
+      renderLineChart(document.getElementById("overviewPnlChart"), [
+        { label: "Total PnL", color: palette.accent, points: applyWindow(payload.charts?.totalPnl || []) },
+      ]);
+      renderLineChart(document.getElementById("overviewDrawdownChart"), [
+        { label: "Drawdown", color: palette.red, points: applyWindow(payload.charts?.drawdown || []) },
+      ]);
+      renderBarChart(
+        document.getElementById("overviewContributionChart"),
+        productContributionItems(payload),
+        { color: palette.blue }
+      );
+      renderMiniMetrics(document.getElementById("overviewSnapshot"), [
+        { label: "Mode", value: payload.summary?.mode || "single", sub: "Current replay branch" },
+        { label: "Queue model", value: payload.summary?.queue_model || "—", sub: "Fill approximation" },
+        { label: "Aggressive fills", value: fmtInteger(payload.summary?.aggressive_fills), sub: "Immediate book crosses" },
+        { label: "Passive fills", value: fmtInteger(payload.summary?.passive_fills), sub: "Resting fills" },
+      ]);
+    }
+
+    function renderExecutionSection() {
+      const host = document.getElementById("executionSection");
+      const payload = currentSinglePayload();
+      if (!payload || !state.controls.sectionVisibility.execution) {
+        host.innerHTML = "";
+        return;
+      }
+      const categoryKey = state.controls.executionCategory;
+      const histogramKey = state.controls.executionHistogram;
+      const histogramColor = EXECUTION_HISTOGRAM_OPTIONS.find((item) => item.key === histogramKey)?.color || palette.accent;
+
+      host.innerHTML = `
+        <section class="section-block">
+          ${sectionHeader("Execution Lens", "Flow, Mix, And Distribution", "This section helps separate a strong equity curve from a replay that only looks good because the fill mix or risk path is hiding the real story.")}
+          <div class="panel-grid">
+            <article class="panel span-7">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Activity Flow</h4>
+                  <div class="panel-copy">Show or hide submitted orders, fills, and next-step pending orders.</div>
+                </div>
+                <div class="panel-tools">
+                  ${buttonChip("Submitted", "toggle-activity", "submitted", state.controls.activity.submitted, "alt")}
+                  ${buttonChip("Fills", "toggle-activity", "fills", state.controls.activity.fills, "alt")}
+                  ${buttonChip("Pending", "toggle-activity", "pending", state.controls.activity.pending, "alt")}
+                </div>
+              </div>
+              <div class="chart tall" id="executionActivityChart"></div>
+            </article>
+
+            <article class="panel span-5">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Categorical Lens</h4>
+                  <div class="panel-copy">Switch the execution mix view without leaving the page.</div>
+                </div>
+                <div class="panel-tools">
+                  <select id="executionCategorySelect">
+                    ${EXECUTION_CATEGORY_OPTIONS.map((option) => `<option value="${option.key}">${escapeHtml(option.label)}</option>`).join("")}
+                  </select>
+                </div>
+              </div>
+              <div class="chart" id="executionCategoryChart"></div>
+            </article>
+
+            <article class="panel span-5">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Distribution Lens</h4>
+                  <div class="panel-copy">Use alternative distributions to judge markout quality and market regime shape.</div>
+                </div>
+                <div class="panel-tools">
+                  <select id="executionHistogramSelect">
+                    ${EXECUTION_HISTOGRAM_OPTIONS.map((option) => `<option value="${option.key}">${escapeHtml(option.label)}</option>`).join("")}
+                  </select>
+                </div>
+              </div>
+              <div class="chart" id="executionHistogramChart"></div>
+            </article>
+
+            <article class="panel span-7">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Product Execution Ledger</h4>
+                  <div class="panel-copy">Which products filled, where the inventory ended, and whether markout quality followed.</div>
+                </div>
+              </div>
+              <div class="table-wrap" id="executionProductTable"></div>
+            </article>
+          </div>
+        </section>
+      `;
+
+      document.getElementById("executionCategorySelect").value = categoryKey;
+      document.getElementById("executionHistogramSelect").value = histogramKey;
+
+      const activitySeries = [];
+      if (state.controls.activity.submitted) {
+        activitySeries.push({ label: "Submitted", color: palette.accent, points: applyWindow(payload.charts?.activity?.[0]?.points || []) });
+      }
+      if (state.controls.activity.fills) {
+        activitySeries.push({ label: "Fills", color: palette.teal, points: applyWindow(payload.charts?.activity?.[1]?.points || []) });
+      }
+      if (state.controls.activity.pending) {
+        activitySeries.push({ label: "Pending", color: palette.gold, points: applyWindow(payload.charts?.activity?.[2]?.points || []) });
+      }
+
+      renderLineChart(document.getElementById("executionActivityChart"), activitySeries);
+      renderBarChart(document.getElementById("executionCategoryChart"), payload.charts?.[categoryKey] || [], { color: palette.teal });
+      renderHistogramChart(document.getElementById("executionHistogramChart"), payload.charts?.[histogramKey] || {}, { color: histogramColor });
+      renderTable(
+        document.getElementById("executionProductTable"),
+        payload.tables?.productExecution || [],
+        ["product", "final_pnl", "fills", "buy_fills", "sell_fills", "final_position", "mean_markout"]
+      );
+    }
+
+    function renderProductSection() {
+      const host = document.getElementById("productSection");
+      const payload = currentSinglePayload();
+      const product = activeProductPayload();
+      if (!payload || !product || !state.controls.sectionVisibility.product) {
+        host.innerHTML = "";
+        return;
+      }
+      const stateLabel = optionLabel(PRODUCT_STATE_OPTIONS, state.controls.productStateMetric);
+      host.innerHTML = `
+        <section class="section-block">
+          ${sectionHeader("Product Lab", `${state.activeProduct.replaceAll("_", " ")} Deep Dive`, "Move between products from the control deck, then swap chart lenses here to test whether the edge is coming from price, inventory, signal, or fill composition.")}
+          <div class="mini-metrics" id="productSummaryMetrics"></div>
+          <div class="panel-grid">
+            <article class="panel span-8">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Mid Price And Fills</h4>
+                  <div class="panel-copy">Overlay the visible mid with buy and sell fills. Hide layers you do not need.</div>
+                </div>
+                <div class="panel-tools">
+                  ${buttonChip("Mid", "toggle-product-price", "mid", state.controls.productPrice.mid, "alt")}
+                  ${buttonChip("Buy fills", "toggle-product-price", "buy", state.controls.productPrice.buy, "alt")}
+                  ${buttonChip("Sell fills", "toggle-product-price", "sell", state.controls.productPrice.sell, "alt")}
+                </div>
+              </div>
+              <div class="chart tall" id="productPriceChart"></div>
+            </article>
+
+            <article class="panel span-4">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Product Lens</h4>
+                  <div class="panel-copy">Currently showing ${escapeHtml(stateLabel.toLowerCase())} through time.</div>
+                </div>
+                <div class="panel-tools">
+                  <select id="productStateSelect">
+                    ${PRODUCT_STATE_OPTIONS.map((option) => `<option value="${option.key}">${escapeHtml(option.label)}</option>`).join("")}
+                  </select>
+                </div>
+              </div>
+              <div class="chart" id="productStateChart"></div>
+            </article>
+
+            <article class="panel span-4">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Distribution Lens</h4>
+                  <div class="panel-copy">Check concentration and tail shape for the active product.</div>
+                </div>
+                <div class="panel-tools">
+                  <select id="productDistributionSelect">
+                    ${PRODUCT_DISTRIBUTION_OPTIONS.map((option) => `<option value="${option.key}">${escapeHtml(option.label)}</option>`).join("")}
+                  </select>
+                </div>
+              </div>
+              <div class="chart" id="productDistributionChart"></div>
+            </article>
+
+            <article class="panel span-4">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Product Mix Lens</h4>
+                  <div class="panel-copy">Inspect fill-type, agreement, or side composition for this product alone.</div>
+                </div>
+                <div class="panel-tools">
+                  <select id="productCategorySelect">
+                    ${PRODUCT_CATEGORY_OPTIONS.map((option) => `<option value="${option.key}">${escapeHtml(option.label)}</option>`).join("")}
+                  </select>
+                </div>
+              </div>
+              <div class="chart" id="productCategoryChart"></div>
+            </article>
+
+            <article class="panel span-4">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Replay Context</h4>
+                  <div class="panel-copy">A quick sense of fill balance, edge, and inventory for the active product.</div>
+                </div>
+              </div>
+              <div class="kv-grid" id="productQuickFacts"></div>
+            </article>
+          </div>
+        </section>
+      `;
+
+      document.getElementById("productStateSelect").value = state.controls.productStateMetric;
+      document.getElementById("productDistributionSelect").value = state.controls.productDistribution;
+      document.getElementById("productCategorySelect").value = state.controls.productCategory;
+
+      renderMiniMetrics(document.getElementById("productSummaryMetrics"), [
+        { label: "Final PnL", value: fmtSigned(product.summary?.finalPnl, 0), sub: "Product contribution" },
+        { label: "Final position", value: fmtSigned(product.summary?.finalPosition, 0), sub: "End exposure" },
+        { label: "Mean spread", value: fmtNumber(product.summary?.meanSpread, 2), sub: "Observed average spread" },
+        { label: "Mean signal", value: fmtNumber(product.summary?.meanSignal, 2), sub: "Average signal proxy" },
+        { label: "Mean imbalance", value: fmtNumber(product.summary?.meanImbalance, 2), sub: "Order-book balance proxy" },
+        { label: "Mean markout", value: fmtSigned(product.summary?.meanMarkout, 1), sub: "Average fill aftermath" },
+      ]);
+
+      renderPriceChart(document.getElementById("productPriceChart"), {
+        linePoints: state.controls.productPrice.mid ? applyWindow(product.charts?.midPrice || []) : [],
+        buyPoints: state.controls.productPrice.buy ? applyWindow(product.charts?.buyFills || []) : [],
+        sellPoints: state.controls.productPrice.sell ? applyWindow(product.charts?.sellFills || []) : [],
+      });
+
+      const selectedState = PRODUCT_STATE_OPTIONS.find((item) => item.key === state.controls.productStateMetric) || PRODUCT_STATE_OPTIONS[0];
+      renderLineChart(document.getElementById("productStateChart"), [
+        { label: selectedState.label, color: selectedState.color, points: applyWindow(product.charts?.[selectedState.key] || []) },
+      ]);
+
+      const distOption = PRODUCT_DISTRIBUTION_OPTIONS.find((item) => item.key === state.controls.productDistribution) || PRODUCT_DISTRIBUTION_OPTIONS[0];
+      renderHistogramChart(document.getElementById("productDistributionChart"), product.charts?.[distOption.key] || {}, { color: distOption.color });
+
+      renderBarChart(document.getElementById("productCategoryChart"), product.charts?.[state.controls.productCategory] || [], { color: palette.teal });
+      renderKeyValueGrid(document.getElementById("productQuickFacts"), {
+        fill_count: product.summary?.fillCount,
+        buy_count: product.summary?.buyCount,
+        sell_count: product.summary?.sellCount,
+        active_lens: selectedState.label,
+      });
+    }
+
+    function renderDiagnosticsSection() {
+      const host = document.getElementById("diagnosticsSection");
+      const payload = currentSinglePayload();
+      if (!payload || !state.controls.sectionVisibility.diagnostics) {
+        host.innerHTML = "";
+        return;
+      }
+      host.innerHTML = `
+        <section class="section-block">
+          ${sectionHeader("Diagnostics", "Replay Diagnostics And Strategy-Specific Tables", "These tables stay available, but now sit behind their own section so they are easy to ignore until you actually need them.")}
+          <div class="panel-grid">
+            <article class="panel span-4">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Pepper Diagnostics</h4>
+                  <div class="panel-copy">High-level execution summary for the pepper branch.</div>
+                </div>
+              </div>
+              <div class="kv-grid" id="pepperGrid"></div>
+            </article>
+
+            <article class="panel span-8">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Osmium Buckets</h4>
+                  <div class="panel-copy">Bucketed fill quality, edge, and realized contribution.</div>
+                </div>
+              </div>
+              <div class="table-wrap" id="osmiumTable"></div>
+            </article>
+
+            <article class="panel span-12">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <h4>Plateau Windows</h4>
+                  <div class="panel-copy">Windows where quotes or signal stayed live while throughput stalled.</div>
+                </div>
+              </div>
+              <div class="table-wrap" id="plateauTable"></div>
+            </article>
+
+            <article class="panel span-12">
+              <div class="footer-note">Dashboard values come from the saved local replay outputs. They are useful for iteration and comparison, but they still reflect the local replay model rather than the official hidden simulator.</div>
+            </article>
+          </div>
+        </section>
+      `;
+      renderKeyValueGrid(document.getElementById("pepperGrid"), payload.tables?.pepper || {});
+      renderTable(
+        document.getElementById("osmiumTable"),
+        payload.tables?.osmiumBuckets || [],
+        ["bucket", "fill_count", "mean_edge_at_fill", "mean_post_fill_markout", "realized_cashflow_contribution"]
+      );
+      renderTable(
+        document.getElementById("plateauTable"),
+        payload.tables?.plateauWindows || [],
+        ["day", "start_timestamp", "end_timestamp", "bars", "reason"]
+      );
+    }
+
+    function renderAll() {
+      renderSidebarFilters();
+      renderRunList();
+      renderHero();
+      renderControlDeck();
+      renderInsightStrip();
+      renderCompareSection();
+      renderOverviewSection();
+      renderExecutionSection();
+      renderProductSection();
+      renderDiagnosticsSection();
+    }
+
+    function createSvg(container, minHeight = 280) {
+      const height = Math.max(minHeight, container.clientHeight - 8 || minHeight);
+      const width = Math.max(320, container.clientWidth - 8 || 320);
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      container.innerHTML = "";
+      container.appendChild(svg);
+      return { svg, width, height };
+    }
+
+    function domainWithPadding(min, max) {
+      if (!Number.isFinite(min) || !Number.isFinite(max)) return { min: 0, max: 1 };
+      if (min === max) {
+        const pad = Math.abs(min || 1) * 0.15;
+        return { min: min - pad, max: max + pad };
+      }
+      const pad = (max - min) * 0.08;
+      return { min: min - pad, max: max + pad };
+    }
+
+    function createScale(domainMin, domainMax, rangeMin, rangeMax) {
+      const span = domainMax - domainMin || 1;
+      return (value) => rangeMin + ((value - domainMin) / span) * (rangeMax - rangeMin);
+    }
+
+    function drawFrame(svg, width, height, margin, xMin, xMax, yMin, yMax, options = {}) {
+      const showXTicks = options.showXTicks !== false;
+      const xFormatter = options.xFormatter || fmtInteger;
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+      for (let i = 0; i < 5; i += 1) {
+        const ratio = i / 4;
+        const y = margin.top + innerHeight * ratio;
+        const line = document.createElementNS(svg.namespaceURI, "line");
+        line.setAttribute("x1", margin.left);
+        line.setAttribute("x2", width - margin.right);
+        line.setAttribute("y1", y);
+        line.setAttribute("y2", y);
+        line.setAttribute("stroke", palette.grid);
+        line.setAttribute("stroke-width", "1");
+        svg.appendChild(line);
+
+        const label = document.createElementNS(svg.namespaceURI, "text");
+        label.setAttribute("x", 8);
+        label.setAttribute("y", y + 4);
+        label.setAttribute("font-size", "10");
+        label.setAttribute("fill", palette.muted);
+        label.textContent = fmtAxis(yMax - ratio * (yMax - yMin));
+        svg.appendChild(label);
+      }
+
+      if (showXTicks) {
+        for (let i = 0; i < 5; i += 1) {
+          const ratio = i / 4;
+          const x = margin.left + innerWidth * ratio;
+          const line = document.createElementNS(svg.namespaceURI, "line");
+          line.setAttribute("x1", x);
+          line.setAttribute("x2", x);
+          line.setAttribute("y1", margin.top);
+          line.setAttribute("y2", height - margin.bottom);
+          line.setAttribute("stroke", "rgba(16, 34, 47, 0.06)");
+          line.setAttribute("stroke-width", "1");
+          svg.appendChild(line);
+
+          const label = document.createElementNS(svg.namespaceURI, "text");
+          label.setAttribute("x", x);
+          label.setAttribute("y", height - 8);
+          label.setAttribute("text-anchor", "middle");
+          label.setAttribute("font-size", "10");
+          label.setAttribute("fill", palette.muted);
+          label.textContent = xFormatter(xMin + ratio * (xMax - xMin));
+          svg.appendChild(label);
+        }
+      }
+    }
+
+    function drawLegend(svg, items) {
+      items.forEach((item, index) => {
+        const x = 18 + index * 120;
+        const y = 18;
+        const dot = document.createElementNS(svg.namespaceURI, "circle");
+        dot.setAttribute("cx", x);
+        dot.setAttribute("cy", y);
+        dot.setAttribute("r", "5");
+        dot.setAttribute("fill", item.color);
+        svg.appendChild(dot);
+
+        const text = document.createElementNS(svg.namespaceURI, "text");
+        text.setAttribute("x", x + 10);
+        text.setAttribute("y", y + 4);
+        text.setAttribute("font-size", "11");
+        text.setAttribute("fill", palette.ink);
+        text.textContent = item.label;
+        svg.appendChild(text);
+      });
+    }
+
+    function linePath(points, xScale, yScale) {
+      return points.map((point, index) => `${index === 0 ? "M" : "L"} ${xScale(Number(point.x))} ${yScale(Number(point.y))}`).join(" ");
+    }
+
+    function renderLineChart(container, series) {
+      const validSeries = (series || []).filter((item) => Array.isArray(item.points) && item.points.length);
+      if (!validSeries.length) {
+        container.innerHTML = `<div class="empty">No time-series data available for this selection.</div>`;
+        return;
+      }
+      const { svg, width, height } = createSvg(container, container.classList.contains("tall") ? 340 : 280);
+      const margin = { top: 24, right: 18, bottom: 28, left: 52 };
+      const allPoints = validSeries.flatMap((item) => item.points);
+      const xValues = allPoints.map((point) => Number(point.x));
+      const yValues = allPoints.map((point) => Number(point.y));
+      const xMin = Math.min(...xValues);
+      const xMax = Math.max(...xValues);
+      const yDomain = domainWithPadding(Math.min(...yValues), Math.max(...yValues));
+      const xScale = createScale(xMin, xMax || xMin + 1, margin.left, width - margin.right);
+      const yScale = createScale(yDomain.min, yDomain.max, height - margin.bottom, margin.top);
+      drawFrame(svg, width, height, margin, xMin, xMax, yDomain.min, yDomain.max);
+      validSeries.forEach((item) => {
+        const path = document.createElementNS(svg.namespaceURI, "path");
+        path.setAttribute("d", linePath(item.points, xScale, yScale));
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke", item.color || palette.accent);
+        path.setAttribute("stroke-width", "2.4");
+        path.setAttribute("stroke-linejoin", "round");
+        path.setAttribute("stroke-linecap", "round");
+        svg.appendChild(path);
+        if (item.points.length === 1) {
+          const circle = document.createElementNS(svg.namespaceURI, "circle");
+          circle.setAttribute("cx", xScale(Number(item.points[0].x)));
+          circle.setAttribute("cy", yScale(Number(item.points[0].y)));
+          circle.setAttribute("r", "4");
+          circle.setAttribute("fill", item.color || palette.accent);
+          svg.appendChild(circle);
+        }
+      });
+      drawLegend(svg, validSeries.map((item) => ({ label: item.label, color: item.color || palette.accent })));
+    }
+
+    function renderHistogramChart(container, histogram, { color = palette.accent } = {}) {
+      const bins = histogram?.bins || [];
+      if (!bins.length) {
+        container.innerHTML = `<div class="empty">No distribution data available for this lens.</div>`;
+        return;
+      }
+      const { svg, width, height } = createSvg(container);
+      const margin = { top: 24, right: 18, bottom: 30, left: 52 };
+      const maxCount = Math.max(...bins.map((bin) => Number(bin.count || 0)), 1);
+      drawFrame(svg, width, height, margin, Number(histogram.min || 0), Number(histogram.max || bins.length), 0, maxCount, {
+        xFormatter: fmtAxis,
+      });
+      const innerWidth = width - margin.left - margin.right;
+      const barWidth = innerWidth / bins.length;
+      bins.forEach((bin, index) => {
+        const heightRatio = Number(bin.count || 0) / maxCount;
+        const rect = document.createElementNS(svg.namespaceURI, "rect");
+        rect.setAttribute("x", margin.left + index * barWidth + 1.5);
+        rect.setAttribute("width", Math.max(1, barWidth - 3));
+        rect.setAttribute("y", margin.top + (1 - heightRatio) * (height - margin.top - margin.bottom));
+        rect.setAttribute("height", Math.max(2, heightRatio * (height - margin.top - margin.bottom)));
+        rect.setAttribute("rx", "7");
+        rect.setAttribute("fill", color);
+        rect.setAttribute("opacity", "0.86");
+        svg.appendChild(rect);
+      });
+    }
+
+    function renderBarChart(container, items, { valueKey = "value", subtitleKey = null, color = palette.accent } = {}) {
+      if (!items || !items.length) {
+        container.innerHTML = `<div class="empty">No categorical data available for this selection.</div>`;
+        return;
+      }
+      const { svg, width, height } = createSvg(container);
+      const margin = { top: 24, right: 18, bottom: 54, left: 52 };
+      const values = items.map((item) => Number(item[valueKey] || 0));
+      const yDomain = domainWithPadding(Math.min(0, ...values), Math.max(0, ...values));
+      drawFrame(svg, width, height, margin, 0, items.length - 1 || 1, yDomain.min, yDomain.max, {
+        showXTicks: false,
+      });
+      const innerWidth = width - margin.left - margin.right;
+      const slotWidth = innerWidth / items.length;
+      const yScale = createScale(yDomain.min, yDomain.max, height - margin.bottom, margin.top);
+      const baselineY = yScale(0);
+      items.forEach((item, index) => {
+        const value = Number(item[valueKey] || 0);
+        const x = margin.left + index * slotWidth + slotWidth * 0.18;
+        const barWidth = Math.max(12, slotWidth * 0.64);
+        const valueY = yScale(value);
+        const rect = document.createElementNS(svg.namespaceURI, "rect");
+        rect.setAttribute("x", x);
+        rect.setAttribute("y", Math.min(baselineY, valueY));
+        rect.setAttribute("width", barWidth);
+        rect.setAttribute("height", Math.max(2, Math.abs(baselineY - valueY)));
+        rect.setAttribute("rx", "8");
+        rect.setAttribute("fill", color);
+        rect.setAttribute("opacity", "0.88");
+        svg.appendChild(rect);
+
+        const label = document.createElementNS(svg.namespaceURI, "text");
+        label.setAttribute("x", x + barWidth / 2);
+        label.setAttribute("y", height - 18);
+        label.setAttribute("text-anchor", "middle");
+        label.setAttribute("font-size", "10");
+        label.setAttribute("fill", palette.ink);
+        label.textContent = String(item.label || "").length > 14 ? `${String(item.label).slice(0, 14)}…` : String(item.label || "");
+        svg.appendChild(label);
+
+        if (subtitleKey && item[subtitleKey] !== undefined) {
+          const sub = document.createElementNS(svg.namespaceURI, "text");
+          sub.setAttribute("x", x + barWidth / 2);
+          sub.setAttribute("y", value >= 0 ? Math.min(baselineY, valueY) - 8 : Math.max(baselineY, valueY) + 16);
+          sub.setAttribute("text-anchor", "middle");
+          sub.setAttribute("font-size", "10");
+          sub.setAttribute("fill", palette.muted);
+          sub.textContent = fmtSigned(item[subtitleKey], 1);
+          svg.appendChild(sub);
+        }
+      });
+    }
+
+    function renderEnvelopeChart(container, chartData) {
+      const baseline = state.controls.compareEnvelope.baseline ? applyWindow(chartData?.baseline || []) : [];
+      const meanSeries = state.controls.compareEnvelope.mean ? applyWindow(chartData?.accessEnvelope || []) : [];
+      const bandSeries = state.controls.compareEnvelope.band ? applyWindowBand(chartData?.accessBand || []) : [];
+      const xValues = [...baseline, ...meanSeries, ...bandSeries].map((item) => Number(item.x));
+      const yValues = [
+        ...baseline.map((item) => Number(item.y)),
+        ...meanSeries.map((item) => Number(item.y)),
+        ...bandSeries.flatMap((item) => [Number(item.min), Number(item.max)]),
+      ].filter((value) => Number.isFinite(value));
+      if (!xValues.length || !yValues.length) {
+        container.innerHTML = `<div class="empty">Enable at least one compare overlay to draw the envelope.</div>`;
+        return;
+      }
+      const { svg, width, height } = createSvg(container, 340);
+      const margin = { top: 24, right: 18, bottom: 28, left: 52 };
+      const xMin = Math.min(...xValues);
+      const xMax = Math.max(...xValues);
+      const yDomain = domainWithPadding(Math.min(...yValues), Math.max(...yValues));
+      const xScale = createScale(xMin, xMax || xMin + 1, margin.left, width - margin.right);
+      const yScale = createScale(yDomain.min, yDomain.max, height - margin.bottom, margin.top);
+      drawFrame(svg, width, height, margin, xMin, xMax, yDomain.min, yDomain.max);
+
+      if (bandSeries.length) {
+        const upper = bandSeries.map((point, index) => `${index === 0 ? "M" : "L"} ${xScale(Number(point.x))} ${yScale(Number(point.max))}`).join(" ");
+        const lower = bandSeries.slice().reverse().map((point) => `L ${xScale(Number(point.x))} ${yScale(Number(point.min))}`).join(" ");
+        const bandPath = document.createElementNS(svg.namespaceURI, "path");
+        bandPath.setAttribute("d", `${upper} ${lower} Z`);
+        bandPath.setAttribute("fill", palette.band);
+        bandPath.setAttribute("stroke", "none");
+        svg.appendChild(bandPath);
+      }
+
+      const series = [
+        { label: "Baseline", color: palette.accent, points: baseline },
+        { label: "Access mean", color: palette.blue, points: meanSeries },
+      ].filter((item) => item.points.length);
+
+      series.forEach((item) => {
+        const path = document.createElementNS(svg.namespaceURI, "path");
+        path.setAttribute("d", linePath(item.points, xScale, yScale));
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke", item.color);
+        path.setAttribute("stroke-width", "2.4");
+        path.setAttribute("stroke-linejoin", "round");
+        path.setAttribute("stroke-linecap", "round");
+        svg.appendChild(path);
+      });
+      drawLegend(svg, [
+        ...(bandSeries.length ? [{ label: "Access band", color: palette.blue }] : []),
+        ...series.map((item) => ({ label: item.label, color: item.color })),
+      ]);
+    }
+
+    function renderRangeMeanChart(container, items) {
+      if (!items || !items.length) {
+        container.innerHTML = `<div class="empty">No per-product uplift values were recorded.</div>`;
+        return;
+      }
+      const { svg, width, height } = createSvg(container);
+      const margin = { top: 24, right: 18, bottom: 40, left: 52 };
+      const values = items.flatMap((item) => [Number(item.min || 0), Number(item.max || 0), Number(item.mean || 0)]);
+      const yDomain = domainWithPadding(Math.min(...values), Math.max(...values));
+      drawFrame(svg, width, height, margin, 0, items.length - 1 || 1, yDomain.min, yDomain.max, {
+        showXTicks: false,
+      });
+      const innerWidth = width - margin.left - margin.right;
+      const slotWidth = innerWidth / items.length;
+      const yScale = createScale(yDomain.min, yDomain.max, height - margin.bottom, margin.top);
+      items.forEach((item, index) => {
+        const center = margin.left + slotWidth * (index + 0.5);
+        const stem = document.createElementNS(svg.namespaceURI, "line");
+        stem.setAttribute("x1", center);
+        stem.setAttribute("x2", center);
+        stem.setAttribute("y1", yScale(Number(item.min || 0)));
+        stem.setAttribute("y2", yScale(Number(item.max || 0)));
+        stem.setAttribute("stroke", palette.teal);
+        stem.setAttribute("stroke-width", "5");
+        stem.setAttribute("opacity", "0.34");
+        svg.appendChild(stem);
+
+        const dot = document.createElementNS(svg.namespaceURI, "circle");
+        dot.setAttribute("cx", center);
+        dot.setAttribute("cy", yScale(Number(item.mean || 0)));
+        dot.setAttribute("r", "6");
+        dot.setAttribute("fill", palette.accent);
+        svg.appendChild(dot);
+
+        const label = document.createElementNS(svg.namespaceURI, "text");
+        label.setAttribute("x", center);
+        label.setAttribute("y", height - 14);
+        label.setAttribute("text-anchor", "middle");
+        label.setAttribute("font-size", "10");
+        label.setAttribute("fill", palette.ink);
+        const text = String(item.label || "").replaceAll("_", " ");
+        label.textContent = text.length > 14 ? `${text.slice(0, 14)}…` : text;
+        svg.appendChild(label);
+      });
+    }
+
+    function renderPriceChart(container, { linePoints, buyPoints, sellPoints }) {
+      const allPoints = [...(linePoints || []), ...(buyPoints || []), ...(sellPoints || [])];
+      if (!allPoints.length) {
+        container.innerHTML = `<div class="empty">No product price or fill data available for this layer selection.</div>`;
+        return;
+      }
+      const { svg, width, height } = createSvg(container, 340);
+      const margin = { top: 24, right: 18, bottom: 28, left: 52 };
+      const xValues = allPoints.map((item) => Number(item.x));
+      const yValues = allPoints.map((item) => Number(item.y));
+      const xMin = Math.min(...xValues);
+      const xMax = Math.max(...xValues);
+      const yDomain = domainWithPadding(Math.min(...yValues), Math.max(...yValues));
+      const xScale = createScale(xMin, xMax || xMin + 1, margin.left, width - margin.right);
+      const yScale = createScale(yDomain.min, yDomain.max, height - margin.bottom, margin.top);
+      drawFrame(svg, width, height, margin, xMin, xMax, yDomain.min, yDomain.max);
+
+      const legend = [];
+      if (linePoints && linePoints.length) {
+        const path = document.createElementNS(svg.namespaceURI, "path");
+        path.setAttribute("d", linePath(linePoints, xScale, yScale));
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke", palette.blue);
+        path.setAttribute("stroke-width", "2.4");
+        path.setAttribute("stroke-linejoin", "round");
+        path.setAttribute("stroke-linecap", "round");
+        svg.appendChild(path);
+        legend.push({ label: "Mid", color: palette.blue });
+      }
+      (buyPoints || []).forEach((point) => drawCircle(svg, xScale(Number(point.x)), yScale(Number(point.y)), 3.4, palette.green));
+      (sellPoints || []).forEach((point) => drawCircle(svg, xScale(Number(point.x)), yScale(Number(point.y)), 3.4, palette.red));
+      if (buyPoints && buyPoints.length) legend.push({ label: "Buy fill", color: palette.green });
+      if (sellPoints && sellPoints.length) legend.push({ label: "Sell fill", color: palette.red });
+      drawLegend(svg, legend);
+    }
+
+    function drawCircle(svg, x, y, radius, color) {
+      const circle = document.createElementNS(svg.namespaceURI, "circle");
+      circle.setAttribute("cx", x);
+      circle.setAttribute("cy", y);
+      circle.setAttribute("r", radius);
+      circle.setAttribute("fill", color);
+      svg.appendChild(circle);
+    }
+
+    function renderKeyValueGrid(container, values) {
+      const entries = Object.entries(values || {});
+      if (!entries.length) {
+        container.innerHTML = `<div class="empty">No values available for this panel.</div>`;
+        return;
+      }
+      container.innerHTML = entries.map(([key, value]) => `
+        <div class="kv-item">
+          <dt>${escapeHtml(key.replaceAll("_", " "))}</dt>
+          <dd>${typeof value === "number" ? fmtNumber(value, 4) : escapeHtml(String(value))}</dd>
+        </div>
+      `).join("");
+    }
+
+    function renderMiniMetrics(container, items) {
+      container.innerHTML = items.map((item) => `
+        <div class="mini-metric">
+          <div class="label">${escapeHtml(item.label)}</div>
+          <div class="value">${escapeHtml(String(item.value))}</div>
+          <div class="sub">${escapeHtml(item.sub)}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderTable(container, rows, columns) {
+      if (!rows || !rows.length) {
+        container.innerHTML = `<div class="empty">No rows were recorded for this view.</div>`;
+        return;
+      }
+      const header = columns.map((column) => `<th>${escapeHtml(column.replaceAll("_", " "))}</th>`).join("");
+      const body = rows.slice(0, 160).map((row) => `
+        <tr>
+          ${columns.map((column) => {
+            const value = row[column];
+            if (value === null || value === undefined || value === "") return "<td>—</td>";
+            if (typeof value === "number") {
+              return `<td>${escapeHtml(Number(value).toLocaleString(undefined, { maximumFractionDigits: 4 }))}</td>`;
+            }
+            return `<td>${escapeHtml(String(value))}</td>`;
+          }).join("")}
+        </tr>
+      `).join("");
+      container.innerHTML = `<table><thead><tr>${header}</tr></thead><tbody>${body}</tbody></table>`;
+    }
+
+    document.body.addEventListener("click", async (event) => {
+      const trigger = event.target.closest("[data-action]");
+      if (!trigger) return;
+      const action = trigger.dataset.action;
+      const value = trigger.dataset.value;
+      if (action === "select-run") {
+        await selectRun(value);
+        return;
+      }
+      if (action === "set-kind-filter") {
+        state.filters.kind = value;
+        applyRunFilters();
+        return;
+      }
+      if (action === "set-focus-window") {
+        state.controls.focusWindow = value;
+        renderAll();
+        return;
+      }
+      if (action === "toggle-section") {
+        state.controls.sectionVisibility[value] = !state.controls.sectionVisibility[value];
+        renderAll();
+        return;
+      }
+      if (action === "select-child") {
+        await selectChild(value);
+        return;
+      }
+      if (action === "toggle-envelope") {
+        state.controls.compareEnvelope[value] = !state.controls.compareEnvelope[value];
+        renderAll();
+        return;
+      }
+      if (action === "toggle-activity") {
+        state.controls.activity[value] = !state.controls.activity[value];
+        renderAll();
+        return;
+      }
+      if (action === "toggle-product-price") {
+        state.controls.productPrice[value] = !state.controls.productPrice[value];
+        renderAll();
+        return;
+      }
+      if (action === "reset-controls") {
+        resetControls();
+        renderAll();
+        return;
+      }
+      if (action === "scroll-top") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    });
+
+    document.getElementById("searchInput").addEventListener("input", (event) => {
+      state.filters.search = event.target.value;
+      applyRunFilters();
+    });
+
+    document.getElementById("sortSelect").addEventListener("change", (event) => {
+      state.filters.sort = event.target.value;
+      applyRunFilters();
+    });
+
+    document.getElementById("refreshButton").addEventListener("click", async () => {
+      await loadRuns();
+    });
+
+    document.getElementById("resetViewButton").addEventListener("click", () => {
+      resetControls();
+      renderAll();
+    });
+
+    document.body.addEventListener("change", async (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+      if (target.id === "productSelect") {
+        state.activeProduct = target.value;
+        renderAll();
+      } else if (target.id === "compareDistributionSelect") {
+        state.controls.compareDistribution = target.value;
+        renderAll();
+      } else if (target.id === "productContributionSelect") {
+        state.controls.productContributionMetric = target.value;
+        renderAll();
+      } else if (target.id === "executionCategorySelect") {
+        state.controls.executionCategory = target.value;
+        renderAll();
+      } else if (target.id === "executionHistogramSelect") {
+        state.controls.executionHistogram = target.value;
+        renderAll();
+      } else if (target.id === "productStateSelect") {
+        state.controls.productStateMetric = target.value;
+        renderAll();
+      } else if (target.id === "productDistributionSelect") {
+        state.controls.productDistribution = target.value;
+        renderAll();
+      } else if (target.id === "productCategorySelect") {
+        state.controls.productCategory = target.value;
+        renderAll();
+      }
+    });
+
+    let resizeTimer = null;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (state.selectedPayload) renderAll();
+      }, 90);
+    });
+
+    loadRuns().catch((error) => {
+      const hero = document.getElementById("hero");
+      hero.innerHTML = `
+        <div class="hero-top">
+          <div>
+            <div class="eyebrow">Dashboard Error</div>
+            <h2>Could Not Load Runs</h2>
+            <div class="hero-copy">${escapeHtml(error.message || String(error))}</div>
+          </div>
+        </div>
+      `;
+      document.getElementById("controlDeck").innerHTML = "";
+      document.getElementById("insightStrip").innerHTML = "";
+    });
+  </script>
+</body>
+</html>

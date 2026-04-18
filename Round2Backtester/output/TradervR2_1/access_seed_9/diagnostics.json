@@ -1,0 +1,102 @@
+{
+  "osmium_buckets": {
+    "high|extreme|tight|agree|access": {
+      "fill_count": 245,
+      "mean_edge_at_fill": 0.4191,
+      "mean_post_fill_markout": -152.5184,
+      "realized_cashflow_contribution": -1166663.0
+    },
+    "high|extreme|normal|agree|access": {
+      "fill_count": 575,
+      "mean_edge_at_fill": -0.757,
+      "mean_post_fill_markout": -160.4235,
+      "realized_cashflow_contribution": 5219536.0
+    },
+    "low|mild|normal|agree|access": {
+      "fill_count": 604,
+      "mean_edge_at_fill": -0.0023,
+      "mean_post_fill_markout": 264.9106,
+      "realized_cashflow_contribution": 810087.0
+    },
+    "low|mild|tight|agree|access": {
+      "fill_count": 154,
+      "mean_edge_at_fill": 0.0149,
+      "mean_post_fill_markout": 26.3214,
+      "realized_cashflow_contribution": -1635878.0
+    },
+    "medium|mild|wide|agree|access": {
+      "fill_count": 9,
+      "mean_edge_at_fill": -0.2488,
+      "mean_post_fill_markout": 43.0556,
+      "realized_cashflow_contribution": -489662.0
+    },
+    "low|mild|wide|agree|access": {
+      "fill_count": 62,
+      "mean_edge_at_fill": 0.0296,
+      "mean_post_fill_markout": 38.5403,
+      "realized_cashflow_contribution": 112149.0
+    },
+    "high|extreme|wide|agree|access": {
+      "fill_count": 429,
+      "mean_edge_at_fill": 0.1528,
+      "mean_post_fill_markout": -150.873,
+      "realized_cashflow_contribution": -2184531.0
+    },
+    "medium|strong|tight|agree|access": {
+      "fill_count": 162,
+      "mean_edge_at_fill": 0.1504,
+      "mean_post_fill_markout": 14.608,
+      "realized_cashflow_contribution": -1537117.0
+    },
+    "high|strong|tight|agree|access": {
+      "fill_count": 154,
+      "mean_edge_at_fill": -0.0547,
+      "mean_post_fill_markout": 14.6883,
+      "realized_cashflow_contribution": 1112927.0
+    },
+    "medium|mild|tight|agree|access": {
+      "fill_count": 56,
+      "mean_edge_at_fill": 0.1469,
+      "mean_post_fill_markout": 21.1429,
+      "realized_cashflow_contribution": -818702.0
+    },
+    "high|strong|normal|agree|access": {
+      "fill_count": 28,
+      "mean_edge_at_fill": -0.1606,
+      "mean_post_fill_markout": 25.6964,
+      "realized_cashflow_contribution": 10892.0
+    },
+    "medium|strong|normal|agree|access": {
+      "fill_count": 81,
+      "mean_edge_at_fill": -0.0837,
+      "mean_post_fill_markout": 26.5926,
+      "realized_cashflow_contribution": -297248.0
+    },
+    "medium|strong|wide|agree|access": {
+      "fill_count": 34,
+      "mean_edge_at_fill": 0.2609,
+      "mean_post_fill_markout": 34.3382,
+      "realized_cashflow_contribution": -78550.0
+    },
+    "medium|mild|normal|agree|access": {
+      "fill_count": 20,
+      "mean_edge_at_fill": -0.0916,
+      "mean_post_fill_markout": 27.5,
+      "realized_cashflow_contribution": 420747.0
+    },
+    "high|strong|wide|agree|access": {
+      "fill_count": 14,
+      "mean_edge_at_fill": -0.7475,
+      "mean_post_fill_markout": 27.3571,
+      "realized_cashflow_contribution": 140442.0
+    }
+  },
+  "pepper": {
+    "average_entry_price": 12231.9703,
+    "buy_count": 101,
+    "sell_count": 61,
+    "average_fill_residual": -4.1824,
+    "late_day_trimming_count": 59
+  },
+  "plateau_windows": []
+}

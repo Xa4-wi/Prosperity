@@ -1,0 +1,974 @@
+{
+  "R2_12": {
+    "key": "R2_12",
+    "title": "Structural base rewrite",
+    "category": "plan",
+    "bot_path": "Bots/Round2/TradervR2_12.py",
+    "exists": true,
+    "parent_key": null,
+    "notes": "Clean restart baseline.",
+    "three_day_total": 218217.0,
+    "split": {
+      "ASH_COATED_OSMIUM": 19372.0,
+      "INTARIAN_PEPPER_ROOT": 198845.0
+    },
+    "day_results": [
+      {
+        "day": -1,
+        "total_pnl": 73274.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 7055.0,
+          "INTARIAN_PEPPER_ROOT": 66219.0
+        },
+        "own_trade_count": 897,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 34,
+            "longest_flat_timestamps": 3400,
+            "plateau_count_ge_10": 14
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 26,
+            "longest_flat_timestamps": 2600,
+            "plateau_count_ge_10": 1
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_12_day_-1"
+      },
+      {
+        "day": 0,
+        "total_pnl": 72752.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 6399.0,
+          "INTARIAN_PEPPER_ROOT": 66353.0
+        },
+        "own_trade_count": 897,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 88,
+            "longest_flat_timestamps": 8800,
+            "plateau_count_ge_10": 11
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 26,
+            "longest_flat_timestamps": 2600,
+            "plateau_count_ge_10": 1
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_12_day_0"
+      },
+      {
+        "day": 1,
+        "total_pnl": 72191.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 5918.0,
+          "INTARIAN_PEPPER_ROOT": 66273.0
+        },
+        "own_trade_count": 913,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 40,
+            "longest_flat_timestamps": 4000,
+            "plateau_count_ge_10": 9
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 26,
+            "longest_flat_timestamps": 2600,
+            "plateau_count_ge_10": 1
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_12_day_1"
+      }
+    ],
+    "plateaus": {
+      "ASH_COATED_OSMIUM": {
+        "longest_flat_bars": 88,
+        "longest_flat_timestamps": 8800,
+        "plateau_count_ge_10": 34
+      },
+      "INTARIAN_PEPPER_ROOT": {
+        "longest_flat_bars": 26,
+        "longest_flat_timestamps": 2600,
+        "plateau_count_ge_10": 3
+      }
+    },
+    "supported_metrics": {
+      "total_pnl": true,
+      "product_split": true,
+      "own_trade_count": true,
+      "plateau_stats": true,
+      "final_positions": false,
+      "osmium_take_fills": false,
+      "osmium_passive_fills": false,
+      "toxic_flips": false,
+      "reentry_events": false,
+      "average_passive_markout": false
+    }
+  },
+  "R2_13": {
+    "key": "R2_13",
+    "title": "Pepper restoration",
+    "category": "support",
+    "bot_path": "Bots/Round2/TradervR2_13.py",
+    "exists": true,
+    "parent_key": "R2_12",
+    "notes": "Preparatory step outside the formal plan; restores the stronger Pepper engine.",
+    "three_day_total": 257722.0,
+    "split": {
+      "ASH_COATED_OSMIUM": 19372.0,
+      "INTARIAN_PEPPER_ROOT": 238350.0
+    },
+    "day_results": [
+      {
+        "day": -1,
+        "total_pnl": 86529.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 7055.0,
+          "INTARIAN_PEPPER_ROOT": 79474.0
+        },
+        "own_trade_count": 845,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 34,
+            "longest_flat_timestamps": 3400,
+            "plateau_count_ge_10": 14
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_13_day_-1"
+      },
+      {
+        "day": 0,
+        "total_pnl": 85882.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 6399.0,
+          "INTARIAN_PEPPER_ROOT": 79483.0
+        },
+        "own_trade_count": 845,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 88,
+            "longest_flat_timestamps": 8800,
+            "plateau_count_ge_10": 11
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_13_day_0"
+      },
+      {
+        "day": 1,
+        "total_pnl": 85311.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 5918.0,
+          "INTARIAN_PEPPER_ROOT": 79393.0
+        },
+        "own_trade_count": 860,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 40,
+            "longest_flat_timestamps": 4000,
+            "plateau_count_ge_10": 9
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_13_day_1"
+      }
+    ],
+    "plateaus": {
+      "ASH_COATED_OSMIUM": {
+        "longest_flat_bars": 88,
+        "longest_flat_timestamps": 8800,
+        "plateau_count_ge_10": 34
+      },
+      "INTARIAN_PEPPER_ROOT": {
+        "longest_flat_bars": 8,
+        "longest_flat_timestamps": 800,
+        "plateau_count_ge_10": 0
+      }
+    },
+    "supported_metrics": {
+      "total_pnl": true,
+      "product_split": true,
+      "own_trade_count": true,
+      "plateau_stats": true,
+      "final_positions": false,
+      "osmium_take_fills": false,
+      "osmium_passive_fills": false,
+      "toxic_flips": false,
+      "reentry_events": false,
+      "average_passive_markout": false
+    }
+  },
+  "R2_14": {
+    "key": "R2_14",
+    "title": "Step 1 - conviction",
+    "category": "plan",
+    "bot_path": "Bots/Round2/TradervR2_14.py",
+    "exists": true,
+    "parent_key": "R2_13",
+    "notes": "Adds conviction-only Osmium layer.",
+    "three_day_total": 256640.0,
+    "split": {
+      "ASH_COATED_OSMIUM": 18290.0,
+      "INTARIAN_PEPPER_ROOT": 238350.0
+    },
+    "day_results": [
+      {
+        "day": -1,
+        "total_pnl": 86160.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 6686.0,
+          "INTARIAN_PEPPER_ROOT": 79474.0
+        },
+        "own_trade_count": 883,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 29,
+            "longest_flat_timestamps": 2900,
+            "plateau_count_ge_10": 10
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_14_day_-1"
+      },
+      {
+        "day": 0,
+        "total_pnl": 85474.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 5991.0,
+          "INTARIAN_PEPPER_ROOT": 79483.0
+        },
+        "own_trade_count": 897,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 70,
+            "longest_flat_timestamps": 7000,
+            "plateau_count_ge_10": 14
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_14_day_0"
+      },
+      {
+        "day": 1,
+        "total_pnl": 85006.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 5613.0,
+          "INTARIAN_PEPPER_ROOT": 79393.0
+        },
+        "own_trade_count": 901,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 35,
+            "longest_flat_timestamps": 3500,
+            "plateau_count_ge_10": 6
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_14_day_1"
+      }
+    ],
+    "plateaus": {
+      "ASH_COATED_OSMIUM": {
+        "longest_flat_bars": 70,
+        "longest_flat_timestamps": 7000,
+        "plateau_count_ge_10": 30
+      },
+      "INTARIAN_PEPPER_ROOT": {
+        "longest_flat_bars": 8,
+        "longest_flat_timestamps": 800,
+        "plateau_count_ge_10": 0
+      }
+    },
+    "supported_metrics": {
+      "total_pnl": true,
+      "product_split": true,
+      "own_trade_count": true,
+      "plateau_stats": true,
+      "final_positions": false,
+      "osmium_take_fills": false,
+      "osmium_passive_fills": false,
+      "toxic_flips": false,
+      "reentry_events": false,
+      "average_passive_markout": false
+    }
+  },
+  "R2_15": {
+    "key": "R2_15",
+    "title": "Step 2 - toxicity smoothing",
+    "category": "plan",
+    "bot_path": "Bots/Round2/TradervR2_15.py",
+    "exists": true,
+    "parent_key": "R2_13",
+    "notes": "Light side-specific toxicity smoothing.",
+    "three_day_total": 257970.0,
+    "split": {
+      "ASH_COATED_OSMIUM": 19620.0,
+      "INTARIAN_PEPPER_ROOT": 238350.0
+    },
+    "day_results": [
+      {
+        "day": -1,
+        "total_pnl": 86641.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 7167.0,
+          "INTARIAN_PEPPER_ROOT": 79474.0
+        },
+        "own_trade_count": 842,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 40,
+            "longest_flat_timestamps": 4000,
+            "plateau_count_ge_10": 13
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_15_day_-1"
+      },
+      {
+        "day": 0,
+        "total_pnl": 85888.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 6405.0,
+          "INTARIAN_PEPPER_ROOT": 79483.0
+        },
+        "own_trade_count": 853,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 29,
+            "longest_flat_timestamps": 2900,
+            "plateau_count_ge_10": 9
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_15_day_0"
+      },
+      {
+        "day": 1,
+        "total_pnl": 85441.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 6048.0,
+          "INTARIAN_PEPPER_ROOT": 79393.0
+        },
+        "own_trade_count": 854,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 47,
+            "longest_flat_timestamps": 4700,
+            "plateau_count_ge_10": 10
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_15_day_1"
+      }
+    ],
+    "plateaus": {
+      "ASH_COATED_OSMIUM": {
+        "longest_flat_bars": 47,
+        "longest_flat_timestamps": 4700,
+        "plateau_count_ge_10": 32
+      },
+      "INTARIAN_PEPPER_ROOT": {
+        "longest_flat_bars": 8,
+        "longest_flat_timestamps": 800,
+        "plateau_count_ge_10": 0
+      }
+    },
+    "supported_metrics": {
+      "total_pnl": true,
+      "product_split": true,
+      "own_trade_count": true,
+      "plateau_stats": true,
+      "final_positions": false,
+      "osmium_take_fills": false,
+      "osmium_passive_fills": false,
+      "toxic_flips": false,
+      "reentry_events": false,
+      "average_passive_markout": false
+    }
+  },
+  "R2_16": {
+    "key": "R2_16",
+    "title": "Step 3 - reentry / neutral drip",
+    "category": "plan",
+    "bot_path": "Bots/Round2/TradervR2_16.py",
+    "exists": true,
+    "parent_key": "R2_15",
+    "notes": "Side-specific re-entry and neutral drip on top of toxicity.",
+    "three_day_total": 258078.0,
+    "split": {
+      "ASH_COATED_OSMIUM": 19728.0,
+      "INTARIAN_PEPPER_ROOT": 238350.0
+    },
+    "day_results": [
+      {
+        "day": -1,
+        "total_pnl": 86668.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 7194.0,
+          "INTARIAN_PEPPER_ROOT": 79474.0
+        },
+        "own_trade_count": 1130,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 34,
+            "longest_flat_timestamps": 3400,
+            "plateau_count_ge_10": 9
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_16_day_-1"
+      },
+      {
+        "day": 0,
+        "total_pnl": 86045.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 6562.0,
+          "INTARIAN_PEPPER_ROOT": 79483.0
+        },
+        "own_trade_count": 1140,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 31,
+            "longest_flat_timestamps": 3100,
+            "plateau_count_ge_10": 11
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_16_day_0"
+      },
+      {
+        "day": 1,
+        "total_pnl": 85365.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 5972.0,
+          "INTARIAN_PEPPER_ROOT": 79393.0
+        },
+        "own_trade_count": 1161,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 44,
+            "longest_flat_timestamps": 4400,
+            "plateau_count_ge_10": 8
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_16_day_1"
+      }
+    ],
+    "plateaus": {
+      "ASH_COATED_OSMIUM": {
+        "longest_flat_bars": 44,
+        "longest_flat_timestamps": 4400,
+        "plateau_count_ge_10": 28
+      },
+      "INTARIAN_PEPPER_ROOT": {
+        "longest_flat_bars": 8,
+        "longest_flat_timestamps": 800,
+        "plateau_count_ge_10": 0
+      }
+    },
+    "supported_metrics": {
+      "total_pnl": true,
+      "product_split": true,
+      "own_trade_count": true,
+      "plateau_stats": true,
+      "final_positions": false,
+      "osmium_take_fills": false,
+      "osmium_passive_fills": false,
+      "toxic_flips": false,
+      "reentry_events": false,
+      "average_passive_markout": false
+    }
+  },
+  "R2_17": {
+    "key": "R2_17",
+    "title": "Step 4 - passive-only markout",
+    "category": "plan",
+    "bot_path": "Bots/Round2/TradervR2_17.py",
+    "exists": true,
+    "parent_key": "R2_16",
+    "notes": "Passive-only markout memory on top of re-entry.",
+    "three_day_total": 258086.0,
+    "split": {
+      "ASH_COATED_OSMIUM": 19736.0,
+      "INTARIAN_PEPPER_ROOT": 238350.0
+    },
+    "day_results": [
+      {
+        "day": -1,
+        "total_pnl": 86676.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 7202.0,
+          "INTARIAN_PEPPER_ROOT": 79474.0
+        },
+        "own_trade_count": 1130,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 34,
+            "longest_flat_timestamps": 3400,
+            "plateau_count_ge_10": 9
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_17_day_-1"
+      },
+      {
+        "day": 0,
+        "total_pnl": 86045.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 6562.0,
+          "INTARIAN_PEPPER_ROOT": 79483.0
+        },
+        "own_trade_count": 1140,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 31,
+            "longest_flat_timestamps": 3100,
+            "plateau_count_ge_10": 11
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_17_day_0"
+      },
+      {
+        "day": 1,
+        "total_pnl": 85365.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 5972.0,
+          "INTARIAN_PEPPER_ROOT": 79393.0
+        },
+        "own_trade_count": 1161,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 44,
+            "longest_flat_timestamps": 4400,
+            "plateau_count_ge_10": 8
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_17_day_1"
+      }
+    ],
+    "plateaus": {
+      "ASH_COATED_OSMIUM": {
+        "longest_flat_bars": 44,
+        "longest_flat_timestamps": 4400,
+        "plateau_count_ge_10": 28
+      },
+      "INTARIAN_PEPPER_ROOT": {
+        "longest_flat_bars": 8,
+        "longest_flat_timestamps": 800,
+        "plateau_count_ge_10": 0
+      }
+    },
+    "supported_metrics": {
+      "total_pnl": true,
+      "product_split": true,
+      "own_trade_count": true,
+      "plateau_stats": true,
+      "final_positions": false,
+      "osmium_take_fills": false,
+      "osmium_passive_fills": false,
+      "toxic_flips": false,
+      "reentry_events": false,
+      "average_passive_markout": false
+    }
+  },
+  "R2_18": {
+    "key": "R2_18",
+    "title": "Exploratory - alpha split heavy",
+    "category": "exploratory",
+    "bot_path": "Bots/Round2/TradervR2_18.py",
+    "exists": true,
+    "parent_key": "R2_17",
+    "notes": "Aggressive take/quote alpha split experiment; not part of the main plan.",
+    "three_day_total": 256499.0,
+    "split": {
+      "ASH_COATED_OSMIUM": 18149.0,
+      "INTARIAN_PEPPER_ROOT": 238350.0
+    },
+    "day_results": [
+      {
+        "day": -1,
+        "total_pnl": 86066.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 6592.0,
+          "INTARIAN_PEPPER_ROOT": 79474.0
+        },
+        "own_trade_count": 1244,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 41,
+            "longest_flat_timestamps": 4100,
+            "plateau_count_ge_10": 7
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_18_day_-1"
+      },
+      {
+        "day": 0,
+        "total_pnl": 85452.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 5969.0,
+          "INTARIAN_PEPPER_ROOT": 79483.0
+        },
+        "own_trade_count": 1270,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 65,
+            "longest_flat_timestamps": 6500,
+            "plateau_count_ge_10": 7
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_18_day_0"
+      },
+      {
+        "day": 1,
+        "total_pnl": 84981.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 5588.0,
+          "INTARIAN_PEPPER_ROOT": 79393.0
+        },
+        "own_trade_count": 1278,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 31,
+            "longest_flat_timestamps": 3100,
+            "plateau_count_ge_10": 8
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_18_day_1"
+      }
+    ],
+    "plateaus": {
+      "ASH_COATED_OSMIUM": {
+        "longest_flat_bars": 65,
+        "longest_flat_timestamps": 6500,
+        "plateau_count_ge_10": 22
+      },
+      "INTARIAN_PEPPER_ROOT": {
+        "longest_flat_bars": 8,
+        "longest_flat_timestamps": 800,
+        "plateau_count_ge_10": 0
+      }
+    },
+    "supported_metrics": {
+      "total_pnl": true,
+      "product_split": true,
+      "own_trade_count": true,
+      "plateau_stats": true,
+      "final_positions": false,
+      "osmium_take_fills": false,
+      "osmium_passive_fills": false,
+      "toxic_flips": false,
+      "reentry_events": false,
+      "average_passive_markout": false
+    }
+  },
+  "R2_19": {
+    "key": "R2_19",
+    "title": "Exploratory - alpha split light",
+    "category": "exploratory",
+    "bot_path": "Bots/Round2/TradervR2_19.py",
+    "exists": true,
+    "parent_key": "R2_17",
+    "notes": "Lighter take/quote alpha split experiment; not part of the main plan.",
+    "three_day_total": 257329.0,
+    "split": {
+      "ASH_COATED_OSMIUM": 18979.0,
+      "INTARIAN_PEPPER_ROOT": 238350.0
+    },
+    "day_results": [
+      {
+        "day": -1,
+        "total_pnl": 86344.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 6870.0,
+          "INTARIAN_PEPPER_ROOT": 79474.0
+        },
+        "own_trade_count": 1154,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 20,
+            "longest_flat_timestamps": 2000,
+            "plateau_count_ge_10": 7
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_19_day_-1"
+      },
+      {
+        "day": 0,
+        "total_pnl": 85859.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 6376.0,
+          "INTARIAN_PEPPER_ROOT": 79483.0
+        },
+        "own_trade_count": 1176,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 33,
+            "longest_flat_timestamps": 3300,
+            "plateau_count_ge_10": 7
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_19_day_0"
+      },
+      {
+        "day": 1,
+        "total_pnl": 85126.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 5733.0,
+          "INTARIAN_PEPPER_ROOT": 79393.0
+        },
+        "own_trade_count": 1197,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 58,
+            "longest_flat_timestamps": 5800,
+            "plateau_count_ge_10": 9
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_19_day_1"
+      }
+    ],
+    "plateaus": {
+      "ASH_COATED_OSMIUM": {
+        "longest_flat_bars": 58,
+        "longest_flat_timestamps": 5800,
+        "plateau_count_ge_10": 23
+      },
+      "INTARIAN_PEPPER_ROOT": {
+        "longest_flat_bars": 8,
+        "longest_flat_timestamps": 800,
+        "plateau_count_ge_10": 0
+      }
+    },
+    "supported_metrics": {
+      "total_pnl": true,
+      "product_split": true,
+      "own_trade_count": true,
+      "plateau_stats": true,
+      "final_positions": false,
+      "osmium_take_fills": false,
+      "osmium_passive_fills": false,
+      "toxic_flips": false,
+      "reentry_events": false,
+      "average_passive_markout": false
+    }
+  },
+  "R2_18_recycler": {
+    "key": "R2_18_recycler",
+    "title": "Step 5 - recycler",
+    "category": "plan_missing",
+    "bot_path": "Bots/Round2/TradervR2_18_recycler.py",
+    "exists": true,
+    "parent_key": "R2_17",
+    "notes": "Planned but not implemented yet.",
+    "three_day_total": 258058.0,
+    "split": {
+      "ASH_COATED_OSMIUM": 19708.0,
+      "INTARIAN_PEPPER_ROOT": 238350.0
+    },
+    "day_results": [
+      {
+        "day": -1,
+        "total_pnl": 86649.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 7175.0,
+          "INTARIAN_PEPPER_ROOT": 79474.0
+        },
+        "own_trade_count": 1132,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 34,
+            "longest_flat_timestamps": 3400,
+            "plateau_count_ge_10": 9
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_18_recycler_day_-1"
+      },
+      {
+        "day": 0,
+        "total_pnl": 86044.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 6561.0,
+          "INTARIAN_PEPPER_ROOT": 79483.0
+        },
+        "own_trade_count": 1140,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 31,
+            "longest_flat_timestamps": 3100,
+            "plateau_count_ge_10": 12
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_18_recycler_day_0"
+      },
+      {
+        "day": 1,
+        "total_pnl": 85365.0,
+        "pnl_by_product": {
+          "ASH_COATED_OSMIUM": 5972.0,
+          "INTARIAN_PEPPER_ROOT": 79393.0
+        },
+        "own_trade_count": 1161,
+        "plateaus": {
+          "ASH_COATED_OSMIUM": {
+            "longest_flat_bars": 44,
+            "longest_flat_timestamps": 4400,
+            "plateau_count_ge_10": 8
+          },
+          "INTARIAN_PEPPER_ROOT": {
+            "longest_flat_bars": 8,
+            "longest_flat_timestamps": 800,
+            "plateau_count_ge_10": 0
+          }
+        },
+        "run_dir": "TraderFactory/generated/runs/deterministic/rust/TradervR2_18_recycler_day_1"
+      }
+    ],
+    "plateaus": {
+      "ASH_COATED_OSMIUM": {
+        "longest_flat_bars": 44,
+        "longest_flat_timestamps": 4400,
+        "plateau_count_ge_10": 29
+      },
+      "INTARIAN_PEPPER_ROOT": {
+        "longest_flat_bars": 8,
+        "longest_flat_timestamps": 800,
+        "plateau_count_ge_10": 0
+      }
+    },
+    "supported_metrics": {
+      "total_pnl": true,
+      "product_split": true,
+      "own_trade_count": true,
+      "plateau_stats": true,
+      "final_positions": false,
+      "osmium_take_fills": false,
+      "osmium_passive_fills": false,
+      "toxic_flips": false,
+      "reentry_events": false,
+      "average_passive_markout": false
+    }
+  },
+  "R2_19_accessaware": {
+    "key": "R2_19_accessaware",
+    "title": "Step 6 - access-aware extension",
+    "category": "plan_missing",
+    "bot_path": "Bots/Round2/TradervR2_19_accessaware.py",
+    "exists": false,
+    "parent_key": "R2_18_recycler",
+    "notes": "Planned but not implemented yet."
+  },
+  "R2_20_multisweep": {
+    "key": "R2_20_multisweep",
+    "title": "Step 7 - multi-level sweep",
+    "category": "plan_missing",
+    "bot_path": "Bots/Round2/TradervR2_20_multisweep.py",
+    "exists": false,
+    "parent_key": "R2_19_accessaware",
+    "notes": "Optional later stage; not implemented yet."
+  }
+}
