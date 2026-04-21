@@ -1,0 +1,27 @@
+{
+  "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_starvation_priority.py",
+  "mode": "no_access",
+  "queue_model": "conservative",
+  "access_seed": 7,
+  "trader_bid": 25000,
+  "steps": 30000,
+  "total_fills": 2567,
+  "total_pnl": 301252.0,
+  "best_total_pnl": 663128.0,
+  "worst_total_pnl": -879876.0,
+  "max_drawdown": 1483670.0,
+  "per_product_pnl": {
+    "ASH_COATED_OSMIUM": 61826.0,
+    "INTARIAN_PEPPER_ROOT": 239426.0
+  },
+  "final_positions": {
+    "ASH_COATED_OSMIUM": 42,
+    "INTARIAN_PEPPER_ROOT": 80
+  },
+  "aggressive_fills": 1136,
+  "passive_fills": 1431,
+  "average_markout_by_side": {
+    "BUY": -160.9958,
+    "SELL": 100.2085
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "config_name": "TradervR2_29 Round 2 Focused Ash Robustness CMA-ES",
+  "config_path": "/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round2/tradervr2_29_cmaes.json",
+  "source_bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+  "best_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_tradervr2_29_cmaes/bots/TradervR2_29_best.py",
+  "parameters": {
+    "STABLE_MEMORY_BLEND": 0.35,
+    "NOISY_TOUCH_GAP": 1.2,
+    "NOISY_STABLE_EMA_GAP": 0.9,
+    "NOISY_SIGNAL_DAMP": 0.82,
+    "NOISY_EDGE_PENALTY": 0.1,
+    "BOOK_HEALTH_SIGNAL_DAMP_LOW": 0.84,
+    "BOOK_HEALTH_SIGNAL_DAMP_MED": 0.93,
+    "BOOK_HEALTH_EDGE_PENALTY_LOW": 0.1,
+    "BOOK_HEALTH_EDGE_PENALTY_MED": 0.04,
+    "BOOK_HEALTH_JOIN_PENALTY_LOW": 0.22,
+    "BOOK_HEALTH_JOIN_PENALTY_MED": 0.1,
+    "BOOK_HEALTH_SIZE_MULT_LOW": 0.9,
+    "BOOK_HEALTH_SIZE_MULT_MED": 0.96,
+    "ACCESS_BOOK_HEALTH_MIN": 0.58,
+    "ACCESS_JOIN_EDGE_BONUS": 0.25
+  },
+  "baseline_scores": {
+    "-1": 99676.0,
+    "0": 100133.0,
+    "1": 99583.0
+  },
+  "best_scores": {
+    "-1": 99676.0,
+    "0": 100133.0,
+    "1": 99583.0
+  },
+  "average": 99797.33333333333,
+  "objective": 99797.33333333333,
+  "regression_penalty": 0.0,
+  "imbalance_penalty": 0.0,
+  "drift_penalty": 0.0,
+  "search": {
+    "max_iter": 3,
+    "population": 6,
+    "parents": 3,
+    "sigma0": 0.05,
+    "seed": 22929,
+    "timeout_seconds": 300.0
+  },
+  "penalties": {
+    "regression": 6.0,
+    "imbalance": 1.0,
+    "drift": 120.0
+  },
+  "total_evaluations": 19,
+  "history": [
+    {
+      "generation": 1,
+      "sigma": 0.045546737988205306,
+      "generation_best_objective": 99797.19535490038,
+      "generation_best_average": 99797.33333333333,
+      "global_best_objective": 99797.33333333333,
+      "global_best_average": 99797.33333333333
+    },
+    {
+      "generation": 2,
+      "sigma": 0.041691333903373956,
+      "generation_best_objective": 99738.52775756108,
+      "generation_best_average": 99794.66666666667,
+      "global_best_objective": 99797.33333333333,
+      "global_best_average": 99797.33333333333
+    },
+    {
+      "generation": 3,
+      "sigma": 0.03889008650303028,
+      "generation_best_objective": 99797.0995880027,
+      "generation_best_average": 99797.33333333333,
+      "global_best_objective": 99797.33333333333,
+      "global_best_average": 99797.33333333333
+    }
+  ]
+}

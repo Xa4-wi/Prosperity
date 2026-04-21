@@ -1,0 +1,74 @@
+[
+  {
+    "bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+    "bot_name": "TradervR2_29",
+    "baseline_no_access_pnl": 301307.0,
+    "access_total_stats": {
+      "mean": 308172.64285714284,
+      "std": 215.6332392687895,
+      "min": 307937.0,
+      "max": 308558.0,
+      "p25": 307974.5,
+      "p10": 307937.0
+    },
+    "delta_stats": {
+      "mean": 6865.642857142857,
+      "std": 215.6332392687895,
+      "min": 6630.0,
+      "max": 7251.0,
+      "p25": 6667.5,
+      "p10": 6630.0
+    },
+    "access_total_robust_score": 308064.82623750845,
+    "delta_robust_score": 6757.826237508462,
+    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_promoted_compare/TradervR2_29/compare_summary.json"
+  },
+  {
+    "bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_28.py",
+    "bot_name": "TradervR2_28",
+    "baseline_no_access_pnl": 301303.0,
+    "access_total_stats": {
+      "mean": 308168.9285714286,
+      "std": 222.6530659009708,
+      "min": 307886.5,
+      "max": 308578.0,
+      "p25": 307966.0,
+      "p10": 307886.5
+    },
+    "delta_stats": {
+      "mean": 6865.928571428572,
+      "std": 222.6530659009708,
+      "min": 6583.5,
+      "max": 7275.0,
+      "p25": 6663.0,
+      "p10": 6583.5
+    },
+    "access_total_robust_score": 308057.6020384781,
+    "delta_robust_score": 6754.602038478086,
+    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_promoted_compare/TradervR2_28/compare_summary.json"
+  },
+  {
+    "bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_26.py",
+    "bot_name": "TradervR2_26",
+    "baseline_no_access_pnl": 301262.0,
+    "access_total_stats": {
+      "mean": 308156.9285714286,
+      "std": 225.70262176011107,
+      "min": 307880.5,
+      "max": 308584.5,
+      "p25": 307943.0,
+      "p10": 307880.5
+    },
+    "delta_stats": {
+      "mean": 6894.928571428572,
+      "std": 225.70262176011104,
+      "min": 6618.5,
+      "max": 7322.5,
+      "p25": 6681.0,
+      "p10": 6618.5
+    },
+    "access_total_robust_score": 308044.07726054854,
+    "delta_robust_score": 6782.077260548516,
+    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_promoted_compare/TradervR2_26/compare_summary.json"
+  }
+]

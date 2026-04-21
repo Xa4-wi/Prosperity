@@ -1,0 +1,66 @@
+{
+  "osmium_buckets": {
+    "high|extreme|tight|agree|no_access": {
+      "fill_count": 237,
+      "mean_edge_at_fill": 0.5498,
+      "mean_post_fill_markout": -159.5211,
+      "realized_cashflow_contribution": -2466996.0
+    },
+    "high|extreme|normal|agree|no_access": {
+      "fill_count": 454,
+      "mean_edge_at_fill": -0.9263,
+      "mean_post_fill_markout": -110.7919,
+      "realized_cashflow_contribution": 5672086.0
+    },
+    "low|mild|normal|agree|no_access": {
+      "fill_count": 776,
+      "mean_edge_at_fill": 0.0,
+      "mean_post_fill_markout": 72.5941,
+      "realized_cashflow_contribution": 766492.0
+    },
+    "low|mild|tight|agree|no_access": {
+      "fill_count": 138,
+      "mean_edge_at_fill": 0.0216,
+      "mean_post_fill_markout": 24.5217,
+      "realized_cashflow_contribution": -716621.0
+    },
+    "high|extreme|wide|agree|no_access": {
+      "fill_count": 470,
+      "mean_edge_at_fill": 0.0795,
+      "mean_post_fill_markout": -133.1351,
+      "realized_cashflow_contribution": -3112043.0
+    },
+    "high|strong|tight|agree|no_access": {
+      "fill_count": 160,
+      "mean_edge_at_fill": -0.0562,
+      "mean_post_fill_markout": 12.4563,
+      "realized_cashflow_contribution": 1142998.0
+    },
+    "low|mild|wide|agree|no_access": {
+      "fill_count": 57,
+      "mean_edge_at_fill": 0.0,
+      "mean_post_fill_markout": 35.9649,
+      "realized_cashflow_contribution": 221869.0
+    },
+    "medium|strong|tight|agree|no_access": {
+      "fill_count": 196,
+      "mean_edge_at_fill": 0.0301,
+      "mean_post_fill_markout": 14.1071,
+      "realized_cashflow_contribution": -597327.0
+    },
+    "medium|mild|tight|agree|no_access": {
+      "fill_count": 70,
+      "mean_edge_at_fill": 0.1152,
+      "mean_post_fill_markout": 20.9643,
+      "realized_cashflow_contribution": -1268338.0
+    }
+  },
+  "pepper": {
+    "average_entry_price": 11006.6667,
+    "buy_count": 9,
+    "sell_count": 0,
+    "average_fill_residual": 4.1673,
+    "late_day_trimming_count": 0
+  },
+  "plateau_windows": []
+}

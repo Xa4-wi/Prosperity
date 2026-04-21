@@ -1,0 +1,19 @@
+Round 2 backtest summary
+========================
+Bot: /Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_markout_bucketedStrong.py
+Mode: no_access
+Queue model: conservative
+Trader bid(): 25000
+Steps: 30000
+Total fills: 2562
+Final PnL: 301231.0000
+Max drawdown: 1483670.0000
+
+Per product PnL:
+- ASH_COATED_OSMIUM: 61805.0000
+- INTARIAN_PEPPER_ROOT: 239426.0000
+
+Approximation notes:
+- Aggressive orders sweep visible levels immediately.
+- Resting orders use an explicit queue model: conservative or touch_join.
+- Access mode augments the public book with synthetic latent quotes sampled from empirical Round 2 structure.

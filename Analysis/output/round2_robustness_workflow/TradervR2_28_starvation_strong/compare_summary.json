@@ -1,0 +1,97 @@
+{
+  "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_starvation_strong.py",
+  "queue_model": "conservative",
+  "baseline_no_access_pnl": 301256.0,
+  "access_runs": [
+    {
+      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_starvation_strong.py",
+      "mode": "access",
+      "queue_model": "conservative",
+      "access_seed": 7,
+      "trader_bid": 25000,
+      "steps": 30000,
+      "total_fills": 2680,
+      "total_pnl": 308238.0,
+      "best_total_pnl": 669746.0,
+      "worst_total_pnl": -879748.0,
+      "max_drawdown": 1484984.0,
+      "per_product_pnl": {
+        "ASH_COATED_OSMIUM": 68718.0,
+        "INTARIAN_PEPPER_ROOT": 239520.0
+      },
+      "final_positions": {
+        "ASH_COATED_OSMIUM": 41,
+        "INTARIAN_PEPPER_ROOT": 80
+      },
+      "aggressive_fills": 1038,
+      "passive_fills": 1642,
+      "average_markout_by_side": {
+        "BUY": -151.6102,
+        "SELL": 145.3272
+      }
+    },
+    {
+      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_starvation_strong.py",
+      "mode": "access",
+      "queue_model": "conservative",
+      "access_seed": 8,
+      "trader_bid": 25000,
+      "steps": 30000,
+      "total_fills": 2723,
+      "total_pnl": 307908.5,
+      "best_total_pnl": 679590.0,
+      "worst_total_pnl": -879911.5,
+      "max_drawdown": 1493460.0,
+      "per_product_pnl": {
+        "ASH_COATED_OSMIUM": 68475.5,
+        "INTARIAN_PEPPER_ROOT": 239433.0
+      },
+      "final_positions": {
+        "ASH_COATED_OSMIUM": 37,
+        "INTARIAN_PEPPER_ROOT": 80
+      },
+      "aggressive_fills": 1069,
+      "passive_fills": 1654,
+      "average_markout_by_side": {
+        "BUY": -141.7965,
+        "SELL": 141.6679
+      }
+    },
+    {
+      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_starvation_strong.py",
+      "mode": "access",
+      "queue_model": "conservative",
+      "access_seed": 9,
+      "trader_bid": 25000,
+      "steps": 30000,
+      "total_fills": 2685,
+      "total_pnl": 308128.0,
+      "best_total_pnl": 639625.0,
+      "worst_total_pnl": -879981.5,
+      "max_drawdown": 1463299.0,
+      "per_product_pnl": {
+        "ASH_COATED_OSMIUM": 68679.0,
+        "INTARIAN_PEPPER_ROOT": 239449.0
+      },
+      "final_positions": {
+        "ASH_COATED_OSMIUM": 51,
+        "INTARIAN_PEPPER_ROOT": 80
+      },
+      "aggressive_fills": 1052,
+      "passive_fills": 1633,
+      "average_markout_by_side": {
+        "BUY": -150.3119,
+        "SELL": 144.585
+      }
+    }
+  ],
+  "delta_access_values": [
+    6982.0,
+    6652.5,
+    6872.0
+  ],
+  "delta_access_mean": 6835.5,
+  "delta_access_median": 6872.0,
+  "delta_access_p25": 6652.5,
+  "delta_access_p10": 6652.5
+}

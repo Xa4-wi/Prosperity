@@ -1,0 +1,98 @@
+[
+  {
+    "bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_fair_medianGuard.py",
+    "bot_name": "TradervR2_28_fair_medianGuard",
+    "baseline_no_access_pnl": 300276.0,
+    "access_total_stats": {
+      "mean": 308705.21428571426,
+      "std": 374.7729652872577,
+      "min": 308276.0,
+      "max": 309424.0,
+      "p25": 308319.5,
+      "p10": 308276.0
+    },
+    "delta_stats": {
+      "mean": 8429.214285714286,
+      "std": 374.7729652872577,
+      "min": 8000.0,
+      "max": 9148.0,
+      "p25": 8043.5,
+      "p10": 8000.0
+    },
+    "access_total_robust_score": 308517.82780307066,
+    "delta_robust_score": 8241.827803070657,
+    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_stage2/TradervR2_28_fair_medianGuard/compare_summary.json"
+  },
+  {
+    "bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_bookHealth_mild.py",
+    "bot_name": "TradervR2_28_bookHealth_mild",
+    "baseline_no_access_pnl": 301303.0,
+    "access_total_stats": {
+      "mean": 308168.9285714286,
+      "std": 222.6530659009708,
+      "min": 307886.5,
+      "max": 308578.0,
+      "p25": 307966.0,
+      "p10": 307886.5
+    },
+    "delta_stats": {
+      "mean": 6865.928571428572,
+      "std": 222.6530659009708,
+      "min": 6583.5,
+      "max": 7275.0,
+      "p25": 6663.0,
+      "p10": 6583.5
+    },
+    "access_total_robust_score": 308057.6020384781,
+    "delta_robust_score": 6754.602038478086,
+    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_stage2/TradervR2_28_bookHealth_mild/compare_summary.json"
+  },
+  {
+    "bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_26.py",
+    "bot_name": "TradervR2_26",
+    "baseline_no_access_pnl": 301262.0,
+    "access_total_stats": {
+      "mean": 308156.9285714286,
+      "std": 225.70262176011107,
+      "min": 307880.5,
+      "max": 308584.5,
+      "p25": 307943.0,
+      "p10": 307880.5
+    },
+    "delta_stats": {
+      "mean": 6894.928571428572,
+      "std": 225.70262176011104,
+      "min": 6618.5,
+      "max": 7322.5,
+      "p25": 6681.0,
+      "p10": 6618.5
+    },
+    "access_total_robust_score": 308044.07726054854,
+    "delta_robust_score": 6782.077260548516,
+    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_stage2/TradervR2_26/compare_summary.json"
+  },
+  {
+    "bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_starvation_strong.py",
+    "bot_name": "TradervR2_28_starvation_strong",
+    "baseline_no_access_pnl": 301256.0,
+    "access_total_stats": {
+      "mean": 308111.14285714284,
+      "std": 184.9464621925789,
+      "min": 307908.5,
+      "max": 308475.0,
+      "p25": 307930.5,
+      "p10": 307908.5
+    },
+    "delta_stats": {
+      "mean": 6855.142857142857,
+      "std": 184.9464621925789,
+      "min": 6652.5,
+      "max": 7219.0,
+      "p25": 6674.5,
+      "p10": 6652.5
+    },
+    "access_total_robust_score": 308018.66962604655,
+    "delta_robust_score": 6762.669626046568,
+    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_stage2/TradervR2_28_starvation_strong/compare_summary.json"
+  }
+]

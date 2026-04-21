@@ -692,3 +692,242 @@ Artifacts:
 - [R2_19 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_19_day_-1/metrics.json)
 - [R2_19 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_19_day_0/metrics.json)
 - [R2_19 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_19_day_1/metrics.json)
+
+## Research Family From Round 2 Data Study
+
+Built directly from the findings in [round2_data_research_report.md](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_data_research/round2_data_research_report.md), using [TradervR2_10_softMarkout.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_softMarkout.py) as the strongest public-data trunk:
+
+- [TradervR2_20_pepperResidual.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_20_pepperResidual.py)
+  - stronger Pepper residual-to-drift execution
+  - buy harder in deep negative residual states
+  - reduce patience in rich positive residual states
+- [TradervR2_21_agreementUnlock.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_21_agreementUnlock.py)
+  - Osmium throughput unlock only when stable gap, imbalance, and micro all align
+  - shallower public sweep
+  - stronger join / front size in full agreement states
+- [TradervR2_22_vacuumRefill.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_22_vacuumRefill.py)
+  - stronger refill-side bias after one-sided Osmium vacuums
+  - quote/take/join nudge on the refill direction
+- [TradervR2_23_researchCombo.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_23_researchCombo.py)
+  - lighter combination of all three research findings
+
+Public Round 2 deterministic replay (`rust` engine):
+
+- [TradervR2_10_softMarkout.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_softMarkout.py)
+  - day `-1`: `99'705.0`
+  - day `0`: `99'994.0`
+  - day `1`: `99'622.0`
+  - total: `299'321.0`
+
+- [TradervR2_20_pepperResidual.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_20_pepperResidual.py)
+  - day `-1`: `99'705.0`
+  - day `0`: `99'994.0`
+  - day `1`: `99'622.0`
+  - total: `299'321.0`
+
+- [TradervR2_21_agreementUnlock.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_21_agreementUnlock.py)
+  - day `-1`: `99'689.0`
+  - day `0`: `99'994.0`
+  - day `1`: `99'612.0`
+  - total: `299'295.0`
+
+- [TradervR2_22_vacuumRefill.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_22_vacuumRefill.py)
+  - day `-1`: `99'705.0`
+  - day `0`: `99'989.0`
+  - day `1`: `99'622.0`
+  - total: `299'316.0`
+
+- [TradervR2_23_researchCombo.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_23_researchCombo.py)
+  - day `-1`: `99'697.0`
+  - day `0`: `99'989.0`
+  - day `1`: `99'613.0`
+  - total: `299'299.0`
+
+Product split:
+- baseline [TradervR2_10_softMarkout.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_softMarkout.py)
+  - `ASH_COATED_OSMIUM`: `60'971.0`
+  - `INTARIAN_PEPPER_ROOT`: `238'350.0`
+- [TradervR2_20_pepperResidual.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_20_pepperResidual.py)
+  - `ASH_COATED_OSMIUM`: `60'971.0`
+  - `INTARIAN_PEPPER_ROOT`: `238'350.0`
+- [TradervR2_21_agreementUnlock.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_21_agreementUnlock.py)
+  - `ASH_COATED_OSMIUM`: `60'945.0`
+  - `INTARIAN_PEPPER_ROOT`: `238'350.0`
+- [TradervR2_22_vacuumRefill.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_22_vacuumRefill.py)
+  - `ASH_COATED_OSMIUM`: `60'966.0`
+  - `INTARIAN_PEPPER_ROOT`: `238'350.0`
+- [TradervR2_23_researchCombo.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_23_researchCombo.py)
+  - `ASH_COATED_OSMIUM`: `60'949.0`
+  - `INTARIAN_PEPPER_ROOT`: `238'350.0`
+
+Read:
+- the Pepper residual finding is already effectively captured by the current Pepper engine; the dedicated branch was completely inert
+- the agreement-unlock branch did change Ash behavior, but slightly in the wrong direction
+- the vacuum/refill branch was the most compatible of the new family, but still `-5.0` total
+- the full combo also stayed very close, but did not beat the trunk
+- overall conclusion: the research findings are real, but the current `R2_10_softMarkout` trunk already captures most of the easy public-data edge from them
+
+Artifacts:
+- [R2_20 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_20_pepperResidual_day_-1/metrics.json)
+- [R2_20 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_20_pepperResidual_day_0/metrics.json)
+- [R2_20 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_20_pepperResidual_day_1/metrics.json)
+- [R2_21 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_21_agreementUnlock_day_-1/metrics.json)
+- [R2_21 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_21_agreementUnlock_day_0/metrics.json)
+- [R2_21 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_21_agreementUnlock_day_1/metrics.json)
+- [R2_22 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_22_vacuumRefill_day_-1/metrics.json)
+- [R2_22 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_22_vacuumRefill_day_0/metrics.json)
+- [R2_22 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_22_vacuumRefill_day_1/metrics.json)
+- [R2_23 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_23_researchCombo_day_-1/metrics.json)
+- [R2_23 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_23_researchCombo_day_0/metrics.json)
+- [R2_23 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_23_researchCombo_day_1/metrics.json)
+
+## `TradervR2_24.py` / `TradervR2_25.py` Sam-analysis recycler follow-up
+
+These two branches were built after reviewing the Sam variance report in
+[Analysis_Sam_Bot/preview.html](/Users/xavierwinkelmann/Prosperity/Bots/Round2/Analysis_Sam_Bot/preview.html),
+which recommended:
+- keep the Logic-A-style moderate Osmium core,
+- avoid baking in access-heavy aggression in the default harness,
+- and test a stronger Osmium terminal recycler to reduce short-side variance.
+
+Implemented:
+- [TradervR2_24.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_24.py)
+  - stronger late short-cover recycler
+  - more explicit late buy relief and sell throttling
+- [TradervR2_25.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_25.py)
+  - gentler version of the same idea
+  - quote-shaping only, without stronger take/allow suppression
+
+Round2Backtester compare results (`conservative` queue model):
+- baseline [TradervR2_23_researchCombo.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_23_researchCombo.py)
+  - baseline no-access: `301'169.0`
+  - access mean delta: `6'477.7`
+  - access p25 delta: `6'336.5`
+- [TradervR2_24.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_24.py)
+  - baseline no-access: `301'069.0`
+  - access mean delta: `6'360.4`
+  - access p25 delta: `6'316.0`
+- [TradervR2_25.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_25.py)
+  - baseline no-access: `301'169.0`
+  - access mean delta: `6'477.1`
+  - access p25 delta: `6'336.5`
+
+Read:
+- the stronger recycler in `R2_24` was too heavy and clearly worse
+- the gentler recycler in `R2_25` is effectively neutral relative to `R2_23`
+- that means Sam’s diagnosis was directionally right, but terminal recycling alone is not opening a new edge yet
+- the more likely remaining margin is still in robust stable-mid / vacuum-aware Osmium behavior under quote thinning, not in a standalone late flattening overlay
+
+Artifacts:
+- [R2_23 compare summary](/Users/xavierwinkelmann/Prosperity/Round2Backtester/output/TradervR2_23_researchCombo/summary.json)
+- [R2_24 compare summary](/Users/xavierwinkelmann/Prosperity/Round2Backtester/output/TradervR2_24/summary.json)
+- [R2_25 compare summary](/Users/xavierwinkelmann/Prosperity/Round2Backtester/output/TradervR2_25/summary.json)
+
+## `TradervR2_26.py` stronger stable-mid / vacuum robustness
+
+This branch follows the Sam variance review more literally:
+- stronger reliance on stable-book fair instead of raw touch,
+- stable-mid EMA memory to smooth quote-thinning noise,
+- damped fast signal when the touch diverges too much from stable memory,
+- reduced join aggression in noisy / post-vacuum states,
+- and access-style aggression disabled when the visible touch looks unstable.
+
+Implemented:
+- [TradervR2_26.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_26.py)
+- distribution scorer:
+  [round2_distribution_score.py](/Users/xavierwinkelmann/Prosperity/Analysis/scripts/round2_distribution_score.py)
+
+Repeated-run distribution ranking (`conservative` queue model, access seeds `7..13`):
+- [TradervR2_26.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_26.py)
+  - baseline no-access: `301'262.0`
+  - access mean/std: `308'156.9 / 225.7`
+  - access p25/p10: `307'943.0 / 307'880.5`
+  - robust score `mean - 0.5*std`: `308'044.1`
+- [TradervR2_23_researchCombo.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_23_researchCombo.py)
+  - baseline no-access: `301'169.0`
+  - access mean/std: `307'652.9 / 88.6`
+  - access p25/p10: `307'567.5 / 307'505.5`
+  - robust score `mean - 0.5*std`: `307'608.6`
+- [TradervR2_25.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_25.py)
+  - baseline no-access: `301'169.0`
+  - access mean/std: `307'652.4 / 88.2`
+  - access p25/p10: `307'567.5 / 307'505.5`
+  - robust score `mean - 0.5*std`: `307'608.3`
+
+Read:
+- `R2_26` is the first branch here that clearly improves the repeated-run distribution, not just a single path
+- the gain is large enough to clear the Sam-report noise floor comfortably
+- it does come with higher spread across seeds than `R2_23`, but the mean and lower tail still move up materially
+- that makes stronger stable-mid / vacuum robustness look like a real lever, unlike the recycler-only experiments
+
+Artifacts:
+- [distribution score report](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_distribution_score/distribution_score.md)
+- [distribution score json](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_distribution_score/distribution_score.json)
+- [R2_26 compare summary](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_distribution_score/TradervR2_26/compare_summary.json)
+
+## Promoted robustness branches: `TradervR2_28.py` and `TradervR2_29.py`
+
+After the robustness workflow, I promoted the best practical winner and a lighter hybrid:
+- [TradervR2_28.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_28.py)
+  - clean standalone promotion of the `bookHealth_mild` branch
+- [TradervR2_29.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py)
+  - `bookHealth_mild` plus a lighter `medianGuard` fair
+  - only uses the median of anchor / stable / last-good fair when book health is degraded
+
+Repeated-run validation (`conservative` queue model, access seeds `7..13`):
+- [TradervR2_29.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py)
+  - baseline no-access: `301'307.0`
+  - access mean/std: `308'172.6 / 215.6`
+  - access p25/p10: `307'974.5 / 307'937.0`
+  - robust score `mean - 0.5*std`: `308'064.8`
+- [TradervR2_28.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_28.py)
+  - baseline no-access: `301'303.0`
+  - access mean/std: `308'168.9 / 222.7`
+  - access p25/p10: `307'966.0 / 307'886.5`
+  - robust score `mean - 0.5*std`: `308'057.6`
+- [TradervR2_26.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_26.py)
+  - baseline no-access: `301'262.0`
+  - access mean/std: `308'156.9 / 225.7`
+  - access p25/p10: `307'943.0 / 307'880.5`
+  - robust score `mean - 0.5*std`: `308'044.1`
+
+Read:
+- `R2_28` cleanly beats `R2_26`
+- `R2_29` improves a little further and is now the best validated branch in this robustness line
+- the hybrid kept the main benefit of `bookHealth_mild` while avoiding the big downside of the full `medianGuard` branch
+
+Artifacts:
+- [promoted compare report](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_promoted_compare/distribution_score.md)
+- [promoted compare json](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_promoted_compare/distribution_score.json)
+- [R2_28 compare summary](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_promoted_compare/TradervR2_28/compare_summary.json)
+- [R2_29 compare summary](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_promoted_compare/TradervR2_29/compare_summary.json)
+
+## Risk rebuild line: `TradervR2_33*`
+
+To rebuild risk management from the ground up without repeating the old blunt overlay mistake, I added a product-aware design note at:
+- [RISK_MANAGEMENT_REBUILD.md](/Users/xavierwinkelmann/Prosperity/Bots/Round2/RISK_MANAGEMENT_REBUILD.md)
+
+The core idea was:
+- Pepper risk should protect entry quality and avoid fighting carry
+- Ash risk should manage book trust, uncertainty, fill quality, and late inventory
+- risk should scale behavior locally inside each engine, not prune orders globally at the portfolio level
+
+Tested branches:
+- [TradervR2_33.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_33.py)
+  - first full rebuild: product-level equity drawdown tracking, Ash confidence/risk context, volatility/fair-disagreement sizing, terminal Ash inventory pressure, and lighter Pepper chase / inventory risk
+  - replay: `99'534.0 / 100'001.0 / 99'519.0` = `299'054.0`
+- [TradervR2_33_1.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_33_1.py)
+  - lighter variant: removed the Ash double-tax on taking, softened terminal pressure, softened Pepper penalties
+  - replay: `99'589.0 / 100'011.0 / 99'551.0` = `299'151.0`
+- [TradervR2_33_2.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_33_2.py)
+  - best rebuild variant: drawdown mostly shapes size / access / mode instead of acting like a standing quote surcharge
+  - replay: `99'653.0 / 100'128.0 / 99'588.0` = `299'369.0`
+
+Reference:
+- [TradervR2_31.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_31.py): `299'433.0`
+
+Read:
+- the rebuilt risk architecture is viable
+- the first fully integrated version was too heavy
+- once the risk signals were narrowed to steering size / mode / late inventory instead of taxing every Ash action, the branch got back to near-parity
+- [TradervR2_33_2.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_33_2.py) is the best version of the rebuild line so far

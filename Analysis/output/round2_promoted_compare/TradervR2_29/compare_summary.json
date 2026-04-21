@@ -1,0 +1,209 @@
+{
+  "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+  "queue_model": "conservative",
+  "baseline_no_access_pnl": 301307.0,
+  "access_runs": [
+    {
+      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+      "mode": "access",
+      "queue_model": "conservative",
+      "access_seed": 7,
+      "trader_bid": 25000,
+      "steps": 30000,
+      "total_fills": 2676,
+      "total_pnl": 308389.0,
+      "best_total_pnl": 691502.0,
+      "worst_total_pnl": -879748.0,
+      "max_drawdown": 1514986.0,
+      "per_product_pnl": {
+        "ASH_COATED_OSMIUM": 68869.0,
+        "INTARIAN_PEPPER_ROOT": 239520.0
+      },
+      "final_positions": {
+        "ASH_COATED_OSMIUM": 43,
+        "INTARIAN_PEPPER_ROOT": 80
+      },
+      "aggressive_fills": 1036,
+      "passive_fills": 1640,
+      "average_markout_by_side": {
+        "BUY": -152.0543,
+        "SELL": 145.3569
+      }
+    },
+    {
+      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+      "mode": "access",
+      "queue_model": "conservative",
+      "access_seed": 8,
+      "trader_bid": 25000,
+      "steps": 30000,
+      "total_fills": 2719,
+      "total_pnl": 307974.5,
+      "best_total_pnl": 679644.0,
+      "worst_total_pnl": -879911.5,
+      "max_drawdown": 1493454.0,
+      "per_product_pnl": {
+        "ASH_COATED_OSMIUM": 68541.5,
+        "INTARIAN_PEPPER_ROOT": 239433.0
+      },
+      "final_positions": {
+        "ASH_COATED_OSMIUM": 37,
+        "INTARIAN_PEPPER_ROOT": 80
+      },
+      "aggressive_fills": 1066,
+      "passive_fills": 1653,
+      "average_markout_by_side": {
+        "BUY": -141.9703,
+        "SELL": 142.0576
+      }
+    },
+    {
+      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+      "mode": "access",
+      "queue_model": "conservative",
+      "access_seed": 9,
+      "trader_bid": 25000,
+      "steps": 30000,
+      "total_fills": 2676,
+      "total_pnl": 308144.0,
+      "best_total_pnl": 639653.0,
+      "worst_total_pnl": -879992.5,
+      "max_drawdown": 1463299.0,
+      "per_product_pnl": {
+        "ASH_COATED_OSMIUM": 68695.0,
+        "INTARIAN_PEPPER_ROOT": 239449.0
+      },
+      "final_positions": {
+        "ASH_COATED_OSMIUM": 51,
+        "INTARIAN_PEPPER_ROOT": 80
+      },
+      "aggressive_fills": 1043,
+      "passive_fills": 1633,
+      "average_markout_by_side": {
+        "BUY": -150.9708,
+        "SELL": 144.9518
+      }
+    },
+    {
+      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+      "mode": "access",
+      "queue_model": "conservative",
+      "access_seed": 10,
+      "trader_bid": 25000,
+      "steps": 30000,
+      "total_fills": 2655,
+      "total_pnl": 307991.5,
+      "best_total_pnl": 694461.0,
+      "worst_total_pnl": -879932.0,
+      "max_drawdown": 1519926.5,
+      "per_product_pnl": {
+        "ASH_COATED_OSMIUM": 68581.5,
+        "INTARIAN_PEPPER_ROOT": 239410.0
+      },
+      "final_positions": {
+        "ASH_COATED_OSMIUM": 57,
+        "INTARIAN_PEPPER_ROOT": 80
+      },
+      "aggressive_fills": 1008,
+      "passive_fills": 1647,
+      "average_markout_by_side": {
+        "BUY": -153.5527,
+        "SELL": 168.7504
+      }
+    },
+    {
+      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+      "mode": "access",
+      "queue_model": "conservative",
+      "access_seed": 11,
+      "trader_bid": 25000,
+      "steps": 30000,
+      "total_fills": 2686,
+      "total_pnl": 308558.0,
+      "best_total_pnl": 604589.0,
+      "worst_total_pnl": -879699.0,
+      "max_drawdown": 1430014.0,
+      "per_product_pnl": {
+        "ASH_COATED_OSMIUM": 69073.0,
+        "INTARIAN_PEPPER_ROOT": 239485.0
+      },
+      "final_positions": {
+        "ASH_COATED_OSMIUM": 44,
+        "INTARIAN_PEPPER_ROOT": 80
+      },
+      "aggressive_fills": 1031,
+      "passive_fills": 1655,
+      "average_markout_by_side": {
+        "BUY": -171.2437,
+        "SELL": 154.0164
+      }
+    },
+    {
+      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+      "mode": "access",
+      "queue_model": "conservative",
+      "access_seed": 12,
+      "trader_bid": 25000,
+      "steps": 30000,
+      "total_fills": 2687,
+      "total_pnl": 307937.0,
+      "best_total_pnl": 638769.0,
+      "worst_total_pnl": -879708.0,
+      "max_drawdown": 1484344.0,
+      "per_product_pnl": {
+        "ASH_COATED_OSMIUM": 68458.0,
+        "INTARIAN_PEPPER_ROOT": 239479.0
+      },
+      "final_positions": {
+        "ASH_COATED_OSMIUM": 60,
+        "INTARIAN_PEPPER_ROOT": 80
+      },
+      "aggressive_fills": 1049,
+      "passive_fills": 1638,
+      "average_markout_by_side": {
+        "BUY": -177.8791,
+        "SELL": 99.6918
+      }
+    },
+    {
+      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+      "mode": "access",
+      "queue_model": "conservative",
+      "access_seed": 13,
+      "trader_bid": 25000,
+      "steps": 30000,
+      "total_fills": 2732,
+      "total_pnl": 308214.5,
+      "best_total_pnl": 619724.0,
+      "worst_total_pnl": -879870.0,
+      "max_drawdown": 1433357.0,
+      "per_product_pnl": {
+        "ASH_COATED_OSMIUM": 68755.5,
+        "INTARIAN_PEPPER_ROOT": 239459.0
+      },
+      "final_positions": {
+        "ASH_COATED_OSMIUM": 49,
+        "INTARIAN_PEPPER_ROOT": 80
+      },
+      "aggressive_fills": 1082,
+      "passive_fills": 1650,
+      "average_markout_by_side": {
+        "BUY": -112.1216,
+        "SELL": 97.1943
+      }
+    }
+  ],
+  "delta_access_values": [
+    7082.0,
+    6667.5,
+    6837.0,
+    6684.5,
+    7251.0,
+    6630.0,
+    6907.5
+  ],
+  "delta_access_mean": 6865.6429,
+  "delta_access_median": 6837.0,
+  "delta_access_p25": 6630.0,
+  "delta_access_p10": 6630.0
+}

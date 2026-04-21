@@ -1,0 +1,27 @@
+{
+  "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_bookHealth_mild.py",
+  "mode": "access",
+  "queue_model": "conservative",
+  "access_seed": 13,
+  "trader_bid": 25000,
+  "steps": 30000,
+  "total_fills": 2724,
+  "total_pnl": 308274.5,
+  "best_total_pnl": 619784.0,
+  "worst_total_pnl": -879870.0,
+  "max_drawdown": 1433357.0,
+  "per_product_pnl": {
+    "ASH_COATED_OSMIUM": 68815.5,
+    "INTARIAN_PEPPER_ROOT": 239459.0
+  },
+  "final_positions": {
+    "ASH_COATED_OSMIUM": 49,
+    "INTARIAN_PEPPER_ROOT": 80
+  },
+  "aggressive_fills": 1074,
+  "passive_fills": 1650,
+  "average_markout_by_side": {
+    "BUY": -112.3144,
+    "SELL": 97.4989
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "name": "TradervR2_29 Round 2 Focused Ash Robustness CMA-ES",
+  "source_bot": "../../../Bots/Round2/TradervR2_29.py",
+  "default_dict_block": "DEFAULT_ASH_PARAMS",
+  "baselines": {
+    "-1": 99676.0,
+    "0": 100133.0,
+    "1": 99583.0
+  },
+  "search": {
+    "max_iter": 3,
+    "population": 6,
+    "parents": 3,
+    "sigma0": 0.05,
+    "seed": 22929,
+    "timeout_seconds": 300
+  },
+  "penalties": {
+    "regression": 6.0,
+    "imbalance": 1.0,
+    "drift": 120.0
+  },
+  "output_prefix": "round2_tradervr2_29_cmaes",
+  "output_dir": "../../../Analysis/output/round2_tradervr2_29_cmaes",
+  "data_root": "../../../Data/ROUND_2",
+  "dataset_tag": "round_2",
+  "engine": "rust",
+  "parameters": [
+    {
+      "name": "STABLE_MEMORY_BLEND",
+      "lower": 0.20,
+      "upper": 0.50
+    },
+    {
+      "name": "NOISY_TOUCH_GAP",
+      "lower": 0.90,
+      "upper": 1.60
+    },
+    {
+      "name": "NOISY_STABLE_EMA_GAP",
+      "lower": 0.60,
+      "upper": 1.20
+    },
+    {
+      "name": "NOISY_SIGNAL_DAMP",
+      "lower": 0.72,
+      "upper": 0.92
+    },
+    {
+      "name": "NOISY_EDGE_PENALTY",
+      "lower": 0.04,
+      "upper": 0.20
+    },
+    {
+      "name": "BOOK_HEALTH_SIGNAL_DAMP_LOW",
+      "lower": 0.72,
+      "upper": 0.94
+    },
+    {
+      "name": "BOOK_HEALTH_SIGNAL_DAMP_MED",
+      "lower": 0.86,
+      "upper": 0.99
+    },
+    {
+      "name": "BOOK_HEALTH_EDGE_PENALTY_LOW",
+      "lower": 0.03,
+      "upper": 0.18
+    },
+    {
+      "name": "BOOK_HEALTH_EDGE_PENALTY_MED",
+      "lower": 0.00,
+      "upper": 0.08
+    },
+    {
+      "name": "BOOK_HEALTH_JOIN_PENALTY_LOW",
+      "lower": 0.10,
+      "upper": 0.35
+    },
+    {
+      "name": "BOOK_HEALTH_JOIN_PENALTY_MED",
+      "lower": 0.03,
+      "upper": 0.18
+    },
+    {
+      "name": "BOOK_HEALTH_SIZE_MULT_LOW",
+      "lower": 0.78,
+      "upper": 1.00
+    },
+    {
+      "name": "BOOK_HEALTH_SIZE_MULT_MED",
+      "lower": 0.88,
+      "upper": 1.00
+    },
+    {
+      "name": "ACCESS_BOOK_HEALTH_MIN",
+      "lower": 0.50,
+      "upper": 0.70
+    },
+    {
+      "name": "ACCESS_JOIN_EDGE_BONUS",
+      "lower": 0.12,
+      "upper": 0.35
+    }
+  ]
+}

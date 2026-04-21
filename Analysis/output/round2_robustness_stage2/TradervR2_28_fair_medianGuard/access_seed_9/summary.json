@@ -1,0 +1,27 @@
+{
+  "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_fair_medianGuard.py",
+  "mode": "access",
+  "queue_model": "conservative",
+  "access_seed": 9,
+  "trader_bid": 25000,
+  "steps": 30000,
+  "total_fills": 2809,
+  "total_pnl": 308276.0,
+  "best_total_pnl": 709949.0,
+  "worst_total_pnl": -880039.0,
+  "max_drawdown": 1523481.0,
+  "per_product_pnl": {
+    "ASH_COATED_OSMIUM": 68827.0,
+    "INTARIAN_PEPPER_ROOT": 239449.0
+  },
+  "final_positions": {
+    "ASH_COATED_OSMIUM": 38,
+    "INTARIAN_PEPPER_ROOT": 80
+  },
+  "aggressive_fills": 1184,
+  "passive_fills": 1625,
+  "average_markout_by_side": {
+    "BUY": -115.3207,
+    "SELL": 137.8532
+  }
+}
