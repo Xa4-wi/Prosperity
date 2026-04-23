@@ -1,0 +1,216 @@
+{
+  "generated_at": "2026-04-23T15:37:30.863311",
+  "root": "Data/Tutorial",
+  "intel_md": "/Users/xavierwinkelmann/Prosperity/Bots/Research/COMPETITIVE_INTEL.md",
+  "notes": [
+    "Advice rules were selected to align with Competitive Intelligence themes: Take \u2192 Clear \u2192 Make, wall/stable mid over raw mid, O-U for mean reversion, Black\u2013Scholes + smile for option families, and bot-detection overlays."
+  ],
+  "price_files": [
+    "Data/Tutorial/prices_round_0_day_-1.csv",
+    "Data/Tutorial/prices_round_0_day_-2.csv"
+  ],
+  "trade_files": [
+    "Data/Tutorial/trades_round_0_day_-1.csv",
+    "Data/Tutorial/trades_round_0_day_-2.csv"
+  ],
+  "products": [
+    {
+      "product": "EMERALDS",
+      "primary_archetype": "mean_reverting_ou",
+      "secondary_archetypes": [
+        "anchored_market_maker",
+        "local_fair_microstructure",
+        "slow_random_walk"
+      ],
+      "mean_mid": 9999.9976,
+      "mean_spread": 15.7384,
+      "trend_snr": 0.0,
+      "trend_r2": 2.241385588629476e-05,
+      "anchor_candidate": 10000,
+      "anchor_step": 1000,
+      "anchor_strength": 0.575,
+      "one_sided_ratio": 0.0,
+      "n_price_rows": 20000,
+      "n_valid_rows": 20000,
+      "n_trade_rows": 399,
+      "avg_top_depth": 24.91685,
+      "imbalance_next_corr": 0.6305757232412561,
+      "trend_resid_next_corr": -0.7006013231572293,
+      "rolling_dev_next_corr": -0.698669817166983,
+      "common_trade_sizes": [
+        [
+          6,
+          85
+        ],
+        [
+          5,
+          74
+        ],
+        [
+          4,
+          63
+        ],
+        [
+          3,
+          60
+        ],
+        [
+          7,
+          59
+        ],
+        [
+          8,
+          58
+        ]
+      ],
+      "daily_extrema_size_hits": [
+        [
+          7,
+          2
+        ],
+        [
+          8,
+          2
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "recurring_large_trade_timestamps": [],
+      "archetype_scores": {
+        "anchored_market_maker": 3.225,
+        "bot_driven_overlay": 0.8,
+        "local_fair_microstructure": 2.5223,
+        "mean_reverting_ou": 3.9991,
+        "slow_random_walk": 1.55,
+        "trending_drift_carry": 1.0001
+      },
+      "recommended_approaches": [
+        "Fit an Ornstein\u2013Uhlenbeck style fair: theta, mu, sigma from history.",
+        "Fade deviations from fair, preferably using zero-cross exits.",
+        "Do not regress on raw prices; use deviations / returns instead.",
+        "Use Take \u2192 Clear \u2192 Make every tick.",
+        "Build fair from anchor + wall/stable mid; skew quotes by inventory.",
+        "Add toxicity / markout-aware quoting and a near-zero-EV recycler.",
+        "Profile first; do not tune on raw website randomness.",
+        "Prefer robust plateaus over sharp parameter peaks.",
+        "Keep state in traderData / serialized memory, not class variables."
+      ],
+      "warnings": [],
+      "days_seen": [
+        -2,
+        -1
+      ],
+      "rounds_seen": [
+        0
+      ],
+      "conversion_feature_columns": [],
+      "basket_candidate_with": [],
+      "option_family": null,
+      "strike": null
+    },
+    {
+      "product": "TOMATOES",
+      "primary_archetype": "slow_random_walk",
+      "secondary_archetypes": [
+        "anchored_market_maker",
+        "bot_driven_overlay",
+        "trending_drift_carry"
+      ],
+      "mean_mid": 4992.758125,
+      "mean_spread": 13.02025,
+      "trend_snr": 3.626748129570361,
+      "trend_r2": 0.4768512838533147,
+      "anchor_candidate": 5000,
+      "anchor_step": 1000,
+      "anchor_strength": 0.388507868346285,
+      "one_sided_ratio": 0.0,
+      "n_price_rows": 20000,
+      "n_valid_rows": 20000,
+      "n_trade_rows": 820,
+      "avg_top_depth": 14.88605,
+      "imbalance_next_corr": 0.3258425501270432,
+      "trend_resid_next_corr": -0.08033490679772852,
+      "rolling_dev_next_corr": -0.14252222616976723,
+      "common_trade_sizes": [
+        [
+          3,
+          210
+        ],
+        [
+          2,
+          209
+        ],
+        [
+          4,
+          202
+        ],
+        [
+          5,
+          197
+        ],
+        [
+          6,
+          2
+        ]
+      ],
+      "daily_extrema_size_hits": [
+        [
+          2,
+          17
+        ],
+        [
+          5,
+          15
+        ],
+        [
+          3,
+          10
+        ],
+        [
+          4,
+          9
+        ]
+      ],
+      "recurring_large_trade_timestamps": [],
+      "archetype_scores": {
+        "anchored_market_maker": 2.6655,
+        "bot_driven_overlay": 2.4,
+        "local_fair_microstructure": 1.3034,
+        "mean_reverting_ou": 1.026,
+        "slow_random_walk": 2.723,
+        "trending_drift_carry": 1.5212
+      },
+      "recommended_approaches": [
+        "Avoid raw mid; use wall mid, maker-mid, or filtered VWAP touch.",
+        "Look for stale market-makers and short-horizon filtered fair.",
+        "Keep thresholds simple and robust; dynamic z-score windows overfit easily.",
+        "Use Take \u2192 Clear \u2192 Make every tick.",
+        "Build fair from anchor + wall/stable mid; skew quotes by inventory.",
+        "Add toxicity / markout-aware quoting and a near-zero-EV recycler.",
+        "Profile first; do not tune on raw website randomness.",
+        "Prefer robust plateaus over sharp parameter peaks.",
+        "Keep state in traderData / serialized memory, not class variables."
+      ],
+      "warnings": [
+        "Repeated lot-size / extrema patterns detected; consider an Olivia-/bot-style detector overlay."
+      ],
+      "days_seen": [
+        -2,
+        -1
+      ],
+      "rounds_seen": [
+        0
+      ],
+      "conversion_feature_columns": [],
+      "basket_candidate_with": [],
+      "option_family": null,
+      "strike": null
+    }
+  ]
+}

@@ -8,7 +8,7 @@ from pathlib import Path
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Generate runtime config for the Olivia-style live detector.")
     parser.add_argument("--input", type=Path, required=True, help="validated_products.json path")
-    parser.add_argument("--output", type=Path, default=Path("Bots/Tools/output/olivia_runtime_config.json"), help="Runtime config JSON output.")
+    parser.add_argument("--output", type=Path, default=Path("Bots/Tools/olivia_tool/output/olivia_runtime_config.json"), help="Runtime config JSON output.")
     parser.add_argument("--min-mode", type=str, default="BIAS_ONLY", choices=["IGNORE", "BIAS_ONLY", "FOLLOW_AFTER_TRIGGER", "FULL_FOLLOW"], help="Minimum mode to include in runtime config.")
     return parser
 

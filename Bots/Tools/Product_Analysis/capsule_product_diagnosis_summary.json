@@ -1,0 +1,329 @@
+{
+  "notes": [
+    "Advice rules were selected to align with Competitive Intelligence themes: Take \u2192 Clear \u2192 Make, wall/stable mid over raw mid, O-U for mean reversion, Black\u2013Scholes + smile for option families, and bot-detection overlays."
+  ],
+  "price_files": [
+    "/mnt/data/prices_round_1_day_-1.csv",
+    "/mnt/data/prices_round_1_day_-2.csv",
+    "/mnt/data/prices_round_1_day_0.csv",
+    "/mnt/data/prices_round_2_day_-1.csv",
+    "/mnt/data/prices_round_2_day_0.csv",
+    "/mnt/data/prices_round_2_day_1.csv"
+  ],
+  "products": {
+    "ASH_COATED_OSMIUM": {
+      "anchor_candidate": 10000,
+      "anchor_step": 1000,
+      "anchor_strength": 0.5262841941566869,
+      "archetype_scores": {
+        "anchored_market_maker": 3.0789,
+        "bot_driven_overlay": 2.4,
+        "local_fair_microstructure": 2.8774,
+        "mean_reverting_ou": 1.8949,
+        "slow_random_walk": 1.6474,
+        "trending_drift_carry": 1.2287
+      },
+      "avg_top_depth": 28.374530278942043,
+      "basket_candidate_with": [],
+      "common_trade_sizes": [
+        [
+          5,
+          474
+        ],
+        [
+          6,
+          468
+        ],
+        [
+          4,
+          381
+        ],
+        [
+          3,
+          360
+        ],
+        [
+          2,
+          359
+        ],
+        [
+          8,
+          179
+        ],
+        [
+          7,
+          153
+        ],
+        [
+          10,
+          143
+        ],
+        [
+          9,
+          143
+        ]
+      ],
+      "conversion_feature_columns": [],
+      "daily_extrema_size_hits": [
+        [
+          6,
+          17
+        ],
+        [
+          2,
+          12
+        ],
+        [
+          3,
+          10
+        ],
+        [
+          4,
+          6
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          10,
+          5
+        ],
+        [
+          8,
+          4
+        ],
+        [
+          7,
+          2
+        ],
+        [
+          9,
+          2
+        ]
+      ],
+      "days_seen": [
+        -2,
+        -1,
+        0,
+        1
+      ],
+      "imbalance_next_corr": 0.5943564797968741,
+      "mean_mid": 10000.531651972828,
+      "mean_slope": -1.9331304009207734e-06,
+      "mean_spread": 16.20472611649082,
+      "mid_std_valid": 4.7366913796333145,
+      "n_price_rows": 60000,
+      "n_trade_rows": 2660,
+      "n_valid_rows": 55352,
+      "one_sided_ratio": 0.07746666666666668,
+      "option_family": null,
+      "primary_archetype": "anchored_market_maker",
+      "product": "ASH_COATED_OSMIUM",
+      "recommended_approaches": [
+        "Use Take \u2192 Clear \u2192 Make every tick.",
+        "Build fair from anchor + wall/stable mid; skew quotes by inventory.",
+        "Add toxicity / markout-aware quoting and a near-zero-EV recycler.",
+        "Use wall/stable mid, microprice, imbalance, and short-horizon local fair.",
+        "Quote conditionally on book health; avoid trusting sparse visible touch.",
+        "Research passive-fill markout and side-specific reentry.",
+        "Profile first; do not tune on raw website randomness.",
+        "Prefer robust plateaus over sharp parameter peaks.",
+        "Keep state in traderData / serialized memory, not class variables."
+      ],
+      "recurring_large_trade_timestamps": [
+        [
+          90200,
+          3
+        ],
+        [
+          122000,
+          3
+        ],
+        [
+          155300,
+          3
+        ],
+        [
+          177700,
+          3
+        ],
+        [
+          185900,
+          3
+        ],
+        [
+          192900,
+          3
+        ],
+        [
+          200300,
+          3
+        ],
+        [
+          208900,
+          3
+        ],
+        [
+          389800,
+          3
+        ],
+        [
+          444200,
+          3
+        ]
+      ],
+      "rolling_dev_next_corr": -0.38103606047586003,
+      "rounds_seen": [
+        1,
+        2
+      ],
+      "secondary_archetypes": [
+        "local_fair_microstructure",
+        "bot_driven_overlay",
+        "mean_reverting_ou"
+      ],
+      "slope_sign_consistency": 0.75,
+      "strike": null,
+      "trade_autocorr_1": -0.49492973243608623,
+      "trend_r2": 0.057507209391761065,
+      "trend_resid_next_corr": -0.21094331546824138,
+      "trend_snr": 2.246634664361639,
+      "warnings": [
+        "Repeated lot-size / extrema patterns detected; consider an Olivia-/bot-style detector overlay."
+      ]
+    },
+    "INTARIAN_PEPPER_ROOT": {
+      "anchor_candidate": 12000,
+      "anchor_step": 1000,
+      "anchor_strength": 0.020114371458872415,
+      "archetype_scores": {
+        "anchored_market_maker": 0.2802,
+        "bot_driven_overlay": 2.4,
+        "local_fair_microstructure": 2.774,
+        "mean_reverting_ou": 1.3576,
+        "slow_random_walk": 1.9598,
+        "trending_drift_carry": 10.9999
+      },
+      "avg_top_depth": 23.115624774417093,
+      "basket_candidate_with": [],
+      "common_trade_sizes": [
+        [
+          3,
+          420
+        ],
+        [
+          6,
+          399
+        ],
+        [
+          5,
+          381
+        ],
+        [
+          7,
+          378
+        ],
+        [
+          4,
+          342
+        ],
+        [
+          8,
+          86
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "conversion_feature_columns": [],
+      "daily_extrema_size_hits": [
+        [
+          6,
+          165
+        ],
+        [
+          7,
+          153
+        ],
+        [
+          5,
+          149
+        ],
+        [
+          3,
+          146
+        ],
+        [
+          4,
+          140
+        ],
+        [
+          8,
+          23
+        ]
+      ],
+      "days_seen": [
+        -2,
+        -1,
+        0,
+        1
+      ],
+      "imbalance_next_corr": 0.5684922930569364,
+      "mean_mid": 12001.967840900888,
+      "mean_slope": 0.0010000170402458613,
+      "mean_spread": 13.584530426622392,
+      "mid_std_valid": 999.6305652336075,
+      "n_price_rows": 60000,
+      "n_trade_rows": 2007,
+      "n_valid_rows": 55412,
+      "one_sided_ratio": 0.07646666666666668,
+      "option_family": null,
+      "primary_archetype": "trending_drift_carry",
+      "product": "INTARIAN_PEPPER_ROOT",
+      "recommended_approaches": [
+        "Use a schedule/catch-up carry engine, not plain market making.",
+        "Track drift line, buy cheap dips vs expected drift, avoid chasing rich moves.",
+        "Keep a protected core position and trim only late / clearly rich states.",
+        "Use wall/stable mid, microprice, imbalance, and short-horizon local fair.",
+        "Quote conditionally on book health; avoid trusting sparse visible touch.",
+        "Research passive-fill markout and side-specific reentry.",
+        "Profile first; do not tune on raw website randomness.",
+        "Prefer robust plateaus over sharp parameter peaks.",
+        "Keep state in traderData / serialized memory, not class variables."
+      ],
+      "recurring_large_trade_timestamps": [],
+      "rolling_dev_next_corr": -0.304888587517452,
+      "rounds_seen": [
+        1,
+        2
+      ],
+      "secondary_archetypes": [
+        "local_fair_microstructure",
+        "bot_driven_overlay",
+        "slow_random_walk"
+      ],
+      "slope_sign_consistency": 1.0,
+      "strike": null,
+      "trade_autocorr_1": -0.4960313271887552,
+      "trend_r2": 0.999979923684478,
+      "trend_resid_next_corr": -0.7018338678899159,
+      "trend_snr": 784.3579695285282,
+      "warnings": [
+        "Repeated lot-size / extrema patterns detected; consider an Olivia-/bot-style detector overlay."
+      ]
+    }
+  },
+  "root": "/mnt/data",
+  "trade_files": [
+    "/mnt/data/trades_round_0_day_-1.csv",
+    "/mnt/data/trades_round_0_day_-2.csv",
+    "/mnt/data/trades_round_1_day_-1.csv",
+    "/mnt/data/trades_round_1_day_-2.csv",
+    "/mnt/data/trades_round_1_day_0.csv",
+    "/mnt/data/trades_round_2_day_-1.csv",
+    "/mnt/data/trades_round_2_day_0.csv",
+    "/mnt/data/trades_round_2_day_1.csv"
+  ]
+}

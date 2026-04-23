@@ -1,0 +1,15 @@
+Wrote markdown report to /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_all_days/capsule_product_diagnosis_report.md
+Wrote JSON summary to /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_all_days/capsule_product_diagnosis_summary.json
+Wrote dashboard to /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_all_days/dashboard/index.html
+run_name=tutorial_all_days
+root=Data/Tutorial
+intel_md=/Users/xavierwinkelmann/Prosperity/Bots/Research/COMPETITIVE_INTEL.md
+report_md=/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_all_days/capsule_product_diagnosis_report.md
+summary_json=/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_all_days/capsule_product_diagnosis_summary.json
+dashboard_dir=/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_all_days/dashboard
+
+>>> Diagnoser command
+/Library/Developer/CommandLineTools/usr/bin/python3 /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/capsule_product_diagnoser.py --root Data/Tutorial --intel-md /Users/xavierwinkelmann/Prosperity/Bots/Research/COMPETITIVE_INTEL.md --out-md /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_all_days/capsule_product_diagnosis_report.md --out-json /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_all_days/capsule_product_diagnosis_summary.json
+
+>>> Dashboard command
+/Library/Developer/CommandLineTools/usr/bin/python3 /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/build_dashboard.py --summary-json /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_all_days/capsule_product_diagnosis_summary.json --output-dir /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_all_days/dashboard
