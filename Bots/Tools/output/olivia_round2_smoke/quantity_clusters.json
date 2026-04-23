@@ -1,0 +1,77 @@
+{
+  "ASH_COATED_OSMIUM": [
+    {
+      "center": 5,
+      "min_qty": 4,
+      "max_qty": 6,
+      "count": 697,
+      "members": [
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "center": 2,
+      "min_qty": 2,
+      "max_qty": 3,
+      "count": 380,
+      "members": [
+        2,
+        3
+      ]
+    },
+    {
+      "center": 8,
+      "min_qty": 7,
+      "max_qty": 9,
+      "count": 250,
+      "members": [
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "center": 10,
+      "min_qty": 10,
+      "max_qty": 10,
+      "count": 68,
+      "members": [
+        10
+      ]
+    }
+  ],
+  "INTARIAN_PEPPER_ROOT": [
+    {
+      "center": 3,
+      "min_qty": 3,
+      "max_qty": 4,
+      "count": 403,
+      "members": [
+        3,
+        4
+      ]
+    },
+    {
+      "center": 5,
+      "min_qty": 5,
+      "max_qty": 6,
+      "count": 366,
+      "members": [
+        5,
+        6
+      ]
+    },
+    {
+      "center": 7,
+      "min_qty": 7,
+      "max_qty": 8,
+      "count": 227,
+      "members": [
+        7,
+        8
+      ]
+    }
+  ]
+}

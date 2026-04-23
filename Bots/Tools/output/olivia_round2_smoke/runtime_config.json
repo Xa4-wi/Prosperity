@@ -1,0 +1,12 @@
+{
+  "INTARIAN_PEPPER_ROOT": {
+    "basket_bias_weight": 0.312,
+    "entry_confidence": 0.7,
+    "exit_confidence": 0.394,
+    "lot_cluster": 5,
+    "lot_cluster_max": 6,
+    "lot_cluster_min": 5,
+    "max_persistence": 200,
+    "mode": "BIAS_ONLY"
+  }
+}

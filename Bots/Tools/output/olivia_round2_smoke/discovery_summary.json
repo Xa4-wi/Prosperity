@@ -1,0 +1,15 @@
+{
+  "round_dir": "ROUND_2",
+  "markout_bars": [
+    5,
+    20,
+    50
+  ],
+  "lot_tolerance": 1,
+  "min_occurrences": 3,
+  "feature_count": 2391,
+  "products": [
+    "ASH_COATED_OSMIUM",
+    "INTARIAN_PEPPER_ROOT"
+  ]
+}

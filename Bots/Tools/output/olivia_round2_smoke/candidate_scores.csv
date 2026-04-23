@@ -1,0 +1,8 @@
+product,cluster_center,cluster_min,cluster_max,trade_count,extremum_hit_rate,directional_correctness,persistence,cross_day_repeatability,cross_product_repeatability,candidate_score,recommended_mode,buy_at_lows_precision,sell_at_highs_precision,avg_signal_persistence_bars,signal_proxy_pnl,notes
+ASH_COATED_OSMIUM,5,4,6,697,0.00430416068866571,0.0,0.0,1.0,1.0,2.0086083213773316,IGNORE,0.0,0.0,0.0,0.0,stable lot cluster 4-6 | repeats across products | repeats across days
+ASH_COATED_OSMIUM,2,2,3,380,0.0,0.0,0.0,0.0,0.5,0.5,IGNORE,0.0,0.0,0.0,0.0,stable lot cluster 2-3 | repeats across products
+ASH_COATED_OSMIUM,8,7,9,250,0.0,0.0,0.0,0.0,0.5,0.5,IGNORE,0.0,0.0,0.0,0.0,stable lot cluster 7-9 | repeats across products
+ASH_COATED_OSMIUM,10,10,10,68,0.0,0.0,0.0,0.0,0.5,0.5,IGNORE,0.0,0.0,0.0,0.0,stable lot size 10 | repeats across products
+INTARIAN_PEPPER_ROOT,5,5,6,366,0.13114754098360656,0.625,0.32083333333333336,1.0,1.0,3.8331284153005463,BIAS_ONLY,0.0,0.6666666666666666,16.041666666666668,0.0,stable lot cluster 5-6 | repeats across products | repeats across days
+INTARIAN_PEPPER_ROOT,7,7,8,227,0.1013215859030837,0.8695652173913043,0.3826086956521739,1.0,0.5,3.82438230224095,BIAS_ONLY,0.0,0.8695652173913043,19.130434782608695,0.0,stable lot cluster 7-8 | repeats across products | repeats across days
+INTARIAN_PEPPER_ROOT,3,3,4,403,0.11910669975186104,0.5833333333333334,0.37083333333333335,1.0,0.5,3.275713399503722,IGNORE,0.0,0.6086956521739131,18.541666666666668,0.0,stable lot cluster 3-4 | repeats across products | repeats across days
