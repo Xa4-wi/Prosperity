@@ -113,65 +113,108 @@ def all_products(samples: Iterable[Sample]) -> List[str]:
     return sorted(products)
 
 
+def fit_linear(xs: Sequence[float], ys: Sequence[float]) -> tuple[float, float, float]:
+    if not xs or len(xs) != len(ys):
+        return 0.0, 0.0, 0.0
+    mean_x = sum(xs) / len(xs)
+    mean_y = sum(ys) / len(ys)
+    var_x = sum((x - mean_x) ** 2 for x in xs)
+    cov_xy = sum((x - mean_x) * (y - mean_y) for x, y in zip(xs, ys))
+    slope = 0.0 if var_x <= EPS else cov_xy / var_x
+    intercept = mean_y - slope * mean_x
+    ss_tot = sum((y - mean_y) ** 2 for y in ys)
+    ss_res = sum((y - (slope * x + intercept)) ** 2 for x, y in zip(xs, ys))
+    r2 = 0.0 if ss_tot <= EPS else max(0.0, 1.0 - ss_res / ss_tot)
+    return slope, intercept, r2
+
+
 def build_product_stats(samples: Sequence[Sample]) -> Dict[str, dict]:
     products = all_products(samples)
     stats: Dict[str, dict] = {}
     for product in products:
-        informative = 0
-        agree = 0
-        mismatch = 0
-        neutral = 0
         local_abs_deltas: List[float] = []
         online_abs_deltas: List[float] = []
-        pair_rows: List[dict] = []
+        best_orientation = 1
+        best_agreement = -1.0
+        best_agree = 0
+        best_informative = 0
+        best_mismatch = 0
+        best_neutral = 0
+        best_pair_rows: List[dict] = []
 
-        for left, right in combinations(samples, 2):
-            local_delta = right.local_by_product.get(product, 0.0) - left.local_by_product.get(product, 0.0)
-            online_delta = right.online_by_product.get(product, 0.0) - left.online_by_product.get(product, 0.0)
-            s_local = sign(local_delta)
-            s_online = sign(online_delta)
-            local_abs_deltas.append(abs(local_delta))
-            online_abs_deltas.append(abs(online_delta))
+        for orientation in (1, -1):
+            informative = 0
+            agree = 0
+            mismatch = 0
+            neutral = 0
+            pair_rows: List[dict] = []
+            for left, right in combinations(samples, 2):
+                local_delta_raw = right.local_by_product.get(product, 0.0) - left.local_by_product.get(product, 0.0)
+                local_delta = orientation * local_delta_raw
+                online_delta = right.online_by_product.get(product, 0.0) - left.online_by_product.get(product, 0.0)
+                local_abs_deltas.append(abs(local_delta_raw))
+                online_abs_deltas.append(abs(online_delta))
+                s_local = sign(local_delta)
+                s_online = sign(online_delta)
 
-            if s_local == 0 and s_online == 0:
-                neutral += 1
-                relation = "neutral"
-            elif s_local == 0 or s_online == 0:
-                informative += 1
-                mismatch += 1
-                relation = "flat_mismatch"
-            elif s_local == s_online:
-                informative += 1
-                agree += 1
-                relation = "agree"
-            else:
-                informative += 1
-                mismatch += 1
-                relation = "mismatch"
+                if s_local == 0 and s_online == 0:
+                    neutral += 1
+                    relation = "neutral"
+                elif s_local == 0 or s_online == 0:
+                    informative += 1
+                    mismatch += 1
+                    relation = "flat_mismatch"
+                elif s_local == s_online:
+                    informative += 1
+                    agree += 1
+                    relation = "agree"
+                else:
+                    informative += 1
+                    mismatch += 1
+                    relation = "mismatch"
 
-            pair_rows.append(
-                {
-                    "left": left.label,
-                    "right": right.label,
-                    "local_delta": local_delta,
-                    "online_delta": online_delta,
-                    "relation": relation,
-                }
-            )
+                pair_rows.append(
+                    {
+                        "left": left.label,
+                        "right": right.label,
+                        "orientation": orientation,
+                        "local_delta": local_delta,
+                        "local_delta_raw": local_delta_raw,
+                        "online_delta": online_delta,
+                        "relation": relation,
+                    }
+                )
 
-        agreement_rate = 0.0 if informative == 0 else agree / informative
+            agreement_rate = 0.0 if informative == 0 else agree / informative
+            if agreement_rate > best_agreement:
+                best_orientation = orientation
+                best_agreement = agreement_rate
+                best_agree = agree
+                best_informative = informative
+                best_mismatch = mismatch
+                best_neutral = neutral
+                best_pair_rows = pair_rows
+
+        informative = best_informative
+        agree = best_agree
+        mismatch = best_mismatch
+        neutral = best_neutral
+        agreement_rate = best_agreement if best_agreement >= 0.0 else 0.0
         local_signal = max(local_abs_deltas, default=0.0)
         online_signal = max(online_abs_deltas, default=0.0)
+        xs = [best_orientation * sample.local_by_product.get(product, 0.0) for sample in samples]
+        ys = [sample.online_by_product.get(product, 0.0) for sample in samples]
+        slope, intercept, r2 = fit_linear(xs, ys)
 
         if informative == 0:
             class_label = "unproven"
             score_weight = 0.0
-        elif agreement_rate >= 0.999:
-            class_label = "trustworthy"
-            score_weight = 1.0
-        elif agreement_rate >= 0.5:
-            class_label = "mixed"
-            score_weight = 0.35
+        elif agreement_rate >= 0.80:
+            class_label = "inverted" if best_orientation < 0 else "trustworthy"
+            score_weight = 0.85
+        elif agreement_rate >= 0.62:
+            class_label = "mixed_inverted" if best_orientation < 0 else "mixed"
+            score_weight = 0.50
         else:
             class_label = "misleading"
             score_weight = 0.0
@@ -184,9 +227,13 @@ def build_product_stats(samples: Sequence[Sample]) -> Dict[str, dict]:
             "agreement_rate": agreement_rate,
             "local_max_abs_delta": local_signal,
             "online_max_abs_delta": online_signal,
+            "orientation": best_orientation,
+            "slope": slope,
+            "intercept": intercept,
+            "r2": r2,
             "class": class_label,
             "score_weight": score_weight,
-            "pairs": pair_rows,
+            "pairs": best_pair_rows,
         }
     return stats
 
@@ -195,12 +242,21 @@ def score_candidate(label: str, metrics_path: Path, product_stats: Dict[str, dic
     local_total, by_product = parse_local_metrics(metrics_path)
     weighted_contribs = {}
     calibrated_total = 0.0
-    for product, pnl in by_product.items():
-        weight = float(product_stats.get(product, {}).get("score_weight", 0.0))
-        contrib = pnl * weight
+    for product in sorted(set(by_product) | set(product_stats)):
+        pnl = by_product.get(product, 0.0)
+        stat = product_stats.get(product, {})
+        weight = float(stat.get("score_weight", 0.0))
+        orientation = int(stat.get("orientation", 1))
+        slope = float(stat.get("slope", 0.0))
+        intercept = float(stat.get("intercept", 0.0))
+        transformed_local = orientation * pnl
+        predicted_online = slope * transformed_local + intercept if weight > 0.0 else 0.0
+        contrib = predicted_online * weight
         weighted_contribs[product] = {
             "local_pnl": pnl,
             "weight": weight,
+            "orientation": orientation,
+            "predicted_online_pnl": predicted_online,
             "calibrated_contribution": contrib,
         }
         calibrated_total += contrib
@@ -229,20 +285,26 @@ def render_markdown(samples: Sequence[Sample], product_stats: Dict[str, dict], c
     lines.append("")
     lines.append("## Product Reliability")
     lines.append("")
-    lines.append("| Product | Class | Weight | Agreement | Notes |")
-    lines.append("|---|---|---:|---:|---|")
+    lines.append("| Product | Class | Weight | Dir | Agreement | R2 | Notes |")
+    lines.append("|---|---|---:|---|---:|---:|---|")
     for product, stat in sorted(product_stats.items()):
         note = ""
         if stat["class"] == "trustworthy":
-            note = "Local sign matched official sign on all informative pairs."
+            note = "Local direction can be used directly."
+        elif stat["class"] == "inverted":
+            note = "Portal logs indicate the local direction should be flipped."
         elif stat["class"] == "misleading":
-            note = "Local deltas pointed the wrong way; ignore in calibrated ranking."
+            note = "Too unstable even after orientation search; ignore in calibrated ranking."
+        elif stat["class"] == "mixed_inverted":
+            note = "Some useful signal, but only after flipping local direction."
         elif stat["class"] == "mixed":
-            note = "Some signal, but not stable enough to trust fully."
+            note = "Some direct signal, but not stable enough to trust fully."
         else:
             note = "Not enough evidence yet."
+        direction = "inv" if int(stat.get("orientation", 1)) < 0 else "dir"
         lines.append(
-            f"| {product} | {stat['class']} | {stat['score_weight']:.2f} | {stat['agreement_rate']:.2f} | {note} |"
+            f"| {product} | {stat['class']} | {stat['score_weight']:.2f} | {direction} | "
+            f"{stat['agreement_rate']:.2f} | {stat.get('r2', 0.0):.2f} | {note} |"
         )
 
     lines.append("")
@@ -256,9 +318,10 @@ def render_markdown(samples: Sequence[Sample], product_stats: Dict[str, dict], c
     lines.append("")
     lines.append("## Interpretation")
     lines.append("")
-    lines.append("- The calibrated score is a selector, not a hidden-book simulator.")
-    lines.append("- Products labeled `misleading` are currently downweighted to zero because the local replay ranked them the wrong way versus official logs.")
-    lines.append("- As more official logs arrive, these weights should be recomputed rather than hardcoded.")
+    lines.append("- The calibrated score is still a selector, not a hidden-book simulator.")
+    lines.append("- It now searches for product-by-product orientation as well as scale, so products can be treated as direct or inverted versus the local replay.")
+    lines.append("- Products labeled `misleading` are still downweighted to zero because even the best orientation was unstable.")
+    lines.append("- As more official logs arrive, the affine mappings and weights should be recomputed rather than hardcoded.")
     lines.append("")
     return "\n".join(lines)
 

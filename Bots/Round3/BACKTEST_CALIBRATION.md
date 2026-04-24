@@ -12,6 +12,18 @@ So for Round 3 we now use a two-step workflow:
 1. Run the normal local backtest to get a candidate run and `metrics.json`.
 2. Score that run with the Round 3 calibration layer built from official logs.
 
+## Current improvement
+
+The calibration is now **orientation-aware**.
+
+That means:
+
+- if a product is locally trustworthy in the same direction as official logs, keep it as-is
+- if a product is locally informative but consistently inverted, flip its contribution instead of treating it as useless
+- if a product is still inconsistent, downweight it hard or ignore it
+
+This matters especially for `HYDROGEL_PACK`, where the uploaded official logs now show the local replay often has the **wrong sign**, not just the wrong magnitude.
+
 ## Current tool
 
 Use:
@@ -34,7 +46,7 @@ python3 Analysis/scripts/run_round3_calibrated_backtest.py Bots/Round3/TradervR3
 
 That command:
 
-1. runs the Rust Round 3 backtester
+1. runs the Rust Round 3 backtester in the faster `--carry --artifact-mode none` mode
 2. finds the new `metrics.json`
 3. applies the calibration samples from [round3_calibration_samples.json](/Users/xavierwinkelmann/Prosperity/Bots/Round3/round3_calibration_samples.json)
 4. prints:
@@ -59,6 +71,23 @@ It produces:
 - a JSON summary
 - product-level reliability weights
 - a `calibrated_total` score for each candidate
+
+## Refreshing the sample set
+
+When new official `.log` files arrive, refresh the calibration sample list first:
+
+```bash
+python3 Analysis/scripts/refresh_round3_calibration_samples.py
+```
+
+That script scans:
+
+- [Bots/Round3](/Users/xavierwinkelmann/Prosperity/Bots/Round3) for uploaded official logs
+- [ProsperityRustBacktester/runs](/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs) for the latest matching `metrics.json`
+
+and rewrites:
+
+- [round3_calibration_samples.json](/Users/xavierwinkelmann/Prosperity/Bots/Round3/round3_calibration_samples.json)
 
 ## Full Round 3 sweep
 
@@ -90,28 +119,21 @@ Instead, it asks:
 If yes:
 - keep that product as a usable ranking signal
 
+If it is consistently reversed:
+- flip the local contribution and fit it to the official log direction
+
 If no:
 - downweight that product to zero for now
 
 ## Current interpretation from R3_6 vs R3_7
 
-From the current labeled pair:
+From the refreshed sample set, the important practical read is:
 
-- usable local ranking signal:
-  - `VEV_5000`
-  - `VEV_5100`
+- `HYDROGEL_PACK` currently behaves more like an **inverted signal** than a dead one
+- `VELVETFRUIT_EXTRACT` is still only partially trustworthy
+- the lower / middle voucher buckets remain the most usable anchors for local ranking
 
-- misleading local ranking signal:
-  - `HYDROGEL_PACK`
-  - `VELVETFRUIT_EXTRACT`
-  - `VEV_4000`
-  - `VEV_4500`
-  - `VEV_5200`
-  - `VEV_5300`
-  - `VEV_5400`
-  - `VEV_5500`
-
-That list should be treated as **temporary and data-driven**, not permanent truth.
+That interpretation is still **temporary and data-driven**, not permanent truth.
 As more official logs arrive, rerun the calibration and let the weights update.
 
 ## Practical rule

@@ -95,7 +95,8 @@ def choose_python_for_pyo3() -> str:
 
 def run_local_backtest(bot_path: Path, dataset: Path) -> tuple[Path, str]:
     runs_root = REPO_ROOT / "ProsperityRustBacktester" / "runs"
-    before_metrics = set(runs_root.glob("backtest-*/metrics.json"))
+    before_metrics = set(runs_root.glob("**/metrics.json"))
+    run_id = f"{bot_path.stem.lower()}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
     cmd = [
         "./scripts/cargo_local.sh",
         "run",
@@ -106,8 +107,11 @@ def run_local_backtest(bot_path: Path, dataset: Path) -> tuple[Path, str]:
         str(dataset),
         "--products",
         "full",
-        "--persist",
         "--carry",
+        "--artifact-mode",
+        "none",
+        "--run-id",
+        run_id,
     ]
     env = os.environ.copy()
     env["PYO3_PYTHON"] = choose_python_for_pyo3()
@@ -121,7 +125,11 @@ def run_local_backtest(bot_path: Path, dataset: Path) -> tuple[Path, str]:
         check=True,
     )
     stdout = proc.stdout
-    after_metrics = set(runs_root.glob("backtest-*/metrics.json"))
+    expected_metrics = (runs_root / run_id / "metrics.json").resolve()
+    if expected_metrics.exists():
+        return expected_metrics, stdout
+
+    after_metrics = set(runs_root.glob("**/metrics.json"))
     new_metrics = sorted(after_metrics - before_metrics, key=lambda path: path.stat().st_mtime)
     if new_metrics:
         return new_metrics[-1].resolve(), stdout

@@ -5,6 +5,7 @@ Base bot: [TradervR3_7.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/Trader
 ## Current Status
 
 - Calibration layer: done
+- Calibration refresh against uploaded logs: done
 - Exact phased workflow: done
 - Phase 1 Hydrogel diagnosis: done
 - Phase 1 Velvet diagnosis: done
@@ -18,6 +19,58 @@ Base bot: [TradervR3_7.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/Trader
 - Current strip-risk winner: [TradervR3_10.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_10.py)
 - Current Hydrogel risk-control bot: [TradervR3_15.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_15.py)
 - Current BS-first voucher bot: [TradervR3_16.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_16.py)
+
+## Calibration Refresh
+
+- The Round 3 calibration is now **orientation-aware**:
+  - if a product is consistently inverted between local replay and official logs, the calibrated scorer can flip it instead of zeroing it out
+- Helper added:
+  - [refresh_round3_calibration_samples.py](/Users/xavierwinkelmann/Prosperity/Analysis/scripts/refresh_round3_calibration_samples.py)
+- The sample set now auto-refreshes from the uploaded official logs in:
+  - [round3_calibration_samples.json](/Users/xavierwinkelmann/Prosperity/Bots/Round3/round3_calibration_samples.json)
+- This matters most for `HYDROGEL_PACK`, which is currently behaving like an **inverted** local signal rather than just a noisy one.
+
+Current calibrated comparison on the refreshed sample set:
+
+- [TradervR3_16.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_16.py)
+  - raw local total: `269531.0`
+  - calibrated total: `2860.12`
+- [TradervR3_27.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_27.py)
+  - raw local total: `237157.0`
+  - calibrated total: `3075.71`
+- [TradervR3_28.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_28.py)
+  - raw local total: `-755873.0`
+  - calibrated total: `9688.55`
+
+Interpretation:
+
+- the refreshed calibration now ranks `R3_28 > R3_27 > R3_16`
+- that matches the uploaded official Hydrogel logs much better than the old raw-local selector
+- so for Hydrogel-heavy work we should trust the refreshed calibrated score far more than raw replay totals
+
+## Hydrogel Research Branch
+
+- [TradervR3_32.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_32.py)
+  - Hydrogel-only research branch built from the `R3_28` follow-up priorities:
+    - adaptive Hydrogel fair from book health
+    - small time-of-day prior
+    - explicit `entry_target`, `hold_target`, `emergency_target`
+    - fade-score exits
+    - richer Hydrogel telemetry in `traderData`
+  - raw local total: `258990.0`
+  - calibrated total: `2930.32`
+  - Hydrogel local PnL: `121868.0`
+
+Interpretation:
+
+- `R3_32` is a valid research branch now:
+  - it compiles
+  - it runs cleanly
+  - it logs the right Hydrogel diagnostics
+- but on the refreshed calibration it does **not** beat the real-log-improved `R3_28` lane yet
+- the useful conclusion is:
+  - the new target/fade/fair architecture is stable enough for research
+  - but the next edge still looks more like **better Hydrogel phase/state timing** than just stronger target math
 
 ## Latest Phase Result
 
@@ -66,6 +119,21 @@ Base bot: [TradervR3_7.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/Trader
 - [TradervR3_24.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_24.py)
   - raw local total: `257977.0`
   - calibrated total: `47234.95`
+- [TradervR3_32.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_32.py)
+  - raw local total: `258990.0`
+  - calibrated total: `2930.32`
+- [TradervR3_33.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_33.py)
+  - raw local total: `-690686.0`
+  - calibrated total: `9254.45`
+- [TradervR3_34.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_34.py)
+  - raw local total: `-737471.0`
+  - calibrated total: `9566.01`
+- [TradervR3_35.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_35.py)
+  - raw local total: `137122.0`
+  - calibrated total: `3741.87`
+- [TradervR3_36.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_36.py)
+  - raw local total: `-803186.0`
+  - calibrated total: `10003.62`
 
 Interpretation:
 
@@ -192,11 +260,83 @@ Interpretation:
     - separate entry vs hold thinking
     - absolute-danger clearing as a second layer
   - the least useful part in this first pass was stacking all of that with already-strong unwind logic, which over-suppressed Hydrogel
+- `R3_28` tested the harder Hydrogel unwind follow-up:
+  - keep `entry_target` vs `hold_target`
+  - make exit mode sticky unless trend strongly reconfirms
+  - step hold target down aggressively during unwind
+  - shut the same-side take loophole so danger inventory cannot silently refill
+- Result:
+  - raw `-755873.0`
+  - calibrated `-307612.55`
+  - Hydrogel local `-892995.0`
+- Practical read:
+  - this version was far too aggressive
+  - the harder unwind did not just de-risk Hydrogel; it turned Hydrogel into a churn machine
+  - the strongest evidence is trade volume:
+    - `R3_16` own trades: `4933`
+    - `R3_26` own trades: `4654`
+    - `R3_27` own trades: `4597`
+    - `R3_28` own trades: `12416`
+  - so the good lesson is not “hard exits are wrong”
+  - it is:
+    - keep the `R3_27` improvement that reduced late top-ups on the real log
+    - but do not make unwind sticky enough to create forced reclear / re-entry churn
+- `R3_29`, `R3_30`, `R3_31` split the `R3_28` bundle into isolated Hydrogel ideas on top of `R3_27`:
+  - `R3_29`: extra `hold_cap` tightening only
+  - `R3_30`: sticky exit ladder only
+  - `R3_31`: execution hardening only
+- Results:
+  - `R3_27`: raw `237157.0`, calibrated `39947.95`, Hydrogel `100035.0`
+  - `R3_29`: raw `237146.0`, calibrated `39944.10`, Hydrogel `100024.0`
+  - `R3_30`: raw `214931.0`, calibrated `32168.85`, Hydrogel `77809.0`
+  - `R3_31`: raw `134229.0`, calibrated `3923.15`, Hydrogel `-2893.0`
+- Practical read:
+  - the extra `hold_cap` tightening is basically neutral
+  - the sticky exit ladder is clearly harmful, but not catastrophically so
+  - the execution-hardening layer is the most dangerous part of `R3_28`
+  - especially the stronger danger-clearing / same-side take blocking stack
+  - so if we borrow anything forward, the only safe piece from the `R3_28` family is:
+    - maybe a very mild version of the extra `hold_cap` tightening
+  - and the pieces to avoid are:
+    - sticky unwind persistence
+    - strong danger-clear escalation
+    - broad same-side take suppression in the danger zone
 - The current Hydrogel conclusion is:
   - the next edge probably still comes from a regime / phase thesis
   - but not from a single smooth score over the whole day
   - and not from a blunt exit overlay either
   - the best Hydrogel exit pattern we have so far is:
+ - `R3_32` combined too many Hydrogel ideas at once:
+   - adaptive fair
+   - time-of-day prior
+   - three-target `entry/hold/emergency` ladder
+   - fade-score exits
+ - Splitting those ideas against the `R3_28` Hydrogel base gave a clearer read:
+   - `R3_33` adaptive Hydrogel fair only:
+     - meaningfully better calibrated than `R3_32`
+     - but still behaves like the inverted `R3_28` Hydrogel family in local replay
+   - `R3_34` time-of-day prior only:
+     - best of the split branches on the refreshed calibration
+     - almost matches `R3_28` calibrated behavior
+     - strongest current evidence that Hydrogel does have useful phase structure
+   - `R3_35` three-target + fade architecture only:
+     - much weaker than `R3_33` / `R3_34`
+     - local replay ended with `HYDROGEL_PACK = 0.0`, so this branch likely over-suppressed or effectively disabled the Hydrogel engine
+- Practical conclusion from the split:
+  - the time prior looks like the strongest carry signal
+  - adaptive fair is a secondary helper
+  - the larger target/fade stack is the least convincing piece on its own
+- `R3_36` then tested the same ideas again in a much narrower form from the `R3_28` base:
+  - keep the original `R3_28` regime structure
+  - add only a light `emergency_target`
+  - add a simple fade score
+  - trigger absolute-danger clear only when inventory is large **and** the Hydrogel state is fading
+- Result:
+  - `R3_36` is the first sign that the emergency-target idea may be usable **if it stays light**
+  - on the refreshed calibration it slightly beats `R3_28`
+  - so the current Hydrogel read is:
+    - broad entry/hold/emergency rewrites are too aggressive
+    - but a narrow emergency layer on top of the `R3_28` family is still promising
     - peak tracking
     - drawdown-from-peak unwind trigger
     - staged target reduction
