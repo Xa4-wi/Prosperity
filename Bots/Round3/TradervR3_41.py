@@ -357,7 +357,7 @@ def polyval(coeffs: Tuple[float, float, float], x: float) -> float:
 
 class Trader:
     """
-    Round 3 v37:
+    Round 3 v28:
     - Step 1: strict Take -> Clear -> Make on the two underlyings
     - Step 2: Black-Scholes-first voucher engine with weighted IV smile fitting
     - Step 3: keep bot-overlay ideas small and stateful until proven stronger
@@ -373,9 +373,8 @@ class Trader:
     - Step 10: soften the Hydrogel unwind:
       make exits peak-drawdown driven instead of generic late-session flattening
     - Step 11: split Hydrogel entry vs hold architecture and add absolute danger clearing
-    - Step 12: Hydrogel refinement from the R3_28 family:
-      stronger inventory hazard management with emergency target overrides
-      and absolute-danger clearing when large inventory starts fading
+    - Step 12: convert Hydrogel unwind into a harder one-way exit state
+      that suppresses same-side refills and steps the hold cap down over time
     """
 
     def _reset_day_if_needed(self, memory: dict, timestamp: int) -> None:
@@ -588,12 +587,6 @@ class Trader:
         if progress > 0.98:
             hold_cap = min(hold_cap, 40)
 
-        emergency_cap = 80
-        if progress > 0.90:
-            emergency_cap = 60
-        if progress > 0.97:
-            emergency_cap = 30
-
         entry_target = int(round(clamp(200.0 * math.tanh(0.95 * regime_score), -float(entry_cap), float(entry_cap))))
         hold_score = 0.88 * regime_score + 0.12 * trend_score
         hold_target = int(round(clamp(200.0 * math.tanh(0.88 * hold_score), -float(hold_cap), float(hold_cap))))
@@ -653,50 +646,10 @@ class Trader:
         short_peak_trend = float(hydro_state.get("short_peak_trend", 0.0))
         long_drawdown = 0.0 if long_peak_mid is None else float(long_peak_mid) - float(mid)
         short_drawup = 0.0 if short_peak_mid is None else float(mid) - float(short_peak_mid)
-        long_regime_drop = 0.0 if long_peak_score <= 0.0 else clamp((long_peak_score - regime_score) / max(0.8, long_peak_score), 0.0, 2.0)
-        short_regime_drop = 0.0 if short_peak_score >= 0.0 else clamp((regime_score - short_peak_score) / max(0.8, abs(short_peak_score)), 0.0, 2.0)
         trend_fade_long = long_peak_trend > 0.0 and trend_score < 0.70 * long_peak_trend
         trend_fade_short = short_peak_trend < 0.0 and trend_score > 0.70 * short_peak_trend
         fair_gap = abs(fair - float(mid))
         signal_fade = fair_gap < max(4.0, 0.55 * spread)
-        fair_gap_shrink = clamp((max(4.0, 0.75 * spread) - fair_gap) / max(2.0, 0.75 * spread), 0.0, 1.5)
-        long_fade_score = (
-            0.35 * clamp((long_peak_trend - trend_score) / max(0.6, long_peak_trend), 0.0, 2.0)
-            + 0.25 * long_regime_drop
-            + 0.20 * clamp(long_drawdown / max(8.0, 1.8 * spread), 0.0, 3.0)
-            + 0.20 * fair_gap_shrink
-        )
-        short_fade_score = (
-            0.35 * clamp((trend_score - short_peak_trend) / max(0.6, abs(short_peak_trend)), 0.0, 2.0)
-            + 0.25 * short_regime_drop
-            + 0.20 * clamp(short_drawup / max(8.0, 1.8 * spread), 0.0, 3.0)
-            + 0.20 * fair_gap_shrink
-        )
-
-        emergency_target = hold_target
-        if current_pos > 120 and long_fade_score > 0.85:
-            emergency_target = min(emergency_target, 80 if abs(current_pos) < 150 else 50)
-        if current_pos > 140 and long_fade_score > 1.25:
-            emergency_target = min(emergency_target, 30 if progress < 0.93 else 0)
-        if current_pos < -120 and short_fade_score > 0.85:
-            emergency_target = max(emergency_target, -80 if abs(current_pos) < 150 else -50)
-        if current_pos < -140 and short_fade_score > 1.25:
-            emergency_target = max(emergency_target, -30 if progress < 0.93 else 0)
-
-        inventory_hazard = 0.0
-        if abs(current_pos) >= 130:
-            inventory_hazard += 0.5
-        if abs(current_pos) >= 150:
-            inventory_hazard += 0.5
-        if current_pos > 0 and long_fade_score > 0.85:
-            inventory_hazard += 0.45
-        if current_pos < 0 and short_fade_score > 0.85:
-            inventory_hazard += 0.45
-        if progress > 0.92:
-            inventory_hazard += 0.25
-
-        if abs(current_pos) >= 130 and inventory_hazard > 0.70:
-            target = emergency_target
 
         unwind_long = current_pos > 150 and (
             (
@@ -822,10 +775,8 @@ class Trader:
 
         stretch_long = current_pos > 150
         stretch_short = current_pos < -150
-        absolute_danger_long = current_pos >= 130 and inventory_hazard > 0.70
-        absolute_danger_short = current_pos <= -130 and inventory_hazard > 0.70
-        hard_danger_long = current_pos >= 150 and inventory_hazard > 1.00
-        hard_danger_short = current_pos <= -150 and inventory_hazard > 1.00
+        absolute_danger_long = current_pos >= 150
+        absolute_danger_short = current_pos <= -150
         exceptional_buy = regime_score >= 2.5 and progress < 0.88
         exceptional_sell = regime_score <= -2.5 and progress < 0.88
 
@@ -846,7 +797,7 @@ class Trader:
         if exit_mode:
             size_mult *= 0.85
         if absolute_danger_long or absolute_danger_short:
-            size_mult *= max(0.45, 0.82 - 0.16 * inventory_hazard)
+            size_mult *= 0.75
 
         return {
             "mid": float(mid),
@@ -858,10 +809,8 @@ class Trader:
             "confidence": confidence,
             "entry_cap": int(entry_cap),
             "hold_cap": int(hold_cap),
-            "emergency_cap": int(emergency_cap),
             "entry_target": int(entry_target),
             "hold_target": int(hold_target),
-            "emergency_target": int(emergency_target),
             "target": int(clamp(float(target), -200.0, 200.0)),
             "good_book": good_book,
             "progress": progress,
@@ -875,20 +824,14 @@ class Trader:
             "short_peak_trend": short_peak_trend,
             "long_drawdown": long_drawdown,
             "short_drawup": short_drawup,
-            "long_fade_score": float(long_fade_score),
-            "short_fade_score": float(short_fade_score),
-            "inventory_hazard": float(inventory_hazard),
             "stretch_long": stretch_long,
             "stretch_short": stretch_short,
             "absolute_danger_long": absolute_danger_long,
             "absolute_danger_short": absolute_danger_short,
-            "hard_danger_long": hard_danger_long,
-            "hard_danger_short": hard_danger_short,
-            "danger_pos_cap": 60 if (hard_danger_long or hard_danger_short) else 90,
             "same_side_bid_block": exit_mode.startswith("long") or absolute_danger_long or (stretch_long and not exceptional_buy),
             "same_side_ask_block": exit_mode.startswith("short") or absolute_danger_short or (stretch_short and not exceptional_sell),
-            "buy_take_extra": 3.0 if exit_mode.startswith("long") else 2.75 if hard_danger_long else 2.25 if absolute_danger_long else 2.0 if stretch_long and not exceptional_buy else 0.0,
-            "sell_take_extra": 3.0 if exit_mode.startswith("short") else 2.75 if hard_danger_short else 2.25 if absolute_danger_short else 2.0 if stretch_short and not exceptional_sell else 0.0,
+            "buy_take_extra": 3.0 if exit_mode.startswith("long") else 2.5 if absolute_danger_long else 2.0 if stretch_long and not exceptional_buy else 0.0,
+            "sell_take_extra": 3.0 if exit_mode.startswith("short") else 2.5 if absolute_danger_short else 2.0 if stretch_short and not exceptional_sell else 0.0,
             "quote_bias": quote_bias,
             "fair_shift": fair_shift,
             "size_mult": size_mult,
@@ -911,9 +854,6 @@ class Trader:
         same_side_ask_block = bool(hydro_ctx.get("same_side_ask_block", False))
         absolute_danger_long = bool(hydro_ctx.get("absolute_danger_long", False))
         absolute_danger_short = bool(hydro_ctx.get("absolute_danger_short", False))
-        hard_danger_long = bool(hydro_ctx.get("hard_danger_long", False))
-        hard_danger_short = bool(hydro_ctx.get("hard_danger_short", False))
-        danger_pos_cap = float(hydro_ctx.get("danger_pos_cap", 90))
         buy_take_allowed = not (same_side_bid_block or unwind_long or absolute_danger_long or current_pos >= 140)
         sell_take_allowed = not (same_side_ask_block or unwind_short or absolute_danger_short or current_pos <= -140)
 
@@ -957,25 +897,13 @@ class Trader:
             hard_clear_edge += 3.0
             soft_clear_max = max(cfg["clear_max"], 72)
             hard_clear_max = max(cfg["clear_max"], 96)
-        elif hard_danger_long or hard_danger_short:
-            soft_limit = 45
-            hard_zone = 70
-            clear_edge += 1.1
-            hard_clear_edge += 2.2
-            soft_clear_max = max(cfg["clear_max"], 52)
-            hard_clear_max = max(cfg["clear_max"], 70)
         elif absolute_danger_long or absolute_danger_short:
-            soft_limit = 55
-            hard_zone = 85
-            clear_edge += 0.7
-            hard_clear_edge += 1.5
-            soft_clear_max = max(cfg["clear_max"], 44)
-            hard_clear_max = max(cfg["clear_max"], 58)
-
-        if absolute_danger_long and pos > 0:
-            relative_pos = max(relative_pos, pos - danger_pos_cap)
-        elif absolute_danger_short and pos < 0:
-            relative_pos = min(relative_pos, pos + danger_pos_cap)
+            soft_limit = 30
+            hard_zone = 55
+            clear_edge += 1.6
+            hard_clear_edge += 2.6
+            soft_clear_max = max(cfg["clear_max"], 64)
+            hard_clear_max = max(cfg["clear_max"], 84)
 
         if relative_pos > hard_zone and bb is not None and (bb >= fair - hard_clear_edge or unwind_long or absolute_danger_long):
             mgr.sell(bb, min(int(math.ceil(relative_pos - soft_limit)), hard_clear_max))
@@ -984,10 +912,6 @@ class Trader:
 
         pos = mgr.projected()
         relative_pos = pos - target
-        if absolute_danger_long and pos > 0:
-            relative_pos = max(relative_pos, pos - danger_pos_cap)
-        elif absolute_danger_short and pos < 0:
-            relative_pos = min(relative_pos, pos + danger_pos_cap)
         if relative_pos < -hard_zone and ba is not None and (ba <= fair + hard_clear_edge or unwind_short or absolute_danger_short):
             mgr.buy(ba, min(int(math.ceil((-soft_limit) - relative_pos)), hard_clear_max))
         elif relative_pos < -soft_limit and ba is not None and (ba <= fair + clear_edge or unwind_short or absolute_danger_short):
@@ -1502,10 +1426,8 @@ class Trader:
                     "confidence": str(hydro_ctx["confidence"]),
                     "entry_cap": int(hydro_ctx["entry_cap"]),
                     "hold_cap": int(hydro_ctx["hold_cap"]),
-                    "emergency_cap": int(hydro_ctx["emergency_cap"]),
                     "entry_target": int(hydro_ctx["entry_target"]),
                     "hold_target": int(hydro_ctx["hold_target"]),
-                    "emergency_target": int(hydro_ctx["emergency_target"]),
                     "target": int(hydro_ctx["target"]),
                     "good_book": bool(hydro_ctx["good_book"]),
                     "progress": round(float(hydro_ctx["progress"]), 3),
@@ -1519,13 +1441,8 @@ class Trader:
                     "short_peak_trend": round(float(hydro_ctx["short_peak_trend"]), 3),
                     "long_drawdown": round(float(hydro_ctx["long_drawdown"]), 3),
                     "short_drawup": round(float(hydro_ctx["short_drawup"]), 3),
-                    "long_fade_score": round(float(hydro_ctx["long_fade_score"]), 3),
-                    "short_fade_score": round(float(hydro_ctx["short_fade_score"]), 3),
-                    "inventory_hazard": round(float(hydro_ctx["inventory_hazard"]), 3),
                     "absolute_danger_long": bool(hydro_ctx["absolute_danger_long"]),
                     "absolute_danger_short": bool(hydro_ctx["absolute_danger_short"]),
-                    "hard_danger_long": bool(hydro_ctx["hard_danger_long"]),
-                    "hard_danger_short": bool(hydro_ctx["hard_danger_short"]),
                     "same_side_bid_block": bool(hydro_ctx["same_side_bid_block"]),
                     "same_side_ask_block": bool(hydro_ctx["same_side_ask_block"]),
                 }

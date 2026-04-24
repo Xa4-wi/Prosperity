@@ -402,6 +402,11 @@ class Trader:
                 "short_peak_trend": 0.0,
                 "exit_mode": "",
                 "exit_age": 0,
+                "late_long_cap": 200,
+                "late_short_cap": -200,
+                "late_long_lock_mid": None,
+                "late_short_lock_mid": None,
+                "late_phase": "",
             }
         memory["last_timestamp"] = timestamp
         memory.setdefault(
@@ -430,6 +435,11 @@ class Trader:
                 "short_peak_trend": 0.0,
                 "exit_mode": "",
                 "exit_age": 0,
+                "late_long_cap": 200,
+                "late_short_cap": -200,
+                "late_long_lock_mid": None,
+                "late_short_lock_mid": None,
+                "late_phase": "",
             },
         )
 
@@ -559,7 +569,8 @@ class Trader:
             confidence = "strong"
             target_cap = 200
 
-        progress = clamp(state.timestamp / 3_000_000.0, 0.0, 1.0)
+        # Hydrogel portal logs are day-local, so use intra-day progress for late-state logic.
+        progress = clamp((state.timestamp % 100_000) / 100_000.0, 0.0, 1.0)
         current_pos = int(state.position.get(HYDROGEL, 0))
         entry_cap = target_cap
         if progress > 0.78:
@@ -623,6 +634,11 @@ class Trader:
             hydro_state["short_peak_trend"] = 0.0
             hydro_state["exit_mode"] = ""
             hydro_state["exit_age"] = 0
+            hydro_state["late_long_cap"] = 200
+            hydro_state["late_short_cap"] = -200
+            hydro_state["late_long_lock_mid"] = None
+            hydro_state["late_short_lock_mid"] = None
+            hydro_state["late_phase"] = ""
 
         side = 1 if current_pos > 120 else -1 if current_pos < -120 else 0
         if side == 0:
@@ -756,6 +772,69 @@ class Trader:
             and fair_gap > max(4.0, 0.55 * spread)
         )
 
+        late_window = progress >= 0.75
+        prev_late_long_cap = int(hydro_state.get("late_long_cap", 200))
+        prev_late_short_cap = int(hydro_state.get("late_short_cap", -200))
+        late_long_lock_mid = hydro_state.get("late_long_lock_mid")
+        late_short_lock_mid = hydro_state.get("late_short_lock_mid")
+        late_long_cap = prev_late_long_cap
+        late_short_cap = prev_late_short_cap
+        late_phase = ""
+
+        if current_pos <= 40:
+            late_long_cap = 200
+            late_long_lock_mid = None
+        elif late_window and current_pos > 80:
+            if current_pos > 140 and (long_fade_score > 0.65 or long_drawdown >= 8.0 or trend_fade_long):
+                late_long_cap = min(late_long_cap, 160)
+            if current_pos > 120 and (long_fade_score > 0.95 or long_drawdown >= 12.0 or ret_ema < -0.03):
+                late_long_cap = min(late_long_cap, 130)
+            if current_pos > 100 and (long_fade_score > 1.25 or long_drawdown >= 16.0 or ret_ema < -0.10):
+                late_long_cap = min(late_long_cap, 100)
+            if current_pos > 80 and (long_fade_score > 1.55 or long_drawdown >= 22.0):
+                late_long_cap = min(late_long_cap, 70)
+            if late_long_cap < prev_late_long_cap and late_long_lock_mid is None:
+                late_long_lock_mid = float(long_peak_mid) if long_peak_mid is not None else float(mid)
+        else:
+            late_long_cap = 200
+            late_long_lock_mid = None
+
+        if current_pos >= -40:
+            late_short_cap = -200
+            late_short_lock_mid = None
+        elif late_window and current_pos < -80:
+            if current_pos < -140 and (short_fade_score > 0.65 or short_drawup >= 8.0 or trend_fade_short):
+                late_short_cap = max(late_short_cap, -160)
+            if current_pos < -120 and (short_fade_score > 0.95 or short_drawup >= 12.0 or ret_ema > 0.03):
+                late_short_cap = max(late_short_cap, -130)
+            if current_pos < -100 and (short_fade_score > 1.25 or short_drawup >= 16.0 or ret_ema > 0.10):
+                late_short_cap = max(late_short_cap, -100)
+            if current_pos < -80 and (short_fade_score > 1.55 or short_drawup >= 22.0):
+                late_short_cap = max(late_short_cap, -70)
+            if late_short_cap > prev_late_short_cap and late_short_lock_mid is None:
+                late_short_lock_mid = float(short_peak_mid) if short_peak_mid is not None else float(mid)
+        else:
+            late_short_cap = -200
+            late_short_lock_mid = None
+
+        late_long_rearm = (
+            late_long_lock_mid is not None
+            and strong_long_reconfirm
+            and float(mid) >= float(late_long_lock_mid) + max(6.0, 2.0 * spread)
+        )
+        late_short_rearm = (
+            late_short_lock_mid is not None
+            and strong_short_reconfirm
+            and float(mid) <= float(late_short_lock_mid) - max(6.0, 2.0 * spread)
+        )
+
+        if late_long_rearm:
+            late_long_cap = max(late_long_cap, 160)
+            late_long_lock_mid = float(mid)
+        if late_short_rearm:
+            late_short_cap = min(late_short_cap, -160)
+            late_short_lock_mid = float(mid)
+
         exit_mode = ""
         if prev_exit_mode.startswith("long") and current_pos > 60:
             if strong_long_reconfirm:
@@ -820,6 +899,13 @@ class Trader:
             else:
                 target = max(target, 0 if progress > 0.88 or short_drawup >= 14.0 else -20)
 
+        if late_window and current_pos > 60 and late_long_cap < 200:
+            target = min(target, late_long_cap)
+            late_phase = "late_long_ratchet"
+        elif late_window and current_pos < -60 and late_short_cap > -200:
+            target = max(target, late_short_cap)
+            late_phase = "late_short_ratchet"
+
         stretch_long = current_pos > 150
         stretch_short = current_pos < -150
         absolute_danger_long = current_pos >= 130 and inventory_hazard > 0.70
@@ -828,6 +914,8 @@ class Trader:
         hard_danger_short = current_pos <= -150 and inventory_hazard > 1.00
         exceptional_buy = regime_score >= 2.5 and progress < 0.88
         exceptional_sell = regime_score <= -2.5 and progress < 0.88
+        late_long_block = late_window and late_long_cap < 200 and not late_long_rearm
+        late_short_block = late_window and late_short_cap > -200 and not late_short_rearm
 
         quote_bias = 0.0 if abs(regime_score) < 0.75 else -0.06 * signal
         fair_shift = clamp(12.0 * regime_score, -48.0, 48.0)
@@ -835,6 +923,10 @@ class Trader:
             fair_shift -= 5.0
         elif exit_mode.startswith("short"):
             fair_shift += 5.0
+        if late_phase == "late_long_ratchet":
+            fair_shift -= 3.0
+        elif late_phase == "late_short_ratchet":
+            fair_shift += 3.0
 
         size_mult = 0.75 if confidence == "guarded" else 1.0
         if confidence == "neutral":
@@ -847,6 +939,14 @@ class Trader:
             size_mult *= 0.85
         if absolute_danger_long or absolute_danger_short:
             size_mult *= max(0.45, 0.82 - 0.16 * inventory_hazard)
+        if late_phase:
+            size_mult *= 0.78
+
+        hydro_state["late_long_cap"] = int(late_long_cap)
+        hydro_state["late_short_cap"] = int(late_short_cap)
+        hydro_state["late_long_lock_mid"] = late_long_lock_mid
+        hydro_state["late_short_lock_mid"] = late_short_lock_mid
+        hydro_state["late_phase"] = late_phase
 
         return {
             "mid": float(mid),
@@ -892,6 +992,14 @@ class Trader:
             "quote_bias": quote_bias,
             "fair_shift": fair_shift,
             "size_mult": size_mult,
+            "late_window": late_window,
+            "late_phase": late_phase,
+            "late_long_cap": int(late_long_cap),
+            "late_short_cap": int(late_short_cap),
+            "late_long_rearm": late_long_rearm,
+            "late_short_rearm": late_short_rearm,
+            "late_long_block": late_long_block,
+            "late_short_block": late_short_block,
         }
 
     def _trade_hydrogel(self, state: TradingState, fair: float, hydro_ctx: dict) -> List[Order]:
@@ -914,8 +1022,10 @@ class Trader:
         hard_danger_long = bool(hydro_ctx.get("hard_danger_long", False))
         hard_danger_short = bool(hydro_ctx.get("hard_danger_short", False))
         danger_pos_cap = float(hydro_ctx.get("danger_pos_cap", 90))
-        buy_take_allowed = not (same_side_bid_block or unwind_long or absolute_danger_long or current_pos >= 140)
-        sell_take_allowed = not (same_side_ask_block or unwind_short or absolute_danger_short or current_pos <= -140)
+        late_long_block = bool(hydro_ctx.get("late_long_block", False))
+        late_short_block = bool(hydro_ctx.get("late_short_block", False))
+        buy_take_allowed = not (same_side_bid_block or unwind_long or absolute_danger_long or late_long_block or current_pos >= 140)
+        sell_take_allowed = not (same_side_ask_block or unwind_short or absolute_danger_short or late_short_block or current_pos <= -140)
 
         buy_take_edge = cfg["take_edge"] + float(hydro_ctx["buy_take_extra"])
         sell_take_edge = cfg["take_edge"] + float(hydro_ctx["sell_take_extra"])
@@ -1022,6 +1132,10 @@ class Trader:
         if same_side_bid_block:
             can_bid = False
         if same_side_ask_block:
+            can_ask = False
+        if late_long_block:
+            can_bid = False
+        if late_short_block:
             can_ask = False
         if unwind_long:
             can_bid = False

@@ -357,7 +357,7 @@ def polyval(coeffs: Tuple[float, float, float], x: float) -> float:
 
 class Trader:
     """
-    Round 3 v37:
+    Round 3 v28:
     - Step 1: strict Take -> Clear -> Make on the two underlyings
     - Step 2: Black-Scholes-first voucher engine with weighted IV smile fitting
     - Step 3: keep bot-overlay ideas small and stateful until proven stronger
@@ -373,9 +373,8 @@ class Trader:
     - Step 10: soften the Hydrogel unwind:
       make exits peak-drawdown driven instead of generic late-session flattening
     - Step 11: split Hydrogel entry vs hold architecture and add absolute danger clearing
-    - Step 12: Hydrogel refinement from the R3_28 family:
-      stronger inventory hazard management with emergency target overrides
-      and absolute-danger clearing when large inventory starts fading
+    - Step 12: convert Hydrogel unwind into a harder one-way exit state
+      that suppresses same-side refills and steps the hold cap down over time
     """
 
     def _reset_day_if_needed(self, memory: dict, timestamp: int) -> None:
@@ -402,6 +401,14 @@ class Trader:
                 "short_peak_trend": 0.0,
                 "exit_mode": "",
                 "exit_age": 0,
+                "cooldown_side": 0,
+                "cooldown_bars": 0,
+                "cooldown_reason": "",
+                "recent_turnover": 0.0,
+                "recent_signed_volume": 0.0,
+                "recent_trade_count": 0.0,
+                "last_own_trade_ts": -1,
+                "prev_position": 0,
             }
         memory["last_timestamp"] = timestamp
         memory.setdefault(
@@ -430,6 +437,14 @@ class Trader:
                 "short_peak_trend": 0.0,
                 "exit_mode": "",
                 "exit_age": 0,
+                "cooldown_side": 0,
+                "cooldown_bars": 0,
+                "cooldown_reason": "",
+                "recent_turnover": 0.0,
+                "recent_signed_volume": 0.0,
+                "recent_trade_count": 0.0,
+                "last_own_trade_ts": -1,
+                "prev_position": 0,
             },
         )
 
@@ -507,6 +522,25 @@ class Trader:
         if ba is not None:
             top_depth += float(abs(od.sell_orders.get(ba, 0)))
         hydro_state = memory["hydro_state"]
+        prev_position = int(hydro_state.get("prev_position", state.position.get(HYDROGEL, 0)))
+        cooldown_side = int(hydro_state.get("cooldown_side", 0))
+        cooldown_bars = max(0, int(hydro_state.get("cooldown_bars", 0)) - 1)
+        cooldown_reason = str(hydro_state.get("cooldown_reason", ""))
+        recent_turnover = 0.90 * float(hydro_state.get("recent_turnover", 0.0))
+        recent_signed_volume = 0.90 * float(hydro_state.get("recent_signed_volume", 0.0))
+        recent_trade_count = 0.90 * float(hydro_state.get("recent_trade_count", 0.0))
+        last_own_trade_ts = int(hydro_state.get("last_own_trade_ts", -1))
+        own_hydro_trades = sorted(state.own_trades.get(HYDROGEL, []), key=lambda t: (t.timestamp, t.price, t.quantity))
+        for trade in own_hydro_trades:
+            ts = int(trade.timestamp)
+            if ts <= last_own_trade_ts:
+                continue
+            qty = abs(int(trade.quantity))
+            signed_qty = qty if getattr(trade, "buyer", "") == "SUBMISSION" else -qty if getattr(trade, "seller", "") == "SUBMISSION" else 0
+            recent_turnover += qty
+            recent_signed_volume += signed_qty
+            recent_trade_count += 1.0
+            last_own_trade_ts = ts
         prev_fast = hydro_state.get("ema_fast")
         prev_slow = hydro_state.get("ema_slow")
         prev_last_mid = hydro_state.get("last_mid")
@@ -588,12 +622,6 @@ class Trader:
         if progress > 0.98:
             hold_cap = min(hold_cap, 40)
 
-        emergency_cap = 80
-        if progress > 0.90:
-            emergency_cap = 60
-        if progress > 0.97:
-            emergency_cap = 30
-
         entry_target = int(round(clamp(200.0 * math.tanh(0.95 * regime_score), -float(entry_cap), float(entry_cap))))
         hold_score = 0.88 * regime_score + 0.12 * trend_score
         hold_target = int(round(clamp(200.0 * math.tanh(0.88 * hold_score), -float(hold_cap), float(hold_cap))))
@@ -623,6 +651,9 @@ class Trader:
             hydro_state["short_peak_trend"] = 0.0
             hydro_state["exit_mode"] = ""
             hydro_state["exit_age"] = 0
+            hydro_state["cooldown_side"] = 0
+            hydro_state["cooldown_bars"] = 0
+            hydro_state["cooldown_reason"] = ""
 
         side = 1 if current_pos > 120 else -1 if current_pos < -120 else 0
         if side == 0:
@@ -672,31 +703,6 @@ class Trader:
             + 0.20 * clamp(short_drawup / max(8.0, 1.8 * spread), 0.0, 3.0)
             + 0.20 * fair_gap_shrink
         )
-
-        emergency_target = hold_target
-        if current_pos > 120 and long_fade_score > 0.85:
-            emergency_target = min(emergency_target, 80 if abs(current_pos) < 150 else 50)
-        if current_pos > 140 and long_fade_score > 1.25:
-            emergency_target = min(emergency_target, 30 if progress < 0.93 else 0)
-        if current_pos < -120 and short_fade_score > 0.85:
-            emergency_target = max(emergency_target, -80 if abs(current_pos) < 150 else -50)
-        if current_pos < -140 and short_fade_score > 1.25:
-            emergency_target = max(emergency_target, -30 if progress < 0.93 else 0)
-
-        inventory_hazard = 0.0
-        if abs(current_pos) >= 130:
-            inventory_hazard += 0.5
-        if abs(current_pos) >= 150:
-            inventory_hazard += 0.5
-        if current_pos > 0 and long_fade_score > 0.85:
-            inventory_hazard += 0.45
-        if current_pos < 0 and short_fade_score > 0.85:
-            inventory_hazard += 0.45
-        if progress > 0.92:
-            inventory_hazard += 0.25
-
-        if abs(current_pos) >= 130 and inventory_hazard > 0.70:
-            target = emergency_target
 
         unwind_long = current_pos > 150 and (
             (
@@ -820,14 +826,60 @@ class Trader:
             else:
                 target = max(target, 0 if progress > 0.88 or short_drawup >= 14.0 else -20)
 
+        turnover_warning = recent_turnover >= 80.0
+        turnover_danger = recent_turnover >= 120.0
+        abs_danger_soft = abs(current_pos) >= 130
+        abs_danger_hard = abs(current_pos) >= 150
+        abs_danger_max = abs(current_pos) >= 180
+        fade_score = long_fade_score if current_pos > 0 else short_fade_score if current_pos < 0 else 0.0
+        exit_state = "none"
+        if abs_danger_max or turnover_danger or (abs_danger_hard and fade_score > 0.85) or fade_score > 1.4:
+            exit_state = "hard"
+        elif abs_danger_soft or fade_score > 0.9 or exit_mode:
+            exit_state = "soft"
+
+        emergency_target = hold_target
+        if current_pos > 0:
+            emergency_target = 0 if abs_danger_max else 20 if abs_danger_hard else 40
+        elif current_pos < 0:
+            emergency_target = 0 if abs_danger_max else -20 if abs_danger_hard else -40
+
+        if exit_state == "soft":
+            if current_pos > 0:
+                target = min(target, max(20, int(round(max(0, hold_target) * 0.7))))
+            elif current_pos < 0:
+                target = max(target, min(-20, int(round(min(0, hold_target) * 0.7))))
+        elif exit_state == "hard":
+            if current_pos > 0:
+                target = min(target, emergency_target)
+            elif current_pos < 0:
+                target = max(target, emergency_target)
+
+        if prev_position > 80 and current_pos < prev_position - 20:
+            cooldown_side = 1
+            cooldown_bars = 6
+            cooldown_reason = "long_unwind"
+        elif prev_position < -80 and current_pos > prev_position + 20:
+            cooldown_side = -1
+            cooldown_bars = 6
+            cooldown_reason = "short_unwind"
+        elif cooldown_bars == 0:
+            cooldown_side = 0
+            cooldown_reason = ""
+
         stretch_long = current_pos > 150
         stretch_short = current_pos < -150
-        absolute_danger_long = current_pos >= 130 and inventory_hazard > 0.70
-        absolute_danger_short = current_pos <= -130 and inventory_hazard > 0.70
-        hard_danger_long = current_pos >= 150 and inventory_hazard > 1.00
-        hard_danger_short = current_pos <= -150 and inventory_hazard > 1.00
+        absolute_danger_long = current_pos >= 130
+        absolute_danger_short = current_pos <= -130
+        hard_danger_long = current_pos >= 150
+        hard_danger_short = current_pos <= -150
+        max_danger_long = current_pos >= 180
+        max_danger_short = current_pos <= -180
         exceptional_buy = regime_score >= 2.5 and progress < 0.88
         exceptional_sell = regime_score <= -2.5 and progress < 0.88
+        very_strong_reconfirm = abs(regime_score) >= 2.4 and abs(trend_score) >= 1.9 and good_book
+        cooldown_long_block = cooldown_side == 1 and cooldown_bars > 0 and not very_strong_reconfirm
+        cooldown_short_block = cooldown_side == -1 and cooldown_bars > 0 and not very_strong_reconfirm
 
         quote_bias = 0.0 if abs(regime_score) < 0.75 else -0.06 * signal
         fair_shift = clamp(12.0 * regime_score, -48.0, 48.0)
@@ -845,8 +897,21 @@ class Trader:
             size_mult *= 0.85
         if exit_mode:
             size_mult *= 0.85
+        if exit_state == "soft":
+            size_mult *= 0.85
+        if turnover_warning:
+            size_mult *= 0.75
         if absolute_danger_long or absolute_danger_short:
-            size_mult *= max(0.45, 0.82 - 0.16 * inventory_hazard)
+            size_mult *= 0.70
+
+        hydro_state["cooldown_side"] = cooldown_side
+        hydro_state["cooldown_bars"] = cooldown_bars
+        hydro_state["cooldown_reason"] = cooldown_reason
+        hydro_state["recent_turnover"] = recent_turnover
+        hydro_state["recent_signed_volume"] = recent_signed_volume
+        hydro_state["recent_trade_count"] = recent_trade_count
+        hydro_state["last_own_trade_ts"] = last_own_trade_ts
+        hydro_state["prev_position"] = current_pos
 
         return {
             "mid": float(mid),
@@ -858,7 +923,6 @@ class Trader:
             "confidence": confidence,
             "entry_cap": int(entry_cap),
             "hold_cap": int(hold_cap),
-            "emergency_cap": int(emergency_cap),
             "entry_target": int(entry_target),
             "hold_target": int(hold_target),
             "emergency_target": int(emergency_target),
@@ -868,6 +932,7 @@ class Trader:
             "extreme_hold_bars": extreme_hold_bars,
             "flatten_before_flip": flatten_before_flip,
             "exit_mode": exit_mode,
+            "exit_state": exit_state,
             "exit_age": exit_age,
             "long_peak_score": long_peak_score,
             "short_peak_score": short_peak_score,
@@ -877,18 +942,27 @@ class Trader:
             "short_drawup": short_drawup,
             "long_fade_score": float(long_fade_score),
             "short_fade_score": float(short_fade_score),
-            "inventory_hazard": float(inventory_hazard),
+            "fade_score": float(fade_score),
+            "turnover_warning": turnover_warning,
+            "turnover_danger": turnover_danger,
+            "recent_turnover": float(recent_turnover),
+            "recent_trade_count": float(recent_trade_count),
+            "cooldown_side": cooldown_side,
+            "cooldown_bars": cooldown_bars,
+            "cooldown_reason": cooldown_reason,
             "stretch_long": stretch_long,
             "stretch_short": stretch_short,
             "absolute_danger_long": absolute_danger_long,
             "absolute_danger_short": absolute_danger_short,
             "hard_danger_long": hard_danger_long,
             "hard_danger_short": hard_danger_short,
-            "danger_pos_cap": 60 if (hard_danger_long or hard_danger_short) else 90,
-            "same_side_bid_block": exit_mode.startswith("long") or absolute_danger_long or (stretch_long and not exceptional_buy),
-            "same_side_ask_block": exit_mode.startswith("short") or absolute_danger_short or (stretch_short and not exceptional_sell),
-            "buy_take_extra": 3.0 if exit_mode.startswith("long") else 2.75 if hard_danger_long else 2.25 if absolute_danger_long else 2.0 if stretch_long and not exceptional_buy else 0.0,
-            "sell_take_extra": 3.0 if exit_mode.startswith("short") else 2.75 if hard_danger_short else 2.25 if absolute_danger_short else 2.0 if stretch_short and not exceptional_sell else 0.0,
+            "max_danger_long": max_danger_long,
+            "max_danger_short": max_danger_short,
+            "same_side_bid_block": exit_mode.startswith("long") or cooldown_long_block or hard_danger_long or (stretch_long and not exceptional_buy),
+            "same_side_ask_block": exit_mode.startswith("short") or cooldown_short_block or hard_danger_short or (stretch_short and not exceptional_sell),
+            "same_side_quote_scale": 0.2 if (cooldown_long_block or cooldown_short_block) else 0.35 if exit_state == "hard" else 0.55 if exit_state == "soft" else 1.0,
+            "buy_take_extra": 3.0 if exit_mode.startswith("long") else 1.8 if turnover_warning else 2.5 if hard_danger_long else 1.25 if absolute_danger_long else 0.0,
+            "sell_take_extra": 3.0 if exit_mode.startswith("short") else 1.8 if turnover_warning else 2.5 if hard_danger_short else 1.25 if absolute_danger_short else 0.0,
             "quote_bias": quote_bias,
             "fair_shift": fair_shift,
             "size_mult": size_mult,
@@ -907,15 +981,19 @@ class Trader:
         current_pos = int(state.position.get(HYDROGEL, 0))
         unwind_long = str(hydro_ctx.get("exit_mode", "")).startswith("long")
         unwind_short = str(hydro_ctx.get("exit_mode", "")).startswith("short")
+        exit_state = str(hydro_ctx.get("exit_state", "none"))
         same_side_bid_block = bool(hydro_ctx.get("same_side_bid_block", False))
         same_side_ask_block = bool(hydro_ctx.get("same_side_ask_block", False))
         absolute_danger_long = bool(hydro_ctx.get("absolute_danger_long", False))
         absolute_danger_short = bool(hydro_ctx.get("absolute_danger_short", False))
         hard_danger_long = bool(hydro_ctx.get("hard_danger_long", False))
         hard_danger_short = bool(hydro_ctx.get("hard_danger_short", False))
-        danger_pos_cap = float(hydro_ctx.get("danger_pos_cap", 90))
-        buy_take_allowed = not (same_side_bid_block or unwind_long or absolute_danger_long or current_pos >= 140)
-        sell_take_allowed = not (same_side_ask_block or unwind_short or absolute_danger_short or current_pos <= -140)
+        max_danger_long = bool(hydro_ctx.get("max_danger_long", False))
+        max_danger_short = bool(hydro_ctx.get("max_danger_short", False))
+        turnover_danger = bool(hydro_ctx.get("turnover_danger", False))
+        same_side_quote_scale = float(hydro_ctx.get("same_side_quote_scale", 1.0))
+        buy_take_allowed = not (same_side_bid_block or unwind_long or hard_danger_long or max_danger_long or turnover_danger or current_pos >= 150)
+        sell_take_allowed = not (same_side_ask_block or unwind_short or hard_danger_short or max_danger_short or turnover_danger or current_pos <= -150)
 
         buy_take_edge = cfg["take_edge"] + float(hydro_ctx["buy_take_extra"])
         sell_take_edge = cfg["take_edge"] + float(hydro_ctx["sell_take_extra"])
@@ -950,27 +1028,39 @@ class Trader:
         hard_clear_edge = clear_edge + 1.5
         soft_clear_max = cfg["clear_max"]
         hard_clear_max = max(cfg["clear_max"], 56)
-        if unwind_long or unwind_short:
+        danger_pos_cap = 90.0
+        if exit_state == "hard":
+            soft_limit = 25
+            hard_zone = 45
+            clear_edge += 1.6
+            hard_clear_edge += 2.6
+            soft_clear_max = max(cfg["clear_max"], 64)
+            hard_clear_max = max(cfg["clear_max"], 84)
+            danger_pos_cap = 20.0 if (max_danger_long or max_danger_short) else 60.0
+        elif unwind_long or unwind_short:
             soft_limit = 25
             hard_zone = 45
             clear_edge += 2.0
             hard_clear_edge += 3.0
             soft_clear_max = max(cfg["clear_max"], 72)
             hard_clear_max = max(cfg["clear_max"], 96)
-        elif hard_danger_long or hard_danger_short:
-            soft_limit = 45
-            hard_zone = 70
-            clear_edge += 1.1
-            hard_clear_edge += 2.2
-            soft_clear_max = max(cfg["clear_max"], 52)
-            hard_clear_max = max(cfg["clear_max"], 70)
-        elif absolute_danger_long or absolute_danger_short:
-            soft_limit = 55
+            danger_pos_cap = 60.0
+        elif exit_state == "soft":
+            soft_limit = 50
             hard_zone = 85
-            clear_edge += 0.7
-            hard_clear_edge += 1.5
-            soft_clear_max = max(cfg["clear_max"], 44)
-            hard_clear_max = max(cfg["clear_max"], 58)
+            clear_edge += 0.5
+            hard_clear_edge += 1.0
+            soft_clear_max = max(cfg["clear_max"], 30)
+            hard_clear_max = max(cfg["clear_max"], 44)
+            danger_pos_cap = 90.0
+        elif absolute_danger_long or absolute_danger_short:
+            soft_limit = 30
+            hard_zone = 55
+            clear_edge += 1.6
+            hard_clear_edge += 2.6
+            soft_clear_max = max(cfg["clear_max"], 64)
+            hard_clear_max = max(cfg["clear_max"], 84)
+            danger_pos_cap = 60.0 if (hard_danger_long or hard_danger_short) else 90.0
 
         if absolute_danger_long and pos > 0:
             relative_pos = max(relative_pos, pos - danger_pos_cap)
@@ -1016,26 +1106,28 @@ class Trader:
         if same_side_bid_block or same_side_ask_block:
             size_scale *= 0.85
         quote_size = max(6, int(round(cfg["quote_size"] * size_scale)))
+        bid_quote_size = max(1, int(round(quote_size * same_side_quote_scale))) if same_side_bid_block else quote_size
+        ask_quote_size = max(1, int(round(quote_size * same_side_quote_scale))) if same_side_ask_block else quote_size
 
         can_bid = mgr.buy_cap > 0
         can_ask = mgr.sell_cap > 0
         if same_side_bid_block:
-            can_bid = False
+            can_bid = bid_quote_size > 0 and exit_state == "soft"
         if same_side_ask_block:
-            can_ask = False
+            can_ask = ask_quote_size > 0 and exit_state == "soft"
         if unwind_long:
             can_bid = False
         if unwind_short:
             can_ask = False
-        if absolute_danger_long:
+        if hard_danger_long or max_danger_long:
             can_bid = False
-        if absolute_danger_short:
+        if hard_danger_short or max_danger_short:
             can_ask = False
 
         if can_bid and (ba is None or buy_px < ba):
-            mgr.buy(buy_px, quote_size)
+            mgr.buy(buy_px, bid_quote_size)
         if can_ask and (bb is None or sell_px > bb):
-            mgr.sell(sell_px, quote_size)
+            mgr.sell(sell_px, ask_quote_size)
 
         return mgr.flush()
 
@@ -1502,7 +1594,6 @@ class Trader:
                     "confidence": str(hydro_ctx["confidence"]),
                     "entry_cap": int(hydro_ctx["entry_cap"]),
                     "hold_cap": int(hydro_ctx["hold_cap"]),
-                    "emergency_cap": int(hydro_ctx["emergency_cap"]),
                     "entry_target": int(hydro_ctx["entry_target"]),
                     "hold_target": int(hydro_ctx["hold_target"]),
                     "emergency_target": int(hydro_ctx["emergency_target"]),
@@ -1512,6 +1603,7 @@ class Trader:
                     "extreme_hold_bars": int(hydro_ctx["extreme_hold_bars"]),
                     "flatten_before_flip": bool(hydro_ctx["flatten_before_flip"]),
                     "exit_mode": str(hydro_ctx["exit_mode"]),
+                    "exit_state": str(hydro_ctx["exit_state"]),
                     "exit_age": int(hydro_ctx["exit_age"]),
                     "long_peak_score": round(float(hydro_ctx["long_peak_score"]), 3),
                     "short_peak_score": round(float(hydro_ctx["short_peak_score"]), 3),
@@ -1519,13 +1611,14 @@ class Trader:
                     "short_peak_trend": round(float(hydro_ctx["short_peak_trend"]), 3),
                     "long_drawdown": round(float(hydro_ctx["long_drawdown"]), 3),
                     "short_drawup": round(float(hydro_ctx["short_drawup"]), 3),
-                    "long_fade_score": round(float(hydro_ctx["long_fade_score"]), 3),
-                    "short_fade_score": round(float(hydro_ctx["short_fade_score"]), 3),
-                    "inventory_hazard": round(float(hydro_ctx["inventory_hazard"]), 3),
+                    "fade_score": round(float(hydro_ctx["fade_score"]), 3),
+                    "recent_turnover": round(float(hydro_ctx["recent_turnover"]), 3),
+                    "recent_trade_count": round(float(hydro_ctx["recent_trade_count"]), 3),
+                    "cooldown_side": int(hydro_ctx["cooldown_side"]),
+                    "cooldown_bars": int(hydro_ctx["cooldown_bars"]),
+                    "cooldown_reason": str(hydro_ctx["cooldown_reason"]),
                     "absolute_danger_long": bool(hydro_ctx["absolute_danger_long"]),
                     "absolute_danger_short": bool(hydro_ctx["absolute_danger_short"]),
-                    "hard_danger_long": bool(hydro_ctx["hard_danger_long"]),
-                    "hard_danger_short": bool(hydro_ctx["hard_danger_short"]),
                     "same_side_bid_block": bool(hydro_ctx["same_side_bid_block"]),
                     "same_side_ask_block": bool(hydro_ctx["same_side_ask_block"]),
                 }

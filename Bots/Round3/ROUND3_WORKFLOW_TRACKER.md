@@ -134,6 +134,9 @@ Interpretation:
 - [TradervR3_36.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_36.py)
   - raw local total: `-803186.0`
   - calibrated total: `10003.62`
+- [TradervR3_37.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_37.py)
+  - raw local total: `-1422945.0`
+  - calibrated total: `14130.75`
 
 Interpretation:
 
@@ -337,6 +340,16 @@ Interpretation:
   - so the current Hydrogel read is:
     - broad entry/hold/emergency rewrites are too aggressive
     - but a narrow emergency layer on top of the `R3_28` family is still promising
+- `R3_37` pushed the same direction harder:
+  - stronger inventory hazard
+  - stronger absolute-danger clear
+  - emergency target can override target logic earlier once Hydrogel is large and fading
+- Result:
+  - the local replay became even more extremely inverted on Hydrogel
+  - calibrated score increased further, but that is mostly the inversion-aware selector rewarding the same direction as the uploaded Hydrogel logs
+  - practical conclusion:
+    - stronger hazard-based inventory control is directionally aligned with the Hydrogel problem
+    - but in local replay it is now too broad to trust as a promoted branch without a real portal log
     - peak tracking
     - drawdown-from-peak unwind trigger
     - staged target reduction
@@ -367,3 +380,37 @@ Do not select Round 3 bots from raw local total alone.
 7. If we revisit Hydrogel next, use the oracle study as the design anchor:
    - phase-aware / state-machine Hydrogel
    - not another smooth local-fair or broad risk-throttle variant
+8. `R3_39` tested a late-day Hydrogel ratchet directly on top of `R3_37`:
+   - use intra-day progress instead of global carry progress
+   - detect a late Hydrogel fade window around `75k+`
+   - ratchet long exposure down in steps once the late long starts fading
+   - block same-side late-long rearming unless Hydrogel makes a real new high with strong reconfirmation
+   - practical read:
+     - this is the cleanest expression so far of the "late state / no-refill" Hydrogel idea
+     - local Hydrogel remains heavily inverted, so it is still not promotable from local replay alone
+     - calibrated score improved again versus `R3_37`, which keeps this family alive as a portal-log-driven Hydrogel lane
+9. `R3_42` moved research to the connected `VELVET + voucher` complex off the `R3_28` Hydrogel base:
+   - split `VELVETFRUIT_EXTRACT` into hedge + alpha targets
+   - added strip-level diagnostics
+   - made vouchers pair-first in structure
+   - practical read from the real `R3_42.log`:
+     - Hydrogel was unchanged versus `R3_28`
+     - the branch mainly switched off the profitable `VELVET + low-strike voucher` side
+     - so the structure was useful, but the first activation layer was too strict
+10. `R3_43` fixed the swallowed voucher exception and softened the connected overlay:
+    - restored live `VELVET` participation
+    - restored low-strike voucher activity
+    - kept the strip diagnostics and soft hedge/pair overlay
+    - practical read:
+      - this is the first usable connected-system research branch
+      - it recovers most of the `R3_42` inactivity loss
+      - remaining gap to `R3_28` looks mostly like `VELVET` steering, not voucher structure
+11. `R3_44` tested a bundled follow-up:
+    - dynamic strip hedge ratio for `VELVET`
+    - softer `VELVET` alpha target
+    - easier low-strike voucher activation for `VEV_4000` to `VEV_5100`
+    - calibrated replay result:
+      - below `R3_43` and below `R3_28`
+    - practical read:
+      - the extra `VELVET` steering hurt more than the low-strike voucher help
+      - next refinement should isolate low-strike voucher changes from `VELVET` target changes

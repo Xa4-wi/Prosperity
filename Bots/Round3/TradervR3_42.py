@@ -357,25 +357,13 @@ def polyval(coeffs: Tuple[float, float, float], x: float) -> float:
 
 class Trader:
     """
-    Round 3 v37:
-    - Step 1: strict Take -> Clear -> Make on the two underlyings
-    - Step 2: Black-Scholes-first voucher engine with weighted IV smile fitting
-    - Step 3: keep bot-overlay ideas small and stateful until proven stronger
-    - Step 4: make strip exposure explicit before adding more alpha
-    - Step 5: enforce lighter strip limits around the dangerous middle strikes
-    - Step 6: redesign Hydrogel as a capped confidence-scaled inventory trader
-    - Step 7: rebalance Hydrogel and Velvet fair construction toward the
-      Phase 1 classification of anchored local-fair market makers
-    - Step 8: Hydrogel oracle follow-up:
-      move Hydrogel toward a regime-state engine instead of pure anchor-local-fair response
-    - Step 9: Hydrogel unwind mode:
-      detect regime fade after a strong long/short state and force staged exit with no top-ups
-    - Step 10: soften the Hydrogel unwind:
-      make exits peak-drawdown driven instead of generic late-session flattening
-    - Step 11: split Hydrogel entry vs hold architecture and add absolute danger clearing
-    - Step 12: Hydrogel refinement from the R3_28 family:
-      stronger inventory hazard management with emergency target overrides
-      and absolute-danger clearing when large inventory starts fading
+    Round 3 v42:
+    - Keep the v28 Hydrogel engine intact as the stable trunk.
+    - Move the main research onto the connected Velvet + voucher complex.
+    - Treat Velvet as hedge-first with only a small capped alpha overlay.
+    - Treat vouchers as one strip portfolio: pair-first, outright second.
+    - Add broad strip-dislocation handling without removing v28 strip protections.
+    - Log the strip state so we can separate hedge PnL from option PnL later.
     """
 
     def _reset_day_if_needed(self, memory: dict, timestamp: int) -> None:
@@ -430,6 +418,15 @@ class Trader:
                 "short_peak_trend": 0.0,
                 "exit_mode": "",
                 "exit_age": 0,
+            },
+        )
+        memory.setdefault(
+            "vev_voucher_state",
+            {
+                "prev_avg_abs_resid": 0.0,
+                "prev_strip_delta": 0.0,
+                "broad_dislocation_age": 0,
+                "last_targets": {},
             },
         )
 
@@ -588,12 +585,6 @@ class Trader:
         if progress > 0.98:
             hold_cap = min(hold_cap, 40)
 
-        emergency_cap = 80
-        if progress > 0.90:
-            emergency_cap = 60
-        if progress > 0.97:
-            emergency_cap = 30
-
         entry_target = int(round(clamp(200.0 * math.tanh(0.95 * regime_score), -float(entry_cap), float(entry_cap))))
         hold_score = 0.88 * regime_score + 0.12 * trend_score
         hold_target = int(round(clamp(200.0 * math.tanh(0.88 * hold_score), -float(hold_cap), float(hold_cap))))
@@ -653,50 +644,10 @@ class Trader:
         short_peak_trend = float(hydro_state.get("short_peak_trend", 0.0))
         long_drawdown = 0.0 if long_peak_mid is None else float(long_peak_mid) - float(mid)
         short_drawup = 0.0 if short_peak_mid is None else float(mid) - float(short_peak_mid)
-        long_regime_drop = 0.0 if long_peak_score <= 0.0 else clamp((long_peak_score - regime_score) / max(0.8, long_peak_score), 0.0, 2.0)
-        short_regime_drop = 0.0 if short_peak_score >= 0.0 else clamp((regime_score - short_peak_score) / max(0.8, abs(short_peak_score)), 0.0, 2.0)
         trend_fade_long = long_peak_trend > 0.0 and trend_score < 0.70 * long_peak_trend
         trend_fade_short = short_peak_trend < 0.0 and trend_score > 0.70 * short_peak_trend
         fair_gap = abs(fair - float(mid))
         signal_fade = fair_gap < max(4.0, 0.55 * spread)
-        fair_gap_shrink = clamp((max(4.0, 0.75 * spread) - fair_gap) / max(2.0, 0.75 * spread), 0.0, 1.5)
-        long_fade_score = (
-            0.35 * clamp((long_peak_trend - trend_score) / max(0.6, long_peak_trend), 0.0, 2.0)
-            + 0.25 * long_regime_drop
-            + 0.20 * clamp(long_drawdown / max(8.0, 1.8 * spread), 0.0, 3.0)
-            + 0.20 * fair_gap_shrink
-        )
-        short_fade_score = (
-            0.35 * clamp((trend_score - short_peak_trend) / max(0.6, abs(short_peak_trend)), 0.0, 2.0)
-            + 0.25 * short_regime_drop
-            + 0.20 * clamp(short_drawup / max(8.0, 1.8 * spread), 0.0, 3.0)
-            + 0.20 * fair_gap_shrink
-        )
-
-        emergency_target = hold_target
-        if current_pos > 120 and long_fade_score > 0.85:
-            emergency_target = min(emergency_target, 80 if abs(current_pos) < 150 else 50)
-        if current_pos > 140 and long_fade_score > 1.25:
-            emergency_target = min(emergency_target, 30 if progress < 0.93 else 0)
-        if current_pos < -120 and short_fade_score > 0.85:
-            emergency_target = max(emergency_target, -80 if abs(current_pos) < 150 else -50)
-        if current_pos < -140 and short_fade_score > 1.25:
-            emergency_target = max(emergency_target, -30 if progress < 0.93 else 0)
-
-        inventory_hazard = 0.0
-        if abs(current_pos) >= 130:
-            inventory_hazard += 0.5
-        if abs(current_pos) >= 150:
-            inventory_hazard += 0.5
-        if current_pos > 0 and long_fade_score > 0.85:
-            inventory_hazard += 0.45
-        if current_pos < 0 and short_fade_score > 0.85:
-            inventory_hazard += 0.45
-        if progress > 0.92:
-            inventory_hazard += 0.25
-
-        if abs(current_pos) >= 130 and inventory_hazard > 0.70:
-            target = emergency_target
 
         unwind_long = current_pos > 150 and (
             (
@@ -822,10 +773,8 @@ class Trader:
 
         stretch_long = current_pos > 150
         stretch_short = current_pos < -150
-        absolute_danger_long = current_pos >= 130 and inventory_hazard > 0.70
-        absolute_danger_short = current_pos <= -130 and inventory_hazard > 0.70
-        hard_danger_long = current_pos >= 150 and inventory_hazard > 1.00
-        hard_danger_short = current_pos <= -150 and inventory_hazard > 1.00
+        absolute_danger_long = current_pos >= 150
+        absolute_danger_short = current_pos <= -150
         exceptional_buy = regime_score >= 2.5 and progress < 0.88
         exceptional_sell = regime_score <= -2.5 and progress < 0.88
 
@@ -846,7 +795,7 @@ class Trader:
         if exit_mode:
             size_mult *= 0.85
         if absolute_danger_long or absolute_danger_short:
-            size_mult *= max(0.45, 0.82 - 0.16 * inventory_hazard)
+            size_mult *= 0.75
 
         return {
             "mid": float(mid),
@@ -858,10 +807,8 @@ class Trader:
             "confidence": confidence,
             "entry_cap": int(entry_cap),
             "hold_cap": int(hold_cap),
-            "emergency_cap": int(emergency_cap),
             "entry_target": int(entry_target),
             "hold_target": int(hold_target),
-            "emergency_target": int(emergency_target),
             "target": int(clamp(float(target), -200.0, 200.0)),
             "good_book": good_book,
             "progress": progress,
@@ -875,20 +822,14 @@ class Trader:
             "short_peak_trend": short_peak_trend,
             "long_drawdown": long_drawdown,
             "short_drawup": short_drawup,
-            "long_fade_score": float(long_fade_score),
-            "short_fade_score": float(short_fade_score),
-            "inventory_hazard": float(inventory_hazard),
             "stretch_long": stretch_long,
             "stretch_short": stretch_short,
             "absolute_danger_long": absolute_danger_long,
             "absolute_danger_short": absolute_danger_short,
-            "hard_danger_long": hard_danger_long,
-            "hard_danger_short": hard_danger_short,
-            "danger_pos_cap": 60 if (hard_danger_long or hard_danger_short) else 90,
             "same_side_bid_block": exit_mode.startswith("long") or absolute_danger_long or (stretch_long and not exceptional_buy),
             "same_side_ask_block": exit_mode.startswith("short") or absolute_danger_short or (stretch_short and not exceptional_sell),
-            "buy_take_extra": 3.0 if exit_mode.startswith("long") else 2.75 if hard_danger_long else 2.25 if absolute_danger_long else 2.0 if stretch_long and not exceptional_buy else 0.0,
-            "sell_take_extra": 3.0 if exit_mode.startswith("short") else 2.75 if hard_danger_short else 2.25 if absolute_danger_short else 2.0 if stretch_short and not exceptional_sell else 0.0,
+            "buy_take_extra": 3.0 if exit_mode.startswith("long") else 2.5 if absolute_danger_long else 2.0 if stretch_long and not exceptional_buy else 0.0,
+            "sell_take_extra": 3.0 if exit_mode.startswith("short") else 2.5 if absolute_danger_short else 2.0 if stretch_short and not exceptional_sell else 0.0,
             "quote_bias": quote_bias,
             "fair_shift": fair_shift,
             "size_mult": size_mult,
@@ -911,9 +852,6 @@ class Trader:
         same_side_ask_block = bool(hydro_ctx.get("same_side_ask_block", False))
         absolute_danger_long = bool(hydro_ctx.get("absolute_danger_long", False))
         absolute_danger_short = bool(hydro_ctx.get("absolute_danger_short", False))
-        hard_danger_long = bool(hydro_ctx.get("hard_danger_long", False))
-        hard_danger_short = bool(hydro_ctx.get("hard_danger_short", False))
-        danger_pos_cap = float(hydro_ctx.get("danger_pos_cap", 90))
         buy_take_allowed = not (same_side_bid_block or unwind_long or absolute_danger_long or current_pos >= 140)
         sell_take_allowed = not (same_side_ask_block or unwind_short or absolute_danger_short or current_pos <= -140)
 
@@ -957,25 +895,13 @@ class Trader:
             hard_clear_edge += 3.0
             soft_clear_max = max(cfg["clear_max"], 72)
             hard_clear_max = max(cfg["clear_max"], 96)
-        elif hard_danger_long or hard_danger_short:
-            soft_limit = 45
-            hard_zone = 70
-            clear_edge += 1.1
-            hard_clear_edge += 2.2
-            soft_clear_max = max(cfg["clear_max"], 52)
-            hard_clear_max = max(cfg["clear_max"], 70)
         elif absolute_danger_long or absolute_danger_short:
-            soft_limit = 55
-            hard_zone = 85
-            clear_edge += 0.7
-            hard_clear_edge += 1.5
-            soft_clear_max = max(cfg["clear_max"], 44)
-            hard_clear_max = max(cfg["clear_max"], 58)
-
-        if absolute_danger_long and pos > 0:
-            relative_pos = max(relative_pos, pos - danger_pos_cap)
-        elif absolute_danger_short and pos < 0:
-            relative_pos = min(relative_pos, pos + danger_pos_cap)
+            soft_limit = 30
+            hard_zone = 55
+            clear_edge += 1.6
+            hard_clear_edge += 2.6
+            soft_clear_max = max(cfg["clear_max"], 64)
+            hard_clear_max = max(cfg["clear_max"], 84)
 
         if relative_pos > hard_zone and bb is not None and (bb >= fair - hard_clear_edge or unwind_long or absolute_danger_long):
             mgr.sell(bb, min(int(math.ceil(relative_pos - soft_limit)), hard_clear_max))
@@ -984,10 +910,6 @@ class Trader:
 
         pos = mgr.projected()
         relative_pos = pos - target
-        if absolute_danger_long and pos > 0:
-            relative_pos = max(relative_pos, pos - danger_pos_cap)
-        elif absolute_danger_short and pos < 0:
-            relative_pos = min(relative_pos, pos + danger_pos_cap)
         if relative_pos < -hard_zone and ba is not None and (ba <= fair + hard_clear_edge or unwind_short or absolute_danger_short):
             mgr.buy(ba, min(int(math.ceil((-soft_limit) - relative_pos)), hard_clear_max))
         elif relative_pos < -soft_limit and ba is not None and (ba <= fair + clear_edge or unwind_short or absolute_danger_short):
@@ -1229,7 +1151,7 @@ class Trader:
             surface[product]["bs_gap"] = market_price - fair_price
         return surface
 
-    def _build_voucher_risk_context(self, state: TradingState, surface: Dict[str, dict]) -> dict:
+    def _build_voucher_risk_context(self, state: TradingState, surface: Dict[str, dict], memory: dict) -> dict:
         liquid_products = [
             product
             for product, ctx in surface.items()
@@ -1237,32 +1159,51 @@ class Trader:
         ]
         residual_pairs = [(product, float(surface[product]["iv_residual"])) for product in liquid_products]
         resid_scale = max(0.04, sum(abs(resid) for _, resid in residual_pairs) / max(1, len(residual_pairs)))
+        avg_abs_resid = sum(abs(resid) for _, resid in residual_pairs) / max(1, len(residual_pairs))
 
         pair_bias: Dict[str, int] = {}
         residual_rank: Dict[str, int] = {}
+        pair_targets: Dict[str, int] = {product: 0 for product in VOUCHER_STRIKES}
+        neighbor_confirm: Dict[str, int] = {}
         sorted_products = sorted(VOUCHER_STRIKES, key=VOUCHER_STRIKES.get)
         sorted_residuals = sorted(liquid_products, key=lambda product: float(surface[product]["iv_residual"]))
         for rank, product in enumerate(sorted_residuals):
             centered_rank = rank - (len(sorted_residuals) - 1) / 2.0
             residual_rank[product] = int(round(centered_rank))
 
+        pair_agreement_count = 0
         for left, right in zip(sorted_products, sorted_products[1:]):
             left_ctx = surface[left]
             right_ctx = surface[right]
             if left not in liquid_products or right not in liquid_products:
                 continue
             gap = float(right_ctx["iv_residual"]) - float(left_ctx["iv_residual"])
+            if abs(gap) >= 0.055:
+                pair_agreement_count += 1
+            pair_unit = 24
+            if 0.20 <= float(left_ctx["delta"]) <= 0.80 or 0.20 <= float(right_ctx["delta"]) <= 0.80:
+                pair_unit = 18
             if gap >= 0.07:
                 pair_bias[left] = pair_bias.get(left, 0) + 1
                 pair_bias[right] = pair_bias.get(right, 0) - 1
+                pair_targets[left] += pair_unit
+                pair_targets[right] -= pair_unit
+                neighbor_confirm[left] = neighbor_confirm.get(left, 0) + 1
+                neighbor_confirm[right] = neighbor_confirm.get(right, 0) + 1
             elif gap <= -0.07:
                 pair_bias[left] = pair_bias.get(left, 0) - 1
                 pair_bias[right] = pair_bias.get(right, 0) + 1
+                pair_targets[left] -= pair_unit
+                pair_targets[right] += pair_unit
+                neighbor_confirm[left] = neighbor_confirm.get(left, 0) + 1
+                neighbor_confirm[right] = neighbor_confirm.get(right, 0) + 1
 
         strip_delta = 0.0
         strip_vega = 0.0
         middle_abs = 0
         middle_net = 0
+        middle_long_gross = 0
+        middle_short_gross = 0
         low_wing_net = 0
         high_wing_net = 0
         adjacent_same_side_max = 0
@@ -1277,6 +1218,10 @@ class Trader:
             if 0.20 <= delta <= 0.80:
                 middle_abs += abs(pos)
                 middle_net += pos
+                if pos > 0:
+                    middle_long_gross += pos
+                elif pos < 0:
+                    middle_short_gross += abs(pos)
             strike = VOUCHER_STRIKES[product]
             if strike <= 5000:
                 low_wing_net += pos
@@ -1294,26 +1239,140 @@ class Trader:
                     adjacent_same_side_max = concentration
                     adjacent_same_side_products = [left, right]
 
+        middle_cap = 190
+        total_delta_cap = 150.0
+        broad_dislocation = (
+            avg_abs_resid > max(0.075, 1.10 * resid_scale)
+            and pair_agreement_count >= 4
+            and abs(strip_delta) < 0.80 * total_delta_cap
+            and middle_abs < 0.80 * middle_cap
+        )
+        vev_state = memory["vev_voucher_state"]
+        prev_avg_abs_resid = float(vev_state.get("prev_avg_abs_resid", 0.0))
+        if broad_dislocation:
+            vev_state["broad_dislocation_age"] = int(vev_state.get("broad_dislocation_age", 0)) + 1
+        else:
+            vev_state["broad_dislocation_age"] = 0
+        resid_compression = prev_avg_abs_resid > 1e-6 and avg_abs_resid < 0.65 * prev_avg_abs_resid
+
+        if broad_dislocation:
+            hedge_ratio = 0.75
+        elif avg_abs_resid > max(0.055, 0.95 * resid_scale):
+            hedge_ratio = 0.50
+        else:
+            hedge_ratio = 0.25
+
+        target_velvet_hedge_pos = -hedge_ratio * strip_delta
+        if abs(strip_delta) < 20.0:
+            target_velvet_hedge_pos = 0.0
+        if resid_compression and abs(strip_delta) < 90.0:
+            target_velvet_hedge_pos *= 0.65
+        target_velvet_hedge_pos = clamp(target_velvet_hedge_pos, -120.0, 120.0)
+
+        cheapest = list(sorted_residuals[:3])
+        richest = list(sorted_residuals[-3:][::-1])
+        middle_same_side_gross = max(middle_long_gross, middle_short_gross)
+
+        vev_state["prev_avg_abs_resid"] = avg_abs_resid
+        vev_state["prev_strip_delta"] = strip_delta
+
         return {
             "resid_scale": resid_scale,
-            "resid_threshold": max(0.035, 0.85 * resid_scale),
-            "extreme_resid_threshold": max(0.060, 1.50 * resid_scale),
+            "avg_abs_resid": avg_abs_resid,
+            "resid_threshold": max(0.035, 0.80 * resid_scale),
+            "extreme_resid_threshold": max(0.060, 1.45 * resid_scale),
             "pair_bias": pair_bias,
+            "pair_targets": pair_targets,
+            "neighbor_confirm": neighbor_confirm,
+            "pair_agreement_count": pair_agreement_count,
             "residual_rank": residual_rank,
             "strip_delta": strip_delta,
             "strip_vega_proxy": strip_vega,
             "delta_pressure": clamp(strip_delta / 140.0, -2.0, 2.0),
-            "target_velvet_pos": int(round(clamp(-0.50 * strip_delta, -100.0, 100.0))),
+            "hedge_ratio": hedge_ratio,
+            "target_velvet_hedge_pos": int(round(target_velvet_hedge_pos)),
             "middle_abs": middle_abs,
             "middle_net": middle_net,
-            "middle_cap": 170,
+            "middle_long_gross": middle_long_gross,
+            "middle_short_gross": middle_short_gross,
+            "middle_same_side_gross": middle_same_side_gross,
+            "middle_cap": middle_cap,
             "adjacent_same_side_max": adjacent_same_side_max,
             "adjacent_same_side_products": adjacent_same_side_products,
             "adjacent_cap": 170,
             "low_wing_net": low_wing_net,
             "high_wing_net": high_wing_net,
-            "total_delta_cap": 150.0,
-            "unconfirmed_outright_cap": 85,
+            "total_delta_cap": total_delta_cap,
+            "per_strike_cap_mid": 90,
+            "per_strike_cap_other": 140,
+            "middle_cluster_cap": 280,
+            "unconfirmed_outright_cap": 70,
+            "broad_dislocation": broad_dislocation,
+            "broad_dislocation_age": int(vev_state.get("broad_dislocation_age", 0)),
+            "resid_compression": resid_compression,
+            "cheapest_strikes": cheapest,
+            "richest_strikes": richest,
+        }
+
+    def _build_velvet_context(self, state: TradingState, velvet_fair: float, risk_ctx: dict) -> dict:
+        od = state.order_depths[VELVET]
+        bb = best_bid(od)
+        ba = best_ask(od)
+        mid = raw_mid(od)
+        if mid is None:
+            mid = stable_mid(od)
+        if mid is None:
+            mid = velvet_fair
+        spread = float((ba - bb) if bb is not None and ba is not None else 2.0)
+        stable = stable_mid(od)
+        if stable is None:
+            stable = mid
+        top_depth = 0.0
+        if bb is not None:
+            top_depth += float(max(0, od.buy_orders.get(bb, 0)))
+        if ba is not None:
+            top_depth += float(abs(od.sell_orders.get(ba, 0)))
+
+        book_good = (
+            bb is not None
+            and ba is not None
+            and bb < ba
+            and spread <= 6.0
+            and top_depth >= 12.0
+            and abs(float(stable) - float(mid)) <= 1.2
+        )
+        strip_delta = float(risk_ctx["strip_delta"])
+        hedge_target = int(risk_ctx["target_velvet_hedge_pos"])
+        alpha_signal = (velvet_fair - float(mid)) / max(1.0, 0.5 * spread)
+        alpha_cap = 0
+        if abs(strip_delta) < 60.0 and book_good:
+            alpha_cap = 40
+        elif abs(strip_delta) < 90.0 and book_good and not bool(risk_ctx["broad_dislocation"]):
+            alpha_cap = 20
+        if bool(risk_ctx["resid_compression"]) and abs(strip_delta) < 70.0:
+            alpha_cap = min(alpha_cap, 20)
+
+        alpha_target = int(round(clamp(45.0 * math.tanh(0.80 * alpha_signal), -float(alpha_cap), float(alpha_cap))))
+        final_target = int(round(clamp(float(hedge_target + alpha_target), -200.0, 200.0)))
+        quote_bias = -0.20 * float(risk_ctx["delta_pressure"])
+        if abs(strip_delta) < 20.0:
+            quote_bias *= 0.50
+        take_bias = 0.0 if alpha_cap <= 0 else 0.15 * clamp(alpha_signal, -1.0, 1.0)
+        size_mult = 0.75 if bool(risk_ctx["broad_dislocation"]) else 1.0
+        if alpha_cap <= 0:
+            size_mult *= 0.85
+
+        return {
+            "mid": float(mid),
+            "spread": spread,
+            "book_good": book_good,
+            "hedge_target": hedge_target,
+            "alpha_target": alpha_target,
+            "target": final_target,
+            "alpha_signal": float(alpha_signal),
+            "quote_bias": quote_bias,
+            "take_bias": take_bias,
+            "size_mult": size_mult,
         }
 
     def _trade_voucher(self, product: str, state: TradingState, voucher_ctx: dict, risk_ctx: dict) -> List[Order]:
@@ -1333,13 +1392,15 @@ class Trader:
 
         middle_band = 0.20 <= delta <= 0.80
         pair_bias = int(clamp(float(risk_ctx["pair_bias"].get(product, 0)), -1.0, 1.0))
-        confirmed = pair_bias != 0
+        pair_target = int(risk_ctx["pair_targets"].get(product, 0))
+        neighbor_confirm = int(risk_ctx["neighbor_confirm"].get(product, 0))
+        confirmed = pair_bias != 0 or pair_target != 0
         resid_threshold = float(risk_ctx["resid_threshold"])
         extreme_resid_threshold = float(risk_ctx["extreme_resid_threshold"])
         cheap_signal = max(0.0, -iv_residual)
         rich_signal = max(0.0, iv_residual)
-        buy_confirmed = cheap_signal >= resid_threshold or pair_bias > 0
-        sell_confirmed = rich_signal >= resid_threshold or pair_bias < 0
+        buy_confirmed = cheap_signal >= resid_threshold or pair_bias > 0 or pair_target > 0
+        sell_confirmed = rich_signal >= resid_threshold or pair_bias < 0 or pair_target < 0
         buy_extreme = cheap_signal >= extreme_resid_threshold
         sell_extreme = rich_signal >= extreme_resid_threshold
         delta_soft = abs(float(risk_ctx["strip_delta"])) > float(risk_ctx["total_delta_cap"])
@@ -1350,57 +1411,100 @@ class Trader:
             product in risk_ctx["adjacent_same_side_products"]
             and int(risk_ctx["adjacent_same_side_max"]) > int(risk_ctx["adjacent_cap"])
         )
-        take_edge = max(0.75, 0.35 * spread) + (0.30 if middle_band else 0.0) + (0.20 if not confirmed else 0.0)
-        clear_edge = max(0.35, 0.15 * spread)
-        soft_limit = 85 if middle_band else 125
-        per_strike_cap = 100 if not middle_band else 80
-        take_max = 10 if middle_band else 18
+        broad_dislocation = bool(risk_ctx["broad_dislocation"])
+        pair_first = pair_target != 0
+        pair_scale = min(2, abs(pair_bias)) + (1 if pair_first else 0)
+
+        per_strike_cap = int(risk_ctx["per_strike_cap_mid"] if middle_band else risk_ctx["per_strike_cap_other"])
+        target_cap = per_strike_cap
+        outright_target = 0
+        outright_unit = 0
+        if neighbor_confirm >= 1 and not delta_soft:
+            if buy_extreme and not delta_block_buy:
+                outright_unit = 18 if middle_band else 28
+                outright_target = outright_unit
+            elif sell_extreme and not delta_block_sell:
+                outright_unit = 18 if middle_band else 28
+                outright_target = -outright_unit
+        elif not middle_band and residual_rank <= -4 and buy_extreme and not delta_block_buy:
+            outright_unit = 16
+            outright_target = outright_unit
+        elif not middle_band and residual_rank >= 4 and sell_extreme and not delta_block_sell:
+            outright_unit = 16
+            outright_target = -outright_unit
+
+        if not confirmed and abs(outright_target) > int(risk_ctx["unconfirmed_outright_cap"]):
+            outright_target = int(math.copysign(int(risk_ctx["unconfirmed_outright_cap"]), outright_target))
+        target_pos = int(clamp(float(pair_target + outright_target), -float(target_cap), float(target_cap)))
+
+        residual_normalized = abs(iv_residual) / max(resid_threshold, 1e-6)
+        zero_cross_clear = abs(iv_residual) < 0.55 * resid_threshold or (iv_residual >= 0.0 and target_pos <= 0 and state.position.get(product, 0) > 0) or (iv_residual <= 0.0 and target_pos >= 0 and state.position.get(product, 0) < 0)
+
+        take_edge = max(0.75, 0.33 * spread) + (0.25 if middle_band else 0.0) + (0.15 if not confirmed else 0.0)
+        if broad_dislocation:
+            take_edge -= 0.20
+        clear_edge = max(0.35, 0.12 * spread)
+        soft_limit = max(18, int(0.70 * target_cap))
+        take_max = 12 if middle_band else 20
+        if broad_dislocation:
+            take_max += 2
 
         # Step 1: Take
         for ask, volume in sorted(od.sell_orders.items()):
             edge = fair - ask
-            if pair_bias > 0:
-                edge += 0.20
-            if (edge >= take_edge and buy_confirmed and not delta_block_buy) or (edge >= take_edge + 0.8 and buy_extreme):
+            if pair_target > 0:
+                edge += 0.25
+            elif pair_bias > 0:
+                edge += 0.15
+            if broad_dislocation and pair_scale > 0:
+                edge += 0.10 * pair_scale
+            buy_side_live = target_pos > mgr.projected() or (buy_extreme and neighbor_confirm >= 1)
+            if ((edge >= take_edge and buy_confirmed and buy_side_live and not delta_block_buy) or (edge >= take_edge + 0.7 and buy_extreme and neighbor_confirm >= 1)):
                 mgr.buy(ask, min(-volume, take_max))
             else:
                 break
 
         for bid, volume in sorted(od.buy_orders.items(), reverse=True):
             edge = bid - fair
-            if pair_bias < 0:
-                edge += 0.20
-            if (edge >= take_edge and sell_confirmed and not delta_block_sell) or (edge >= take_edge + 0.8 and sell_extreme):
+            if pair_target < 0:
+                edge += 0.25
+            elif pair_bias < 0:
+                edge += 0.15
+            if broad_dislocation and pair_scale > 0:
+                edge += 0.10 * pair_scale
+            sell_side_live = target_pos < mgr.projected() or (sell_extreme and neighbor_confirm >= 1)
+            if ((edge >= take_edge and sell_confirmed and sell_side_live and not delta_block_sell) or (edge >= take_edge + 0.7 and sell_extreme and neighbor_confirm >= 1)):
                 mgr.sell(bid, min(volume, take_max))
             else:
                 break
 
         # Step 2: Clear
         pos = mgr.projected()
-        if pos > soft_limit and bb is not None and bb >= fair - clear_edge:
-            mgr.sell(bb, min(pos - soft_limit, 50))
-        elif pos > 0 and not buy_confirmed and bb is not None and bb >= fair - (clear_edge + 0.15):
-            mgr.sell(bb, min(pos, 28))
-        elif pos < -soft_limit and ba is not None and ba <= fair + clear_edge:
-            mgr.buy(ba, min((-soft_limit) - pos, 50))
-        elif pos < 0 and not sell_confirmed and ba is not None and ba <= fair + (clear_edge + 0.15):
-            mgr.buy(ba, min(-pos, 28))
+        relative_pos = pos - target_pos
+        if relative_pos > soft_limit and bb is not None and bb >= fair - clear_edge:
+            mgr.sell(bb, min(int(math.ceil(relative_pos - soft_limit)), 46))
+        elif pos > target_pos and bb is not None and (zero_cross_clear or not buy_confirmed) and bb >= fair - (clear_edge + 0.20):
+            mgr.sell(bb, min(pos - target_pos, 30))
+        elif relative_pos < -soft_limit and ba is not None and ba <= fair + clear_edge:
+            mgr.buy(ba, min(int(math.ceil((-soft_limit) - relative_pos)), 46))
+        elif pos < target_pos and ba is not None and (zero_cross_clear or not sell_confirmed) and ba <= fair + (clear_edge + 0.20):
+            mgr.buy(ba, min(target_pos - pos, 30))
 
         # Step 3: Make
         pos = mgr.projected()
-        inv_ratio = pos / limit
+        inv_ratio = (pos - target_pos) / limit
         inv_penalty = (0.02 * max(25.0, fair) + 2.0) * inv_ratio
         signal_shift = clamp((cheap_signal - rich_signal) / max(resid_threshold, 1e-6), -1.5, 1.5)
-        reservation = fair - inv_penalty + 0.30 * signal_shift + 0.12 * pair_bias
+        reservation = fair - inv_penalty + 0.18 * signal_shift + 0.16 * pair_bias + 0.004 * pair_target
         quote_edge = max(1.0, 0.45 * spread, 0.015 * max(20.0, fair))
         if middle_band:
             quote_edge += 0.40
         if not confirmed:
             quote_edge += 0.20
-        if not buy_confirmed and not sell_confirmed:
+        if not buy_confirmed and not sell_confirmed and target_pos == 0:
             quote_edge += 0.20
-        if risk_ctx["middle_abs"] > risk_ctx["middle_cap"] and middle_band:
-            quote_edge += 0.35
+        if risk_ctx["middle_same_side_gross"] > risk_ctx["middle_cluster_cap"] and middle_band:
+            quote_edge += 0.45
         if delta_soft:
             quote_edge += 0.15
         if delta_hard:
@@ -1409,6 +1513,8 @@ class Trader:
             quote_edge += 0.15
         if abs(bs_gap) > 1.0:
             quote_edge += 0.10
+        if broad_dislocation and pair_first:
+            quote_edge -= 0.10
 
         buy_px = round_down(reservation - quote_edge)
         sell_px = round_up(reservation + quote_edge)
@@ -1428,7 +1534,7 @@ class Trader:
             size_scale *= 0.45
         if not confirmed:
             size_scale *= 0.75
-        if abs(iv_residual) > 0.10:
+        if abs(iv_residual) > 0.10 and not broad_dislocation:
             size_scale *= 0.85
         size_scale *= clamp(1.4 / (1.0 + 0.02 * vega_proxy), 0.35, 1.0)
         if delta_soft:
@@ -1439,16 +1545,18 @@ class Trader:
             size_scale *= 0.82
         if abs(residual_rank) >= 3:
             size_scale *= 0.90
+        if pair_first:
+            size_scale *= 1.10
         base_size = 9 if fair > 100.0 else 14
         quote_size = max(4, int(round(base_size * size_scale)))
 
         if fair >= 0.5:
-            can_bid = mgr.buy_cap > 0 and pos < per_strike_cap and (buy_confirmed or pos < -int(0.35 * soft_limit))
-            can_ask = mgr.sell_cap > 0 and pos > -per_strike_cap and (sell_confirmed or pos > int(0.35 * soft_limit))
-            if middle_band and risk_ctx["middle_abs"] > risk_ctx["middle_cap"]:
-                if risk_ctx["middle_net"] >= 0:
+            can_bid = mgr.buy_cap > 0 and pos < target_cap and (buy_confirmed or pos < target_pos)
+            can_ask = mgr.sell_cap > 0 and pos > -target_cap and (sell_confirmed or pos > target_pos)
+            if middle_band and risk_ctx["middle_same_side_gross"] > risk_ctx["middle_cluster_cap"]:
+                if risk_ctx["middle_net"] >= 0 and target_pos >= 0:
                     can_bid = False
-                if risk_ctx["middle_net"] <= 0:
+                if risk_ctx["middle_net"] <= 0 and target_pos <= 0:
                     can_ask = False
             if not confirmed and pos >= risk_ctx["unconfirmed_outright_cap"]:
                 can_bid = False
@@ -1459,10 +1567,14 @@ class Trader:
             if delta_block_sell:
                 can_ask = False
             if adjacent_block:
-                if pos >= int(0.7 * per_strike_cap) and pair_bias >= 0:
+                if pos >= int(0.7 * target_cap) and pair_bias >= 0 and target_pos >= 0:
                     can_bid = False
-                if pos <= -int(0.7 * per_strike_cap) and pair_bias <= 0:
+                if pos <= -int(0.7 * target_cap) and pair_bias <= 0 and target_pos <= 0:
                     can_ask = False
+            if zero_cross_clear and pos > target_pos:
+                can_bid = False
+            if zero_cross_clear and pos < target_pos:
+                can_ask = False
 
             if can_bid and (ba is None or buy_px < ba):
                 mgr.buy(buy_px, quote_size)
@@ -1502,10 +1614,8 @@ class Trader:
                     "confidence": str(hydro_ctx["confidence"]),
                     "entry_cap": int(hydro_ctx["entry_cap"]),
                     "hold_cap": int(hydro_ctx["hold_cap"]),
-                    "emergency_cap": int(hydro_ctx["emergency_cap"]),
                     "entry_target": int(hydro_ctx["entry_target"]),
                     "hold_target": int(hydro_ctx["hold_target"]),
-                    "emergency_target": int(hydro_ctx["emergency_target"]),
                     "target": int(hydro_ctx["target"]),
                     "good_book": bool(hydro_ctx["good_book"]),
                     "progress": round(float(hydro_ctx["progress"]), 3),
@@ -1519,13 +1629,8 @@ class Trader:
                     "short_peak_trend": round(float(hydro_ctx["short_peak_trend"]), 3),
                     "long_drawdown": round(float(hydro_ctx["long_drawdown"]), 3),
                     "short_drawup": round(float(hydro_ctx["short_drawup"]), 3),
-                    "long_fade_score": round(float(hydro_ctx["long_fade_score"]), 3),
-                    "short_fade_score": round(float(hydro_ctx["short_fade_score"]), 3),
-                    "inventory_hazard": round(float(hydro_ctx["inventory_hazard"]), 3),
                     "absolute_danger_long": bool(hydro_ctx["absolute_danger_long"]),
                     "absolute_danger_short": bool(hydro_ctx["absolute_danger_short"]),
-                    "hard_danger_long": bool(hydro_ctx["hard_danger_long"]),
-                    "hard_danger_short": bool(hydro_ctx["hard_danger_short"]),
                     "same_side_bid_block": bool(hydro_ctx["same_side_bid_block"]),
                     "same_side_ask_block": bool(hydro_ctx["same_side_ask_block"]),
                 }
@@ -1543,26 +1648,52 @@ class Trader:
         if velvet_fair is not None:
             try:
                 voucher_surface = self._build_voucher_surface(state, velvet_fair)
-                risk_ctx = self._build_voucher_risk_context(state, voucher_surface)
+                risk_ctx = self._build_voucher_risk_context(state, voucher_surface, memory)
+                velvet_ctx = self._build_velvet_context(state, velvet_fair, risk_ctx)
                 memory["strip_monitor"] = {
                     "strip_delta": round(float(risk_ctx["strip_delta"]), 3),
                     "strip_vega_proxy": round(float(risk_ctx["strip_vega_proxy"]), 3),
-                    "target_velvet_pos": int(risk_ctx["target_velvet_pos"]),
+                    "avg_abs_resid": round(float(risk_ctx["avg_abs_resid"]), 4),
+                    "resid_scale": round(float(risk_ctx["resid_scale"]), 4),
+                    "pair_agreement_count": int(risk_ctx["pair_agreement_count"]),
+                    "broad_dislocation": bool(risk_ctx["broad_dislocation"]),
+                    "broad_dislocation_age": int(risk_ctx["broad_dislocation_age"]),
+                    "hedge_ratio": round(float(risk_ctx["hedge_ratio"]), 3),
+                    "target_velvet_hedge_pos": int(risk_ctx["target_velvet_hedge_pos"]),
+                    "target_velvet_pos": int(velvet_ctx["target"]),
+                    "velvet_alpha_target": int(velvet_ctx["alpha_target"]),
+                    "velvet_book_good": bool(velvet_ctx["book_good"]),
                     "middle_abs": int(risk_ctx["middle_abs"]),
                     "middle_net": int(risk_ctx["middle_net"]),
+                    "middle_same_side_gross": int(risk_ctx["middle_same_side_gross"]),
                     "middle_cap": int(risk_ctx["middle_cap"]),
+                    "middle_cluster_cap": int(risk_ctx["middle_cluster_cap"]),
                     "adjacent_same_side_max": int(risk_ctx["adjacent_same_side_max"]),
                     "adjacent_cap": int(risk_ctx["adjacent_cap"]),
                     "adjacent_same_side_products": list(risk_ctx["adjacent_same_side_products"]),
                     "low_wing_net": int(risk_ctx["low_wing_net"]),
                     "high_wing_net": int(risk_ctx["high_wing_net"]),
+                    "cheapest_strikes": list(risk_ctx["cheapest_strikes"]),
+                    "richest_strikes": list(risk_ctx["richest_strikes"]),
+                }
+                memory["voucher_targets"] = {
+                    product: {
+                        "pair_target": int(risk_ctx["pair_targets"].get(product, 0)),
+                        "pair_bias": int(risk_ctx["pair_bias"].get(product, 0)),
+                        "neighbor_confirm": int(risk_ctx["neighbor_confirm"].get(product, 0)),
+                        "iv_residual": round(float(voucher_surface[product]["iv_residual"]), 4),
+                        "delta": round(float(voucher_surface[product]["delta"]), 4),
+                    }
+                    for product in VOUCHER_STRIKES
                 }
                 result[VELVET] = self._trade_underlying(
                     VELVET,
                     state,
                     velvet_fair,
-                    position_target=float(risk_ctx["target_velvet_pos"]),
-                    quote_bias=-0.15 * float(risk_ctx["delta_pressure"]),
+                    position_target=float(velvet_ctx["target"]),
+                    take_bias=float(velvet_ctx["take_bias"]),
+                    quote_bias=float(velvet_ctx["quote_bias"]),
+                    size_mult=float(velvet_ctx["size_mult"]),
                 )
                 for product in VOUCHER_STRIKES:
                     if product in state.order_depths:
