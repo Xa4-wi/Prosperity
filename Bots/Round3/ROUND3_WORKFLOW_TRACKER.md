@@ -157,10 +157,53 @@ Interpretation:
 - `R3_24` did not work yet:
   - it gave back Hydrogel too broadly and underperformed `R3_16`
   - so the oracle direction looks right, but the first generic regime detector was too blunt
+- The `R3_24` log analysis still uncovered something important:
+  - Hydrogel entry improved a lot
+  - but the late Hydrogel drawdown was still dominated by pinned `+200` inventory and tiny refill trades back to full size
+  - so the missing piece was not entry, but regime-exit behavior
+- Two Hydrogel exit branches were built from `R3_24`:
+  - `R3_25`: first explicit unwind / no-rebuy branch
+  - `R3_26`: softer peak-drawdown-driven unwind
+- `R3_25` proved the behavioral point but was too blunt:
+  - raw `234976.0`
+  - calibrated `39184.6`
+  - Hydrogel local `97854.0`
+  - it stopped finishing pinned long, but over-flattened too aggressively
+- `R3_26` is the better exit template:
+  - raw `247725.0`
+  - calibrated `43646.75`
+  - Hydrogel local `110603.0`
+  - still below `R3_16`, but clearly better than `R3_25`
+  - it keeps the important rule: once unwind starts, stop rebuying the stretched side
+  - and in the local replay it no longer has top-ups back to `+200` after about `t=2.60m`
+  - it also finishes de-risked instead of pinned, ending around `-107` Hydrogel instead of a stuck full-size long
+- `R3_27` tested a larger structural Hydrogel change:
+  - separate `entry_target` vs `hold_target`
+  - fade-based trailing exit using peak trend and peak price
+  - absolute inventory danger clearing independent of `pos - target`
+- Result:
+  - raw `237157.0`
+  - calibrated `39947.95`
+  - Hydrogel local `100035.0`
+- Practical read:
+  - the architecture idea is sensible
+  - but the first full bundle is still too restrictive compared with `R3_26`
+  - the most useful retained ideas are:
+    - separate entry vs hold thinking
+    - absolute-danger clearing as a second layer
+  - the least useful part in this first pass was stacking all of that with already-strong unwind logic, which over-suppressed Hydrogel
 - The current Hydrogel conclusion is:
   - the next edge probably still comes from a regime / phase thesis
   - but not from a single smooth score over the whole day
-  - the next regime branch should be more structured, likely phase-aware or explicit state-machine based
+  - and not from a blunt exit overlay either
+  - the best Hydrogel exit pattern we have so far is:
+    - peak tracking
+    - drawdown-from-peak unwind trigger
+    - staged target reduction
+    - no same-side rebuys once unwind begins
+  - the next regime branch should combine:
+    - better phase/state identification from `R3_24`
+    - with the softer unwind logic shape from `R3_26`
 
 ## Current Evaluation Rule
 
