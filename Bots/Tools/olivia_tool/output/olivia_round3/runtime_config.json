@@ -1,0 +1,32 @@
+{
+  "VELVETFRUIT_EXTRACT": {
+    "basket_bias_weight": 0.5,
+    "entry_confidence": 0.85,
+    "exit_confidence": 0.3,
+    "lot_cluster": 10,
+    "lot_cluster_max": 11,
+    "lot_cluster_min": 10,
+    "max_persistence": 200,
+    "mode": "BIAS_ONLY"
+  },
+  "VEV_5300": {
+    "basket_bias_weight": 0.5,
+    "entry_confidence": 0.85,
+    "exit_confidence": 0.3,
+    "lot_cluster": 2,
+    "lot_cluster_max": 2,
+    "lot_cluster_min": 1,
+    "max_persistence": 200,
+    "mode": "FOLLOW_AFTER_TRIGGER"
+  },
+  "VEV_5500": {
+    "basket_bias_weight": 0.3,
+    "entry_confidence": 0.69,
+    "exit_confidence": 0.4,
+    "lot_cluster": 4,
+    "lot_cluster_max": 5,
+    "lot_cluster_min": 4,
+    "max_persistence": 200,
+    "mode": "BIAS_ONLY"
+  }
+}

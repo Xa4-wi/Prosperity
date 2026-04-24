@@ -1,0 +1,25 @@
+{
+  "round_dir": "ROUND_3",
+  "markout_bars": [
+    5,
+    20,
+    50
+  ],
+  "lot_tolerance": 1,
+  "min_occurrences": 3,
+  "feature_count": 4048,
+  "products": [
+    "HYDROGEL_PACK",
+    "VELVETFRUIT_EXTRACT",
+    "VEV_4000",
+    "VEV_4500",
+    "VEV_5000",
+    "VEV_5100",
+    "VEV_5200",
+    "VEV_5300",
+    "VEV_5400",
+    "VEV_5500",
+    "VEV_6000",
+    "VEV_6500"
+  ]
+}

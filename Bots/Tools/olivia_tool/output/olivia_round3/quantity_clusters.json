@@ -1,0 +1,238 @@
+{
+  "HYDROGEL_PACK": [
+    {
+      "center": 5,
+      "min_qty": 4,
+      "max_qty": 6,
+      "count": 619,
+      "members": [
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "center": 3,
+      "min_qty": 2,
+      "max_qty": 3,
+      "count": 391,
+      "members": [
+        2,
+        3
+      ]
+    }
+  ],
+  "VELVETFRUIT_EXTRACT": [
+    {
+      "center": 5,
+      "min_qty": 4,
+      "max_qty": 6,
+      "count": 624,
+      "members": [
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "center": 8,
+      "min_qty": 7,
+      "max_qty": 9,
+      "count": 480,
+      "members": [
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "center": 3,
+      "min_qty": 3,
+      "max_qty": 3,
+      "count": 190,
+      "members": [
+        3
+      ]
+    },
+    {
+      "center": 10,
+      "min_qty": 10,
+      "max_qty": 11,
+      "count": 39,
+      "members": [
+        10,
+        11
+      ]
+    },
+    {
+      "center": 13,
+      "min_qty": 12,
+      "max_qty": 14,
+      "count": 33,
+      "members": [
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "center": 15,
+      "min_qty": 15,
+      "max_qty": 15,
+      "count": 6,
+      "members": [
+        15
+      ]
+    }
+  ],
+  "VEV_4000": [
+    {
+      "center": 2,
+      "min_qty": 1,
+      "max_qty": 3,
+      "count": 464,
+      "members": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "VEV_4500": [],
+  "VEV_5000": [],
+  "VEV_5100": [],
+  "VEV_5200": [
+    {
+      "center": 5,
+      "min_qty": 4,
+      "max_qty": 5,
+      "count": 10,
+      "members": [
+        4,
+        5
+      ]
+    },
+    {
+      "center": 2,
+      "min_qty": 1,
+      "max_qty": 3,
+      "count": 8,
+      "members": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "VEV_5300": [
+    {
+      "center": 4,
+      "min_qty": 3,
+      "max_qty": 5,
+      "count": 87,
+      "members": [
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "center": 2,
+      "min_qty": 1,
+      "max_qty": 2,
+      "count": 34,
+      "members": [
+        1,
+        2
+      ]
+    }
+  ],
+  "VEV_5400": [
+    {
+      "center": 4,
+      "min_qty": 4,
+      "max_qty": 5,
+      "count": 117,
+      "members": [
+        4,
+        5
+      ]
+    },
+    {
+      "center": 2,
+      "min_qty": 2,
+      "max_qty": 3,
+      "count": 108,
+      "members": [
+        2,
+        3
+      ]
+    }
+  ],
+  "VEV_5500": [
+    {
+      "center": 4,
+      "min_qty": 4,
+      "max_qty": 5,
+      "count": 141,
+      "members": [
+        4,
+        5
+      ]
+    },
+    {
+      "center": 2,
+      "min_qty": 2,
+      "max_qty": 3,
+      "count": 126,
+      "members": [
+        2,
+        3
+      ]
+    }
+  ],
+  "VEV_6000": [
+    {
+      "center": 4,
+      "min_qty": 3,
+      "max_qty": 5,
+      "count": 208,
+      "members": [
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "center": 2,
+      "min_qty": 2,
+      "max_qty": 2,
+      "count": 76,
+      "members": [
+        2
+      ]
+    }
+  ],
+  "VEV_6500": [
+    {
+      "center": 4,
+      "min_qty": 3,
+      "max_qty": 5,
+      "count": 208,
+      "members": [
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "center": 2,
+      "min_qty": 2,
+      "max_qty": 2,
+      "count": 76,
+      "members": [
+        2
+      ]
+    }
+  ]
+}

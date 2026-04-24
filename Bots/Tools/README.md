@@ -6,6 +6,17 @@ Each major tool should live in its own subdirectory so we can add more tool fami
 
 ## Current tools
 
+### Round 3 quick start
+
+Location:
+- [ROUND3_RUNBOOK.md](/Users/xavierwinkelmann/Prosperity/Bots/Tools/ROUND3_RUNBOOK.md)
+
+Use this first when a new round starts. It gives the exact command order for:
+- product diagnosis
+- Olivia / bot-overlay discovery
+- dashboard serving
+- first strategy triage
+
 ### Product Analysis
 
 Location:

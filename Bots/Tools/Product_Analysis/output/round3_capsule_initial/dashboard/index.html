@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Capsule Product Diagnosis Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; background: #f7f7f7; color: #111; }
+    h1,h2,h3 { margin: 0 0 10px; }
+    .muted { color: #666; }
+    .summary-grid, .metric-grid { display: grid; gap: 12px; }
+    .summary-grid { grid-template-columns: repeat(4, minmax(180px,1fr)); margin: 16px 0 24px; }
+    .metric-grid { grid-template-columns: repeat(4, minmax(160px,1fr)); margin: 14px 0 18px; }
+    .card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .metric { background: #fafafa; border-radius: 8px; padding: 10px; }
+    .label { font-size: 12px; color: #666; margin-bottom: 4px; }
+    .value { font-size: 18px; font-weight: 700; }
+    select { padding: 8px 10px; font-size: 14px; margin: 10px 0 16px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 8px; text-align: left; border-bottom: 1px solid #eee; font-size: 13px; vertical-align: top; }
+    .layout { display: grid; grid-template-columns: 1.1fr 1fr; gap: 16px; }
+    .bars { display: grid; gap: 8px; }
+    .bar-row { display: grid; grid-template-columns: 180px 1fr 60px; gap: 10px; align-items: center; }
+    .bar-shell { height: 14px; background: #ececec; border-radius: 999px; overflow: hidden; }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, #1976d2, #43a047); }
+    ul { margin: 8px 0 0 18px; }
+    .warning { color: #b71c1c; }
+    .chip { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #edf4ff; color: #0d47a1; font-size: 12px; margin: 2px 6px 2px 0; }
+  </style>
+</head>
+<body>
+  <h1>Capsule Product Diagnosis Dashboard</h1>
+  <p class="muted">Interactive view over the diagnosis report and summary. Useful for reviewing archetypes, warnings, and strategy directions product by product.</p>
+
+  <div class="summary-grid">
+    <div class="metric"><div class="label">Root</div><div class="value" style="font-size:13px" id="root"></div></div>
+    <div class="metric"><div class="label">Generated</div><div class="value" style="font-size:13px" id="generated"></div></div>
+    <div class="metric"><div class="label">Price files</div><div class="value" id="priceCount"></div></div>
+    <div class="metric"><div class="label">Trade files</div><div class="value" id="tradeCount"></div></div>
+  </div>
+
+  <label for="productSelect">Product</label><br />
+  <select id="productSelect"></select>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h2 id="productName"></h2>
+    <div id="chips" style="margin-top:6px;"></div>
+    <div class="metric-grid" id="metrics"></div>
+  </div>
+
+  <div class="layout">
+    <div class="card">
+      <h3>Archetype Scores</h3>
+      <div id="archetypeBars" class="bars"></div>
+    </div>
+    <div class="card">
+      <h3>Trade Pattern Clues</h3>
+      <div id="tradePatterns"></div>
+    </div>
+  </div>
+
+  <div class="layout" style="margin-top:16px;">
+    <div class="card">
+      <h3>Recommended Approaches</h3>
+      <ul id="approaches"></ul>
+    </div>
+    <div class="card">
+      <h3>Warnings</h3>
+      <ul id="warnings"></ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <h3>All Products</h3>
+    <table id="productTable"></table>
+  </div>
+
+<script>
+const DATA = {"generated_at": "2026-04-24T12:25:44.972254", "root": "Data/ROUND_3", "intel_md": "/Users/xavierwinkelmann/Prosperity/Bots/Research/COMPETITIVE_INTEL.md", "notes": ["Advice rules were selected to align with Competitive Intelligence themes: Take \u2192 Clear \u2192 Make, wall/stable mid over raw mid, O-U for mean reversion, Black\u2013Scholes + smile for option families, and bot-detection overlays."], "price_files": ["Data/ROUND_3/prices_round_3_day_0.csv", "Data/ROUND_3/prices_round_3_day_1.csv", "Data/ROUND_3/prices_round_3_day_2.csv"], "trade_files": ["Data/ROUND_3/trades_round_3_day_0.csv", "Data/ROUND_3/trades_round_3_day_1.csv", "Data/ROUND_3/trades_round_3_day_2.csv"], "products": [{"product": "HYDROGEL_PACK", "primary_archetype": "anchored_market_maker", "secondary_archetypes": ["bot_driven_overlay", "slow_random_walk", "trending_drift_carry"], "mean_mid": 9990.806866666666, "mean_spread": 15.7208, "trend_snr": 1.2666770922812194, "trend_r2": 0.2541589152833255, "anchor_candidate": 10000, "anchor_step": 1000, "anchor_strength": 0.3382930151791862, "one_sided_ratio": 0.0, "n_price_rows": 30000, "n_valid_rows": 30000, "n_trade_rows": 1010, "avg_top_depth": 24.799266666666668, "imbalance_next_corr": 0.29886409457496504, "trend_resid_next_corr": -0.0404194172644014, "rolling_dev_next_corr": -0.031375729383007554, "common_trade_sizes": [[5, 212], [6, 205], [4, 202], [3, 198], [2, 193]], "daily_extrema_size_hits": [[4, 17], [3, 15], [6, 12], [5, 12], [2, 10]], "recurring_large_trade_timestamps": [], "archetype_scores": {"anchored_market_maker": 2.5149, "bot_driven_overlay": 2.4, "local_fair_microstructure": 1.1955, "mean_reverting_ou": 0.684, "slow_random_walk": 2.0234, "trending_drift_carry": 1.7941}, "recommended_approaches": ["Use Take \u2192 Clear \u2192 Make every tick.", "Build fair from anchor + wall/stable mid; skew quotes by inventory.", "Add toxicity / markout-aware quoting and a near-zero-EV recycler.", "Cluster repeated trade sizes and timestamp patterns; build a confidence-based detector.", "Check daily-extrema trades for Olivia-like or other informed-bot signatures.", "Use bot behavior as an overlay on top of the base product model.", "Profile first; do not tune on raw website randomness.", "Prefer robust plateaus over sharp parameter peaks.", "Keep state in traderData / serialized memory, not class variables."], "warnings": ["Repeated lot-size / extrema patterns detected; consider an Olivia-/bot-style detector overlay."], "days_seen": [0, 1, 2], "rounds_seen": [3], "conversion_feature_columns": [], "basket_candidate_with": [], "option_family": null, "strike": null}, {"product": "VELVETFRUIT_EXTRACT", "primary_archetype": "bot_driven_overlay", "secondary_archetypes": ["anchored_market_maker", "slow_random_walk", "trending_drift_carry"], "mean_mid": 5250.0981, "mean_spread": 4.988133333333334, "trend_snr": 1.1790566057763805, "trend_r2": 0.03931775198651168, "anchor_candidate": 5250, "anchor_step": 250, "anchor_strength": 0.2601101785736905, "one_sided_ratio": 0.0, "n_price_rows": 30000, "n_valid_rows": 30000, "n_trade_rows": 1372, "avg_top_depth": 75.62643333333334, "imbalance_next_corr": 0.2806478109322504, "trend_resid_next_corr": -0.036022099634473476, "rolling_dev_next_corr": -0.030815003689024963, "common_trade_sizes": [[8, 233], [7, 224], [5, 223], [6, 212], [3, 190], [4, 189], [10, 29], [9, 23], [13, 13], [12, 11]], "daily_extrema_size_hits": [[6, 14], [8, 14], [5, 13], [3, 12], [4, 5], [7, 3], [10, 2], [12, 2]], "recurring_large_trade_timestamps": [[547100, 2], [882600, 2], [10400, 1], [44900, 1], [105600, 1], [109000, 1], [112600, 1], [132600, 1], [156200, 1], [157400, 1]], "archetype_scores": {"anchored_market_maker": 2.2803, "bot_driven_overlay": 2.4, "local_fair_microstructure": 1.1226, "mean_reverting_ou": 0.6697, "slow_random_walk": 2.1798, "trending_drift_carry": 1.1474}, "recommended_approaches": ["Cluster repeated trade sizes and timestamp patterns; build a confidence-based detector.", "Check daily-extrema trades for Olivia-like or other informed-bot signatures.", "Use bot behavior as an overlay on top of the base product model.", "Use Take \u2192 Clear \u2192 Make every tick.", "Build fair from anchor + wall/stable mid; skew quotes by inventory.", "Add toxicity / markout-aware quoting and a near-zero-EV recycler.", "Profile first; do not tune on raw website randomness.", "Prefer robust plateaus over sharp parameter peaks.", "Keep state in traderData / serialized memory, not class variables."], "warnings": ["Repeated lot-size / extrema patterns detected; consider an Olivia-/bot-style detector overlay."], "days_seen": [0, 1, 2], "rounds_seen": [3], "conversion_feature_columns": [], "basket_candidate_with": [], "option_family": null, "strike": null}, {"product": "VEV_4000", "primary_archetype": "option_family", "secondary_archetypes": ["anchored_market_maker", "bot_driven_overlay", "local_fair_microstructure"], "mean_mid": 1250.1098, "mean_spread": 20.813466666666667, "trend_snr": 1.1678118543582598, "trend_r2": 0.0394045158383623, "anchor_candidate": 1250, "anchor_step": 250, "anchor_strength": 0.43874053001286406, "one_sided_ratio": 0.0, "n_price_rows": 30000, "n_valid_rows": 30000, "n_trade_rows": 464, "avg_top_depth": 21.841433333333335, "imbalance_next_corr": 0.48274013658783266, "trend_resid_next_corr": -0.045991075181483806, "rolling_dev_next_corr": -0.05950879414940789, "common_trade_sizes": [[2, 160], [3, 158], [1, 146]], "daily_extrema_size_hits": [[1, 15], [2, 14], [3, 14]], "recurring_large_trade_timestamps": [], "archetype_scores": {"anchored_market_maker": 2.8162, "bot_driven_overlay": 2.4, "local_fair_microstructure": 1.931, "mean_reverting_ou": 0.757, "option_family": 4.0, "slow_random_walk": 1.8225, "trending_drift_carry": 1.1474}, "recommended_approaches": ["Fit implied-vol smile across strikes; Black\u2013Scholes with smile-adjusted IV.", "Research IV mean-reversion, cross-voucher spreads, and cautious delta hedging.", "Do not use flat volatility unless validated very strongly.", "Use Take \u2192 Clear \u2192 Make every tick.", "Build fair from anchor + wall/stable mid; skew quotes by inventory.", "Add toxicity / markout-aware quoting and a near-zero-EV recycler.", "Profile first; do not tune on raw website randomness.", "Prefer robust plateaus over sharp parameter peaks.", "Keep state in traderData / serialized memory, not class variables."], "warnings": ["Do not use flat-vol Black\u2013Scholes without validating an IV smile.", "Repeated lot-size / extrema patterns detected; consider an Olivia-/bot-style detector overlay."], "days_seen": [0, 1, 2], "rounds_seen": [3], "conversion_feature_columns": [], "basket_candidate_with": [], "option_family": "VEV", "strike": 4000.0}, {"product": "VEV_4500", "primary_archetype": "option_family", "secondary_archetypes": ["anchored_market_maker", "basket_or_etf_candidate", "slow_random_walk"], "mean_mid": 750.1095666666666, "mean_spread": 15.852666666666666, "trend_snr": 1.188168556584129, "trend_r2": 0.03944950044588078, "anchor_candidate": 750, "anchor_step": 250, "anchor_strength": 0.4062056617546389, "one_sided_ratio": 0.0, "n_price_rows": 30000, "n_valid_rows": 30000, "n_trade_rows": 1, "avg_top_depth": 17.8998, "imbalance_next_corr": 0.40117066591079087, "trend_resid_next_corr": -0.04024037210213288, "rolling_dev_next_corr": -0.04355425997236391, "common_trade_sizes": [[1, 1]], "daily_extrema_size_hits": [[1, 2]], "recurring_large_trade_timestamps": [], "archetype_scores": {"anchored_market_maker": 2.7186, "basket_or_etf_candidate": 2.0, "local_fair_microstructure": 1.6047, "mean_reverting_ou": 0.7078, "option_family": 4.0, "slow_random_walk": 1.8876, "trending_drift_carry": 1.1481}, "recommended_approaches": ["Fit implied-vol smile across strikes; Black\u2013Scholes with smile-adjusted IV.", "Research IV mean-reversion, cross-voucher spreads, and cautious delta hedging.", "Do not use flat volatility unless validated very strongly.", "Use Take \u2192 Clear \u2192 Make every tick.", "Build fair from anchor + wall/stable mid; skew quotes by inventory.", "Add toxicity / markout-aware quoting and a near-zero-EV recycler.", "Profile first; do not tune on raw website randomness.", "Prefer robust plateaus over sharp parameter peaks.", "Keep state in traderData / serialized memory, not class variables."], "warnings": ["Do not use flat-vol Black\u2013Scholes without validating an IV smile."], "days_seen": [0, 1, 2], "rounds_seen": [3], "conversion_feature_columns": [], "basket_candidate_with": ["VEV_4000", "VEV_5000"], "option_family": "VEV", "strike": 4500.0}, {"product": "VEV_5000", "primary_archetype": "option_family", "secondary_archetypes": ["anchored_market_maker", "slow_random_walk", "basket_or_etf_candidate"], "mean_mid": 255.0224, "mean_spread": 6.043333333333333, "trend_snr": 1.17744360598697, "trend_r2": 0.0323638052805015, "anchor_candidate": 250, "anchor_step": 250, "anchor_strength": 0.3064251828835074, "one_sided_ratio": 0.0, "n_price_rows": 30000, "n_valid_rows": 30000, "n_trade_rows": 1, "avg_top_depth": 30.810366666666667, "imbalance_next_corr": 0.21368581769130784, "trend_resid_next_corr": -0.03291561631402546, "rolling_dev_next_corr": -0.021324309436173982, "common_trade_sizes": [[1, 1]], "daily_extrema_size_hits": [[1, 2]], "recurring_large_trade_timestamps": [], "archetype_scores": {"anchored_market_maker": 2.4193, "basket_or_etf_candidate": 2.0, "local_fair_microstructure": 0.8547, "mean_reverting_ou": 0.6414, "option_family": 4.0, "slow_random_walk": 2.0871, "trending_drift_carry": 1.1265}, "recommended_approaches": ["Fit implied-vol smile across strikes; Black\u2013Scholes with smile-adjusted IV.", "Research IV mean-reversion, cross-voucher spreads, and cautious delta hedging.", "Do not use flat volatility unless validated very strongly.", "Use Take \u2192 Clear \u2192 Make every tick.", "Build fair from anchor + wall/stable mid; skew quotes by inventory.", "Add toxicity / markout-aware quoting and a near-zero-EV recycler.", "Profile first; do not tune on raw website randomness.", "Prefer robust plateaus over sharp parameter peaks.", "Keep state in traderData / serialized memory, not class variables."], "warnings": ["Do not use flat-vol Black\u2013Scholes without validating an IV smile."], "days_seen": [0, 1, 2], "rounds_seen": [3], "conversion_feature_columns": [], "basket_candidate_with": ["VEV_4500", "VEV_5100"], "option_family": "VEV", "strike": 5000.0}, {"product": "VEV_5100", "primary_archetype": "option_family", "secondary_archetypes": ["anchored_market_maker", "slow_random_walk", "trending_drift_carry"], "mean_mid": 166.80545, "mean_spread": 4.295833333333333, "trend_snr": 1.097566284901699, "trend_r2": 0.027553715337412427, "anchor_candidate": 170, "anchor_step": 10, "anchor_strength": 0.24932058959005068, "one_sided_ratio": 0.0, "n_price_rows": 30000, "n_valid_rows": 30000, "n_trade_rows": 1, "avg_top_depth": 38.5963, "imbalance_next_corr": 0.22710759693280377, "trend_resid_next_corr": -0.0316700026260308, "rolling_dev_next_corr": -0.019850607440254256, "common_trade_sizes": [[1, 1]], "daily_extrema_size_hits": [[1, 2]], "recurring_large_trade_timestamps": [], "archetype_scores": {"anchored_market_maker": 2.248, "local_fair_microstructure": 0.9084, "mean_reverting_ou": 0.6347, "option_family": 4.0, "slow_random_walk": 2.2014, "trending_drift_carry": 1.1101}, "recommended_approaches": ["Fit implied-vol smile across strikes; Black\u2013Scholes with smile-adjusted IV.", "Research IV mean-reversion, cross-voucher spreads, and cautious delta hedging.", "Do not use flat volatility unless validated very strongly.", "Use Take \u2192 Clear \u2192 Make every tick.", "Build fair from anchor + wall/stable mid; skew quotes by inventory.", "Add toxicity / markout-aware quoting and a near-zero-EV recycler.", "Profile first; do not tune on raw website randomness.", "Prefer robust plateaus over sharp parameter peaks.", "Keep state in traderData / serialized memory, not class variables."], "warnings": ["Do not use flat-vol Black\u2013Scholes without validating an IV smile."], "days_seen": [0, 1, 2], "rounds_seen": [3], "conversion_feature_columns": [], "basket_candidate_with": [], "option_family": "VEV", "strike": 5100.0}, {"product": "VEV_5200", "primary_archetype": "option_family", "secondary_archetypes": ["anchored_market_maker", "slow_random_walk", "bot_driven_overlay"], "mean_mid": 95.54876666666667, "mean_spread": 2.888133333333333, "trend_snr": 0.9702108332718097, "trend_r2": 0.03722496313784857, "anchor_candidate": 100, "anchor_step": 100, "anchor_strength": 0.24866001544530483, "one_sided_ratio": 0.0, "n_price_rows": 30000, "n_valid_rows": 30000, "n_trade_rows": 18, "avg_top_depth": 45.07216666666667, "imbalance_next_corr": 0.28549987335882987, "trend_resid_next_corr": -0.03444513957591154, "rolling_dev_next_corr": -0.02771264302813509, "common_trade_sizes": [[5, 6], [2, 5], [4, 4], [3, 2], [1, 1]], "daily_extrema_size_hits": [[5, 6], [4, 4], [2, 3], [3, 2], [1, 1]], "recurring_large_trade_timestamps": [], "archetype_scores": {"anchored_market_maker": 2.246, "bot_driven_overlay": 1.6, "local_fair_microstructure": 1.142, "mean_reverting_ou": 0.6588, "option_family": 4.0, "slow_random_walk": 2.2027, "trending_drift_carry": 1.1359}, "recommended_approaches": ["Fit implied-vol smile across strikes; Black\u2013Scholes with smile-adjusted IV.", "Research IV mean-reversion, cross-voucher spreads, and cautious delta hedging.", "Do not use flat volatility unless validated very strongly.", "Use Take \u2192 Clear \u2192 Make every tick.", "Build fair from anchor + wall/stable mid; skew quotes by inventory.", "Add toxicity / markout-aware quoting and a near-zero-EV recycler.", "Profile first; do not tune on raw website randomness.", "Prefer robust plateaus over sharp parameter peaks.", "Keep state in traderData / serialized memory, not class variables."], "warnings": ["Do not use flat-vol Black\u2013Scholes without validating an IV smile.", "Repeated lot-size / extrema patterns detected; consider an Olivia-/bot-style detector overlay."], "days_seen": [0, 1, 2], "rounds_seen": [3], "conversion_feature_columns": [], "basket_candidate_with": [], "option_family": "VEV", "strike": 5200.0}, {"product": "VEV_5300", "primary_archetype": "option_family", "secondary_archetypes": ["bot_driven_overlay", "anchored_market_maker", "slow_random_walk"], "mean_mid": 46.759933333333336, "mean_spread": 2.1068, "trend_snr": 0.9453050349866658, "trend_r2": 0.04513716574704694, "anchor_candidate": 50, "anchor_step": 50, "anchor_strength": 0.2782908225694891, "one_sided_ratio": 0.0, "n_price_rows": 30000, "n_valid_rows": 30000, "n_trade_rows": 121, "avg_top_depth": 40.526666666666664, "imbalance_next_corr": 0.35331991630802617, "trend_resid_next_corr": -0.041184772776415114, "rolling_dev_next_corr": -0.045020420617400615, "common_trade_sizes": [[4, 36], [2, 33], [5, 28], [3, 23], [1, 1]], "daily_extrema_size_hits": [[4, 11], [5, 4], [2, 4], [3, 3]], "recurring_large_trade_timestamps": [], "archetype_scores": {"anchored_market_maker": 2.3349, "bot_driven_overlay": 2.4, "local_fair_microstructure": 1.4133, "mean_reverting_ou": 0.7136, "option_family": 4.0, "slow_random_walk": 2.1434, "trending_drift_carry": 1.159}, "recommended_approaches": ["Fit implied-vol smile across strikes; Black\u2013Scholes with smile-adjusted IV.", "Research IV mean-reversion, cross-voucher spreads, and cautious delta hedging.", "Do not use flat volatility unless validated very strongly.", "Cluster repeated trade sizes and timestamp patterns; build a confidence-based detector.", "Check daily-extrema trades for Olivia-like or other informed-bot signatures.", "Use bot behavior as an overlay on top of the base product model.", "Profile first; do not tune on raw website randomness.", "Prefer robust plateaus over sharp parameter peaks.", "Keep state in traderData / serialized memory, not class variables."], "warnings": ["Do not use flat-vol Black\u2013Scholes without validating an IV smile.", "Repeated lot-size / extrema patterns detected; consider an Olivia-/bot-style detector overlay."], "days_seen": [0, 1, 2], "rounds_seen": [3], "conversion_feature_columns": [], "basket_candidate_with": [], "option_family": "VEV", "strike": 5300.0}, {"product": "VEV_5400", "primary_archetype": "option_family", "secondary_archetypes": ["bot_driven_overlay", "slow_random_walk", "anchored_market_maker"], "mean_mid": 15.951916666666667, "mean_spread": 1.3814333333333333, "trend_snr": 1.257621175335682, "trend_r2": 0.11728103187336536, "anchor_candidate": 20, "anchor_step": 10, "anchor_strength": 0.21448079216900134, "one_sided_ratio": 0.0, "n_price_rows": 30000, "n_valid_rows": 30000, "n_trade_rows": 225, "avg_top_depth": 43.482166666666664, "imbalance_next_corr": 0.27311185709955177, "trend_resid_next_corr": -0.0494008827701261, "rolling_dev_next_corr": -0.06382269859808991, "common_trade_sizes": [[2, 62], [4, 60], [5, 57], [3, 46]], "daily_extrema_size_hits": [[2, 9], [5, 8], [4, 8], [3, 6]], "recurring_large_trade_timestamps": [], "archetype_scores": {"anchored_market_maker": 2.1434, "bot_driven_overlay": 2.4, "local_fair_microstructure": 1.0924, "mean_reverting_ou": 0.7758, "option_family": 4.0, "slow_random_walk": 2.271, "trending_drift_carry": 1.3833}, "recommended_approaches": ["Fit implied-vol smile across strikes; Black\u2013Scholes with smile-adjusted IV.", "Research IV mean-reversion, cross-voucher spreads, and cautious delta hedging.", "Do not use flat volatility unless validated very strongly.", "Cluster repeated trade sizes and timestamp patterns; build a confidence-based detector.", "Check daily-extrema trades for Olivia-like or other informed-bot signatures.", "Use bot behavior as an overlay on top of the base product model.", "Profile first; do not tune on raw website randomness.", "Prefer robust plateaus over sharp parameter peaks.", "Keep state in traderData / serialized memory, not class variables."], "warnings": ["Do not use flat-vol Black\u2013Scholes without validating an IV smile.", "Repeated lot-size / extrema patterns detected; consider an Olivia-/bot-style detector overlay."], "days_seen": [0, 1, 2], "rounds_seen": [3], "conversion_feature_columns": [], "basket_candidate_with": [], "option_family": "VEV", "strike": 5400.0}, {"product": "VEV_5500", "primary_archetype": "option_family", "secondary_archetypes": ["bot_driven_overlay", "slow_random_walk", "anchored_market_maker"], "mean_mid": 6.64135, "mean_spread": 1.1497666666666666, "trend_snr": 0.6887549927218407, "trend_r2": 0.15945046646031566, "anchor_candidate": 10, "anchor_step": 10, "anchor_strength": 0.20816416263377513, "one_sided_ratio": 0.0, "n_price_rows": 30000, "n_valid_rows": 30000, "n_trade_rows": 267, "avg_top_depth": 44.34973333333333, "imbalance_next_corr": 0.2869608024407238, "trend_resid_next_corr": -0.07324617939754945, "rolling_dev_next_corr": -0.11490259660988172, "common_trade_sizes": [[2, 73], [4, 73], [5, 68], [3, 53]], "daily_extrema_size_hits": [[4, 8], [3, 5], [5, 5], [2, 5]], "recurring_large_trade_timestamps": [], "archetype_scores": {"anchored_market_maker": 2.1245, "bot_driven_overlay": 2.4, "local_fair_microstructure": 1.1478, "mean_reverting_ou": 0.9495, "option_family": 4.0, "slow_random_walk": 2.2837, "trending_drift_carry": 1.4956}, "recommended_approaches": ["Fit implied-vol smile across strikes; Black\u2013Scholes with smile-adjusted IV.", "Research IV mean-reversion, cross-voucher spreads, and cautious delta hedging.", "Do not use flat volatility unless validated very strongly.", "Cluster repeated trade sizes and timestamp patterns; build a confidence-based detector.", "Check daily-extrema trades for Olivia-like or other informed-bot signatures.", "Use bot behavior as an overlay on top of the base product model.", "Profile first; do not tune on raw website randomness.", "Prefer robust plateaus over sharp parameter peaks.", "Keep state in traderData / serialized memory, not class variables."], "warnings": ["Do not use flat-vol Black\u2013Scholes without validating an IV smile.", "Repeated lot-size / extrema patterns detected; consider an Olivia-/bot-style detector overlay."], "days_seen": [0, 1, 2], "rounds_seen": [3], "conversion_feature_columns": [], "basket_candidate_with": [], "option_family": "VEV", "strike": 5500.0}, {"product": "VEV_6000", "primary_archetype": "option_family", "secondary_archetypes": ["anchored_market_maker", "bot_driven_overlay", "slow_random_walk"], "mean_mid": 0.5, "mean_spread": 1.0, "trend_snr": NaN, "trend_r2": NaN, "anchor_candidate": 0, "anchor_step": 1000, "anchor_strength": 0.7666666666666666, "one_sided_ratio": 0.0, "n_price_rows": 30000, "n_valid_rows": 30000, "n_trade_rows": 284, "avg_top_depth": 44.95503333333333, "imbalance_next_corr": NaN, "trend_resid_next_corr": NaN, "rolling_dev_next_corr": NaN, "common_trade_sizes": [[4, 78], [2, 76], [5, 74], [3, 56]], "daily_extrema_size_hits": [[3, 4], [2, 2]], "recurring_large_trade_timestamps": [], "archetype_scores": {"anchored_market_maker": 2.8, "bot_driven_overlay": 2.4, "option_family": 4.0, "slow_random_walk": 0.4667}, "recommended_approaches": ["Fit implied-vol smile across strikes; Black\u2013Scholes with smile-adjusted IV.", "Research IV mean-reversion, cross-voucher spreads, and cautious delta hedging.", "Do not use flat volatility unless validated very strongly.", "Use Take \u2192 Clear \u2192 Make every tick.", "Build fair from anchor + wall/stable mid; skew quotes by inventory.", "Add toxicity / markout-aware quoting and a near-zero-EV recycler.", "Profile first; do not tune on raw website randomness.", "Prefer robust plateaus over sharp parameter peaks.", "Keep state in traderData / serialized memory, not class variables."], "warnings": ["Do not use flat-vol Black\u2013Scholes without validating an IV smile.", "Repeated lot-size / extrema patterns detected; consider an Olivia-/bot-style detector overlay."], "days_seen": [0, 1, 2], "rounds_seen": [3], "conversion_feature_columns": [], "basket_candidate_with": [], "option_family": "VEV", "strike": 6000.0}, {"product": "VEV_6500", "primary_archetype": "option_family", "secondary_archetypes": ["anchored_market_maker", "bot_driven_overlay", "slow_random_walk"], "mean_mid": 0.5, "mean_spread": 1.0, "trend_snr": NaN, "trend_r2": NaN, "anchor_candidate": 0, "anchor_step": 1000, "anchor_strength": 0.7666666666666666, "one_sided_ratio": 0.0, "n_price_rows": 30000, "n_valid_rows": 30000, "n_trade_rows": 284, "avg_top_depth": 30.961566666666666, "imbalance_next_corr": NaN, "trend_resid_next_corr": NaN, "rolling_dev_next_corr": NaN, "common_trade_sizes": [[4, 78], [2, 76], [5, 74], [3, 56]], "daily_extrema_size_hits": [[3, 4], [2, 2]], "recurring_large_trade_timestamps": [], "archetype_scores": {"anchored_market_maker": 2.8, "bot_driven_overlay": 2.4, "option_family": 4.0, "slow_random_walk": 0.4667}, "recommended_approaches": ["Fit implied-vol smile across strikes; Black\u2013Scholes with smile-adjusted IV.", "Research IV mean-reversion, cross-voucher spreads, and cautious delta hedging.", "Do not use flat volatility unless validated very strongly.", "Use Take \u2192 Clear \u2192 Make every tick.", "Build fair from anchor + wall/stable mid; skew quotes by inventory.", "Add toxicity / markout-aware quoting and a near-zero-EV recycler.", "Profile first; do not tune on raw website randomness.", "Prefer robust plateaus over sharp parameter peaks.", "Keep state in traderData / serialized memory, not class variables."], "warnings": ["Do not use flat-vol Black\u2013Scholes without validating an IV smile.", "Repeated lot-size / extrema patterns detected; consider an Olivia-/bot-style detector overlay."], "days_seen": [0, 1, 2], "rounds_seen": [3], "conversion_feature_columns": [], "basket_candidate_with": [], "option_family": "VEV", "strike": 6500.0}]};
+
+function fmt(value, digits=3) {
+  if (value === null || value === undefined || Number.isNaN(value)) return "n/a";
+  if (typeof value === "number") return value.toFixed(digits);
+  return String(value);
+}
+
+function setSummary() {
+  document.getElementById("root").textContent = DATA.root || "n/a";
+  document.getElementById("generated").textContent = DATA.generated_at || "n/a";
+  document.getElementById("priceCount").textContent = DATA.price_files.length;
+  document.getElementById("tradeCount").textContent = DATA.trade_files.length;
+}
+
+function renderTable() {
+  const rows = DATA.products.map(p => `
+    <tr>
+      <td>${p.product}</td>
+      <td>${p.primary_archetype}</td>
+      <td>${(p.secondary_archetypes || []).join(", ")}</td>
+      <td>${fmt(p.mean_mid, 2)}</td>
+      <td>${fmt(p.mean_spread, 2)}</td>
+      <td>${fmt(p.trend_snr, 2)}</td>
+      <td>${fmt(p.one_sided_ratio, 3)}</td>
+    </tr>`).join("");
+  document.getElementById("productTable").innerHTML = `
+    <tr><th>Product</th><th>Primary</th><th>Secondary</th><th>Mean mid</th><th>Mean spread</th><th>Trend SNR</th><th>One-sided</th></tr>
+    ${rows}
+  `;
+}
+
+function renderProduct(productName) {
+  const p = DATA.products.find(x => x.product === productName);
+  if (!p) return;
+  document.getElementById("productName").textContent = p.product;
+  document.getElementById("chips").innerHTML = `
+    <span class="chip">primary: ${p.primary_archetype}</span>
+    ${(p.secondary_archetypes || []).map(x => `<span class="chip">${x}</span>`).join("")}
+  `;
+  const metricRows = [
+    ["Rounds seen", (p.rounds_seen || []).join(", ") || "n/a"],
+    ["Days seen", (p.days_seen || []).join(", ") || "n/a"],
+    ["Valid / total rows", `${p.n_valid_rows} / ${p.n_price_rows}`],
+    ["Trade rows", p.n_trade_rows],
+    ["Mean mid", fmt(p.mean_mid, 2)],
+    ["Mean spread", fmt(p.mean_spread, 3)],
+    ["Top depth", fmt(p.avg_top_depth, 2)],
+    ["Trend SNR", fmt(p.trend_snr, 3)],
+    ["Trend R²", fmt(p.trend_r2, 4)],
+    ["One-sided ratio", fmt(p.one_sided_ratio, 3)],
+    ["Imbalance corr", fmt(p.imbalance_next_corr, 3)],
+    ["Residual/next corr", fmt(p.trend_resid_next_corr, 3)],
+    ["Rolling dev corr", fmt(p.rolling_dev_next_corr, 3)],
+    ["Anchor", p.anchor_candidate !== null ? `${p.anchor_candidate} (${p.anchor_step})` : "n/a"],
+  ];
+  document.getElementById("metrics").innerHTML = metricRows.map(([label, value]) => `
+    <div class="metric"><div class="label">${label}</div><div class="value">${value}</div></div>
+  `).join("");
+
+  const scores = Object.entries(p.archetype_scores || {});
+  const maxScore = Math.max(1, ...scores.map(([,v]) => v));
+  document.getElementById("archetypeBars").innerHTML = scores.map(([name, value]) => `
+    <div class="bar-row">
+      <div>${name}</div>
+      <div class="bar-shell"><div class="bar-fill" style="width:${(value / maxScore) * 100}%"></div></div>
+      <div>${fmt(value, 3)}</div>
+    </div>
+  `).join("");
+
+  const tradePatterns = [];
+  if ((p.common_trade_sizes || []).length) tradePatterns.push(`<div><strong>Common trade sizes:</strong> ${JSON.stringify(p.common_trade_sizes.slice(0, 6))}</div>`);
+  if ((p.daily_extrema_size_hits || []).length) tradePatterns.push(`<div><strong>Extrema size hits:</strong> ${JSON.stringify(p.daily_extrema_size_hits.slice(0, 6))}</div>`);
+  if ((p.recurring_large_trade_timestamps || []).length) tradePatterns.push(`<div><strong>Recurring large-trade timestamps:</strong> ${JSON.stringify(p.recurring_large_trade_timestamps.slice(0, 8))}</div>`);
+  if ((p.conversion_feature_columns || []).length) tradePatterns.push(`<div><strong>Conversion columns:</strong> ${(p.conversion_feature_columns || []).join(", ")}</div>`);
+  if ((p.basket_candidate_with || []).length) tradePatterns.push(`<div><strong>Basket candidates:</strong> ${(p.basket_candidate_with || []).join(", ")}</div>`);
+  if (p.option_family) tradePatterns.push(`<div><strong>Option family:</strong> ${p.option_family} strike ${p.strike}</div>`);
+  document.getElementById("tradePatterns").innerHTML = tradePatterns.join("") || "<div class='muted'>No special pattern clues recorded.</div>";
+
+  document.getElementById("approaches").innerHTML = (p.recommended_approaches || []).map(x => `<li>${x}</li>`).join("") || "<li class='muted'>No strategy suggestions.</li>";
+  document.getElementById("warnings").innerHTML = (p.warnings || []).map(x => `<li class="warning">${x}</li>`).join("") || "<li class='muted'>No warnings.</li>";
+}
+
+setSummary();
+renderTable();
+const select = document.getElementById("productSelect");
+for (const p of DATA.products) {
+  const opt = document.createElement("option");
+  opt.value = p.product;
+  opt.textContent = p.product;
+  select.appendChild(opt);
+}
+select.addEventListener("change", () => renderProduct(select.value));
+if (DATA.products.length) {
+  select.value = DATA.products[0].product;
+  renderProduct(select.value);
+}
+</script>
+</body>
+</html>
