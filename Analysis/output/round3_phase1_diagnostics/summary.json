@@ -1,0 +1,116 @@
+[
+  {
+    "product": "HYDROGEL_PACK",
+    "anchor_reference": 10000.0,
+    "metrics": {
+      "mean_mid": 9990.806866666666,
+      "spread_mean": 15.7208,
+      "spread_std": 1.4550076838285084,
+      "top_depth_mean": 24.799266666666668,
+      "top3_depth_mean": 75.26366666666667,
+      "drift_snr": 0.026607961650520356,
+      "mean_reversion_half_life": 300.54352447916875,
+      "micro_gap_corr": 0.2969983916868094,
+      "imbalance_corr": 0.2988804860175016,
+      "stable_gap_corr": 0.3266704650666351,
+      "stable_gap_std": 0.3730830505696428,
+      "stable_gap_abs_mean": 0.45841090065443035,
+      "anchor_dist": 9.193133333334117
+    },
+    "daily_metrics": [
+      {
+        "day": 0,
+        "drift_snr": -0.19168367775480571,
+        "mean_reversion_half_life": 188.82463515489016,
+        "micro_gap_corr": 0.29834843081746526,
+        "imbalance_corr": 0.29981811296189104,
+        "volatility": 0.021930627436743386
+      },
+      {
+        "day": 1,
+        "drift_snr": 0.26533653133101787,
+        "mean_reversion_half_life": 418.870933690775,
+        "micro_gap_corr": 0.2952524019986347,
+        "imbalance_corr": 0.29733553250069716,
+        "volatility": 0.021500371043172383
+      },
+      {
+        "day": 2,
+        "drift_snr": -0.004608676230378849,
+        "mean_reversion_half_life": 293.8131512301955,
+        "micro_gap_corr": 0.297579356405517,
+        "imbalance_corr": 0.2995803795757977,
+        "volatility": 0.02172141113691447
+      }
+    ],
+    "bucket_realized_volatility": {
+      "0": 0.015691894695694226,
+      "1": 0.01527590185369422,
+      "2": 0.015237633418157901,
+      "3": 0.015281215911500338,
+      "4": 0.014961759788363492,
+      "5": 0.015680522387965256
+    },
+    "primary_classification": "anchored_local_fair_mm",
+    "anchor_strength": "strong",
+    "execution_style": "Take -> Clear -> Make around a robust stable/wall fair",
+    "notes": "drift signal is weak; mean-reversion is not strong enough to be the base model; short-horizon local book state contains predictive information; the product stays near a strong anchor"
+  },
+  {
+    "product": "VELVETFRUIT_EXTRACT",
+    "anchor_reference": 5250.0,
+    "metrics": {
+      "mean_mid": 5250.0981,
+      "spread_mean": 4.988133333333334,
+      "spread_std": 0.8471083257503468,
+      "top_depth_mean": 75.62643333333334,
+      "top3_depth_mean": 120.73226666666666,
+      "drift_snr": 0.23222762266600377,
+      "mean_reversion_half_life": 279.2757259735223,
+      "micro_gap_corr": 0.22697117879644363,
+      "imbalance_corr": 0.2806662006925825,
+      "stable_gap_corr": 0.34477125057966346,
+      "stable_gap_std": 0.22506038033716963,
+      "stable_gap_abs_mean": 0.18143184537862217,
+      "anchor_dist": 0.09810000000015862
+    },
+    "daily_metrics": [
+      {
+        "day": 0,
+        "drift_snr": -0.05354635145171111,
+        "mean_reversion_half_life": 206.11525433899195,
+        "micro_gap_corr": 0.2264724418373094,
+        "imbalance_corr": 0.27806811025686357,
+        "volatility": 0.021356444095807985
+      },
+      {
+        "day": 1,
+        "drift_snr": 0.18064656997715528,
+        "mean_reversion_half_life": 234.6689535927815,
+        "micro_gap_corr": 0.22874688126354764,
+        "imbalance_corr": 0.283809629093266,
+        "volatility": 0.021621225367872653
+      },
+      {
+        "day": 2,
+        "drift_snr": 0.2460335652345838,
+        "mean_reversion_half_life": 347.5616638927893,
+        "micro_gap_corr": 0.22573070942078832,
+        "imbalance_corr": 0.2801293462669275,
+        "volatility": 0.021655631427663913
+      }
+    ],
+    "bucket_realized_volatility": {
+      "0": 0.015319773318610088,
+      "1": 0.015497209933135948,
+      "2": 0.014939040596119472,
+      "3": 0.015097213811230045,
+      "4": 0.0152902468123883,
+      "5": 0.01525627688025698
+    },
+    "primary_classification": "anchored_local_fair_mm",
+    "anchor_strength": "strong",
+    "execution_style": "Take -> Clear -> Make around a robust stable/wall fair",
+    "notes": "drift signal is weak; mean-reversion is not strong enough to be the base model; short-horizon local book state contains predictive information; the product stays near a strong anchor"
+  }
+]

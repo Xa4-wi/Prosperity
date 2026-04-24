@@ -1,0 +1,14 @@
+/Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/deps/serde-0f3ad8e7fb245763.d: /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/build/serde-0e8e8a817c3d4882/out/private.rs
+
+/Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/deps/libserde-0f3ad8e7fb245763.rlib: /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/build/serde-0e8e8a817c3d4882/out/private.rs
+
+/Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/deps/libserde-0f3ad8e7fb245763.rmeta: /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/build/serde-0e8e8a817c3d4882/out/private.rs
+
+/Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs:
+/Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs:
+/Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs:
+/Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs:
+/Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs:
+/Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/build/serde-0e8e8a817c3d4882/out/private.rs:
+
+# env-dep:OUT_DIR=/Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/build/serde-0e8e8a817c3d4882/out

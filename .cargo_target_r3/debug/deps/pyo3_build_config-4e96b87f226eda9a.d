@@ -1,0 +1,14 @@
+/Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/deps/pyo3_build_config-4e96b87f226eda9a.d: /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.27.2/src/lib.rs /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.27.2/src/errors.rs /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.27.2/src/impl_.rs /Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/build/pyo3-build-config-9f70bd06602c0393/out/pyo3-build-config-file.txt /Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/build/pyo3-build-config-9f70bd06602c0393/out/pyo3-build-config.txt
+
+/Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/deps/libpyo3_build_config-4e96b87f226eda9a.rlib: /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.27.2/src/lib.rs /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.27.2/src/errors.rs /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.27.2/src/impl_.rs /Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/build/pyo3-build-config-9f70bd06602c0393/out/pyo3-build-config-file.txt /Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/build/pyo3-build-config-9f70bd06602c0393/out/pyo3-build-config.txt
+
+/Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/deps/libpyo3_build_config-4e96b87f226eda9a.rmeta: /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.27.2/src/lib.rs /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.27.2/src/errors.rs /Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.27.2/src/impl_.rs /Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/build/pyo3-build-config-9f70bd06602c0393/out/pyo3-build-config-file.txt /Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/build/pyo3-build-config-9f70bd06602c0393/out/pyo3-build-config.txt
+
+/Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.27.2/src/lib.rs:
+/Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.27.2/src/errors.rs:
+/Users/xavierwinkelmann/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.27.2/src/impl_.rs:
+/Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/build/pyo3-build-config-9f70bd06602c0393/out/pyo3-build-config-file.txt:
+/Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/build/pyo3-build-config-9f70bd06602c0393/out/pyo3-build-config.txt:
+
+# env-dep:CARGO_PKG_VERSION=0.27.2
+# env-dep:OUT_DIR=/Users/xavierwinkelmann/Prosperity/.cargo_target_r3/debug/build/pyo3-build-config-9f70bd06602c0393/out

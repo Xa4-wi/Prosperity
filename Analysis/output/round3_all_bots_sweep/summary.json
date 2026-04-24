@@ -1,0 +1,452 @@
+[
+  {
+    "bot": "TradervR3_1.py",
+    "returncode": 0,
+    "raw_total": -49148.0,
+    "calibrated_total": -30128.5,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_1_20260424_150640",
+    "top_products": [
+      {
+        "product": "VEV_5100",
+        "local_pnl": -54167.0,
+        "weight": 1.0,
+        "calibrated_contribution": -54167.0
+      },
+      {
+        "product": "VEV_5000",
+        "local_pnl": 24038.5,
+        "weight": 1.0,
+        "calibrated_contribution": 24038.5
+      },
+      {
+        "product": "HYDROGEL_PACK",
+        "local_pnl": 132926.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VELVETFRUIT_EXTRACT",
+        "local_pnl": 63031.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4000",
+        "local_pnl": 21662.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4500",
+        "local_pnl": 37814.5,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      }
+    ]
+  },
+  {
+    "bot": "TradervR3_2.py",
+    "returncode": 0,
+    "raw_total": -44685.5,
+    "calibrated_total": -26872.0,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_2_20260424_150824",
+    "top_products": [
+      {
+        "product": "VEV_5100",
+        "local_pnl": -50066.0,
+        "weight": 1.0,
+        "calibrated_contribution": -50066.0
+      },
+      {
+        "product": "VEV_5000",
+        "local_pnl": 23194.0,
+        "weight": 1.0,
+        "calibrated_contribution": 23194.0
+      },
+      {
+        "product": "HYDROGEL_PACK",
+        "local_pnl": 132926.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VELVETFRUIT_EXTRACT",
+        "local_pnl": 63031.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4000",
+        "local_pnl": 20940.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4500",
+        "local_pnl": 38923.5,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      }
+    ]
+  },
+  {
+    "bot": "TradervR3_3.py",
+    "returncode": 0,
+    "raw_total": -35436.0,
+    "calibrated_total": -23917.0,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_3_20260424_150942",
+    "top_products": [
+      {
+        "product": "VEV_5100",
+        "local_pnl": -51267.0,
+        "weight": 1.0,
+        "calibrated_contribution": -51267.0
+      },
+      {
+        "product": "VEV_5000",
+        "local_pnl": 27350.0,
+        "weight": 1.0,
+        "calibrated_contribution": 27350.0
+      },
+      {
+        "product": "HYDROGEL_PACK",
+        "local_pnl": 132857.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VELVETFRUIT_EXTRACT",
+        "local_pnl": 62942.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4000",
+        "local_pnl": 23026.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4500",
+        "local_pnl": 49216.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      }
+    ]
+  },
+  {
+    "bot": "TradervR3_4.py",
+    "returncode": 0,
+    "raw_total": -54616.5,
+    "calibrated_total": -36884.5,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_4_20260424_151101",
+    "top_products": [
+      {
+        "product": "VEV_5100",
+        "local_pnl": -64563.0,
+        "weight": 1.0,
+        "calibrated_contribution": -64563.0
+      },
+      {
+        "product": "VEV_5000",
+        "local_pnl": 27678.5,
+        "weight": 1.0,
+        "calibrated_contribution": 27678.5
+      },
+      {
+        "product": "HYDROGEL_PACK",
+        "local_pnl": 132857.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VELVETFRUIT_EXTRACT",
+        "local_pnl": 62857.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4000",
+        "local_pnl": 21742.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4500",
+        "local_pnl": 43309.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      }
+    ]
+  },
+  {
+    "bot": "TradervR3_4_1.py",
+    "returncode": 0,
+    "raw_total": -54507.5,
+    "calibrated_total": -36884.5,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_4_1_20260424_151219",
+    "top_products": [
+      {
+        "product": "VEV_5100",
+        "local_pnl": -64563.0,
+        "weight": 1.0,
+        "calibrated_contribution": -64563.0
+      },
+      {
+        "product": "VEV_5000",
+        "local_pnl": 27678.5,
+        "weight": 1.0,
+        "calibrated_contribution": 27678.5
+      },
+      {
+        "product": "HYDROGEL_PACK",
+        "local_pnl": 132857.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VELVETFRUIT_EXTRACT",
+        "local_pnl": 62966.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4000",
+        "local_pnl": 21742.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4500",
+        "local_pnl": 43309.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      }
+    ]
+  },
+  {
+    "bot": "TradervR3_4_2.py",
+    "returncode": 0,
+    "raw_total": -55025.5,
+    "calibrated_total": -38426.5,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_4_2_20260424_151341",
+    "top_products": [
+      {
+        "product": "VEV_5100",
+        "local_pnl": -67925.0,
+        "weight": 1.0,
+        "calibrated_contribution": -67925.0
+      },
+      {
+        "product": "VEV_5000",
+        "local_pnl": 29498.5,
+        "weight": 1.0,
+        "calibrated_contribution": 29498.5
+      },
+      {
+        "product": "HYDROGEL_PACK",
+        "local_pnl": 132857.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VELVETFRUIT_EXTRACT",
+        "local_pnl": 62869.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4000",
+        "local_pnl": 21838.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4500",
+        "local_pnl": 44644.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      }
+    ]
+  },
+  {
+    "bot": "TradervR3_5.py",
+    "returncode": 0,
+    "raw_total": -52049.0,
+    "calibrated_total": -35177.5,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_5_20260424_151458",
+    "top_products": [
+      {
+        "product": "VEV_5100",
+        "local_pnl": -60585.0,
+        "weight": 1.0,
+        "calibrated_contribution": -60585.0
+      },
+      {
+        "product": "VEV_5000",
+        "local_pnl": 25407.5,
+        "weight": 1.0,
+        "calibrated_contribution": 25407.5
+      },
+      {
+        "product": "HYDROGEL_PACK",
+        "local_pnl": 132857.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VELVETFRUIT_EXTRACT",
+        "local_pnl": 62971.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4000",
+        "local_pnl": 21686.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4500",
+        "local_pnl": 38372.5,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      }
+    ]
+  },
+  {
+    "bot": "TradervR3_6.py",
+    "returncode": 0,
+    "raw_total": -48170.0,
+    "calibrated_total": -36368.0,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_6_20260424_151611",
+    "top_products": [
+      {
+        "product": "VEV_5100",
+        "local_pnl": -63232.0,
+        "weight": 1.0,
+        "calibrated_contribution": -63232.0
+      },
+      {
+        "product": "VEV_5000",
+        "local_pnl": 26864.0,
+        "weight": 1.0,
+        "calibrated_contribution": 26864.0
+      },
+      {
+        "product": "HYDROGEL_PACK",
+        "local_pnl": 132857.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VELVETFRUIT_EXTRACT",
+        "local_pnl": 62971.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4000",
+        "local_pnl": 21668.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4500",
+        "local_pnl": 38773.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      }
+    ]
+  },
+  {
+    "bot": "TradervR3_7.py",
+    "returncode": 0,
+    "raw_total": 83575.0,
+    "calibrated_total": 54343.0,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_7_20260424_151725",
+    "top_products": [
+      {
+        "product": "VEV_5000",
+        "local_pnl": 111352.0,
+        "weight": 1.0,
+        "calibrated_contribution": 111352.0
+      },
+      {
+        "product": "VEV_5100",
+        "local_pnl": -57009.0,
+        "weight": 1.0,
+        "calibrated_contribution": -57009.0
+      },
+      {
+        "product": "HYDROGEL_PACK",
+        "local_pnl": 132235.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VELVETFRUIT_EXTRACT",
+        "local_pnl": 63115.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4000",
+        "local_pnl": 57291.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4500",
+        "local_pnl": 85964.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      }
+    ]
+  },
+  {
+    "bot": "TradervR3_8.py",
+    "returncode": 0,
+    "raw_total": 6281.0,
+    "calibrated_total": 13044.0,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_8_20260424_151847",
+    "top_products": [
+      {
+        "product": "VEV_5000",
+        "local_pnl": 68006.0,
+        "weight": 1.0,
+        "calibrated_contribution": 68006.0
+      },
+      {
+        "product": "VEV_5100",
+        "local_pnl": -54962.0,
+        "weight": 1.0,
+        "calibrated_contribution": -54962.0
+      },
+      {
+        "product": "HYDROGEL_PACK",
+        "local_pnl": 129087.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VELVETFRUIT_EXTRACT",
+        "local_pnl": 61821.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4000",
+        "local_pnl": 34913.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_4500",
+        "local_pnl": 61576.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      }
+    ]
+  }
+]

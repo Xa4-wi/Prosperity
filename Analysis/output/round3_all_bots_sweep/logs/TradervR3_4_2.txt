@@ -1,0 +1,15 @@
+bot: TradervR3_4_2.py
+metrics: /Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777036343483/metrics.json
+raw_local_total: -55025.50
+calibrated_total: -38426.50
+output_dir: /Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_4_2_20260424_151341
+
+Top product contributions:
+- VEV_5100: local=-67925.00, weight=1.00, calibrated=-67925.00
+- VEV_5000: local=29498.50, weight=1.00, calibrated=29498.50
+- HYDROGEL_PACK: local=132857.00, weight=0.00, calibrated=0.00
+- VELVETFRUIT_EXTRACT: local=62869.00, weight=0.00, calibrated=0.00
+- VEV_4000: local=21838.00, weight=0.00, calibrated=0.00
+- VEV_4500: local=44644.00, weight=0.00, calibrated=0.00
+- VEV_5200: local=-139545.00, weight=0.00, calibrated=-0.00
+- VEV_5300: local=-99445.00, weight=0.00, calibrated=-0.00
