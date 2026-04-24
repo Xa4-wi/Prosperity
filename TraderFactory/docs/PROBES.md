@@ -4,13 +4,13 @@
 
 Core package:
 
-- [trader_factory/probes](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/probes)
+- [trader_factory/probes](TraderFactory/trader_factory/probes)
 
 Current capabilities:
 
-- standard DIAG event helpers in [logging.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/probes/logging.py)
-- built-in probe specs in [specs.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/probes/specs.py)
-- probe workspace generation in [scaffold.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/probes/scaffold.py)
+- standard DIAG event helpers in [logging.py](TraderFactory/trader_factory/probes/logging.py)
+- built-in probe specs in [specs.py](TraderFactory/trader_factory/probes/specs.py)
+- probe workspace generation in [scaffold.py](TraderFactory/trader_factory/probes/scaffold.py)
 
 ## Probe Modes
 
@@ -76,7 +76,7 @@ For backward compatibility with the current analyzers, keep the historical short
 - `et`
 - `p`
 
-The helper in [logging.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/probes/logging.py) supports that directly through `make_event(...)`.
+The helper in [logging.py](TraderFactory/trader_factory/probes/logging.py) supports that directly through `make_event(...)`.
 
 ## Relationship To Diagnostics
 
@@ -84,9 +84,9 @@ The probe framework creates the research workspace and event schema.
 
 The diagnostics package analyzes official outputs afterward:
 
-- [boundary_probe.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/diagnostics/boundary_probe.py)
-- [passive_ladder.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/diagnostics/passive_ladder.py)
-- [aggressive_markout.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/diagnostics/aggressive_markout.py)
+- [boundary_probe.py](TraderFactory/trader_factory/diagnostics/boundary_probe.py)
+- [passive_ladder.py](TraderFactory/trader_factory/diagnostics/passive_ladder.py)
+- [aggressive_markout.py](TraderFactory/trader_factory/diagnostics/aggressive_markout.py)
 
 ## Current Scope
 

@@ -2,7 +2,7 @@
 
 This is a separate Round 2 backtester workspace that still runs bot files directly from `Bots/`.
 
-It is built around the manual in [Bots/Round2/round2_backtester_manual.md](/Users/xavierwinkelmann/Prosperity/Bots/Round2/round2_backtester_manual.md) and supports:
+It is built around the manual in [Bots/Round2/round2_backtester_manual.md](Bots/Round2/round2_backtester_manual.md) and supports:
 
 - public Round 2 price and trade CSV replay
 - raw run artifact loading with `load_any()`
@@ -16,12 +16,12 @@ It is built around the manual in [Bots/Round2/round2_backtester_manual.md](/User
 
 ## Layout
 
-- [run_backtest.py](/Users/xavierwinkelmann/Prosperity/Round2Backtester/run_backtest.py): CLI entry point
-- [round2_backtester/loaders.py](/Users/xavierwinkelmann/Prosperity/Round2Backtester/round2_backtester/loaders.py): `load_any()` and schema normalization
-- [round2_backtester/replay.py](/Users/xavierwinkelmann/Prosperity/Round2Backtester/round2_backtester/replay.py): replay engine and compare runner
-- [round2_backtester/datamodel_bridge.py](/Users/xavierwinkelmann/Prosperity/Round2Backtester/round2_backtester/datamodel_bridge.py): bot import bridge into `Bots/`
-- [round2_backtester/dashboard_server.py](/Users/xavierwinkelmann/Prosperity/Round2Backtester/round2_backtester/dashboard_server.py): local dashboard server
-- [dashboard/index.html](/Users/xavierwinkelmann/Prosperity/Round2Backtester/dashboard/index.html): dashboard frontend
+- [run_backtest.py](Round2Backtester/run_backtest.py): CLI entry point
+- [round2_backtester/loaders.py](Round2Backtester/round2_backtester/loaders.py): `load_any()` and schema normalization
+- [round2_backtester/replay.py](Round2Backtester/round2_backtester/replay.py): replay engine and compare runner
+- [round2_backtester/datamodel_bridge.py](Round2Backtester/round2_backtester/datamodel_bridge.py): bot import bridge into `Bots/`
+- [round2_backtester/dashboard_server.py](Round2Backtester/round2_backtester/dashboard_server.py): local dashboard server
+- [dashboard/index.html](Round2Backtester/dashboard/index.html): dashboard frontend
 
 ## Quick start
 
@@ -108,4 +108,4 @@ The dashboard is built to browse saved runs directly from the output folder and 
 
 The default data root is:
 
-- [Data/ROUND_2](/Users/xavierwinkelmann/Prosperity/Data/ROUND_2)
+- [Data/ROUND_2](Data/ROUND_2)

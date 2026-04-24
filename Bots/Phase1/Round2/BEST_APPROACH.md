@@ -24,7 +24,7 @@ What to test:
 - quote/size penalties driven by expected markout, not only by raw toxicity
 
 Bot:
-- [TradervR2_4.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_4.py)
+- [TradervR2_4.py](Bots/Round2/TradervR2_4.py)
 
 ### 2. Higher-rank microprice / OFI local fair
 Idea:
@@ -41,7 +41,7 @@ What to test:
 - stronger tight-book local-fair estimator
 
 Bot:
-- [TradervR2_5.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_5.py)
+- [TradervR2_5.py](Bots/Round2/TradervR2_5.py)
 
 ### 3. Conditional throughput expansion
 Idea:
@@ -58,7 +58,7 @@ What to test:
 - extra sweep depth only in strongest aligned states
 
 Bot:
-- [TradervR2_6.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_6.py)
+- [TradervR2_6.py](Bots/Round2/TradervR2_6.py)
 
 ### 4. Drift execution / catch-up schedule
 Idea:
@@ -75,12 +75,12 @@ What to test:
 - softer/earlier late-session trimming when ahead and overextended
 
 Bot:
-- [TradervR2_7.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_7.py)
+- [TradervR2_7.py](Bots/Round2/TradervR2_7.py)
 
 ## Baseline
 
 Current public-data Round 2 baseline:
-- [TradervR2_2.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_2.py)
+- [TradervR2_2.py](Bots/Round2/TradervR2_2.py)
 
 Why it stays the baseline:
 - strongest Pepper backbone so far

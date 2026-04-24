@@ -289,7 +289,7 @@ That is the exact process this repo is meant to standardize.
 
 See:
 
-- [configs/examples/prosperity_round0.json](/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/examples/prosperity_round0.json)
+- [configs/examples/prosperity_round0.json](TraderFactory/configs/examples/prosperity_round0.json)
 
 It describes a simple EMERALDS / TOMATOES style round using structured fields:
 
@@ -379,35 +379,35 @@ Important note:
 - the Monte Carlo viewer is local to TraderFactory
 - deterministic replay and Monte Carlo look in `TraderFactory/data/` first, then fall back to the legacy sibling `Prosperity/Data/` path
 - deterministic replay can also run through `ProsperityRustBacktester` with `--engine rust`
-- see [docs/ENGINES.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/ENGINES.md)
-- detailed Monte Carlo usage is documented in [docs/MONTE_CARLO.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/MONTE_CARLO.md)
-- viewer usage is documented in [docs/VIEWER.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/VIEWER.md)
-- the CMA-ES engine is local to TraderFactory and documented in [docs/OPTIMIZATION.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/OPTIMIZATION.md)
-- the probe framework is local to TraderFactory and documented in [docs/PROBES.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/PROBES.md)
-- the baseline project generator is documented in [docs/GENERATION.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/GENERATION.md)
+- see [docs/ENGINES.md](TraderFactory/docs/ENGINES.md)
+- detailed Monte Carlo usage is documented in [docs/MONTE_CARLO.md](TraderFactory/docs/MONTE_CARLO.md)
+- viewer usage is documented in [docs/VIEWER.md](TraderFactory/docs/VIEWER.md)
+- the CMA-ES engine is local to TraderFactory and documented in [docs/OPTIMIZATION.md](TraderFactory/docs/OPTIMIZATION.md)
+- the probe framework is local to TraderFactory and documented in [docs/PROBES.md](TraderFactory/docs/PROBES.md)
+- the baseline project generator is documented in [docs/GENERATION.md](TraderFactory/docs/GENERATION.md)
 
 ### 4. Read the workflow docs
 
 Start with:
 
-- [docs/WORKFLOW.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/WORKFLOW.md)
-- [docs/MVP_SCOPE.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/MVP_SCOPE.md)
-- [docs/MIGRATION_PLAN.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/MIGRATION_PLAN.md)
-- [docs/TRADER_FACTORY_ARCHITECTURE.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/TRADER_FACTORY_ARCHITECTURE.md)
-- [docs/OPTIMIZATION.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/OPTIMIZATION.md)
-- [docs/MONTE_CARLO.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/MONTE_CARLO.md)
-- [docs/VIEWER.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/VIEWER.md)
-- [docs/PROBES.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/PROBES.md)
-- [docs/GENERATION.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/GENERATION.md)
+- [docs/WORKFLOW.md](TraderFactory/docs/WORKFLOW.md)
+- [docs/MVP_SCOPE.md](TraderFactory/docs/MVP_SCOPE.md)
+- [docs/MIGRATION_PLAN.md](TraderFactory/docs/MIGRATION_PLAN.md)
+- [docs/TRADER_FACTORY_ARCHITECTURE.md](TraderFactory/docs/TRADER_FACTORY_ARCHITECTURE.md)
+- [docs/OPTIMIZATION.md](TraderFactory/docs/OPTIMIZATION.md)
+- [docs/MONTE_CARLO.md](TraderFactory/docs/MONTE_CARLO.md)
+- [docs/VIEWER.md](TraderFactory/docs/VIEWER.md)
+- [docs/PROBES.md](TraderFactory/docs/PROBES.md)
+- [docs/GENERATION.md](TraderFactory/docs/GENERATION.md)
 
 ### 5. Review the source references
 
 The initial scaffold is based on the current project’s real assets.
 See:
 
-- [references/SOURCE_MAP.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/references/SOURCE_MAP.md)
-- [references/Strategies.txt](/Users/xavierwinkelmann/Prosperity/TraderFactory/references/Strategies.txt)
-- [references/PUBLIC_STRATEGY_RESEARCH.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/references/PUBLIC_STRATEGY_RESEARCH.md)
+- [references/SOURCE_MAP.md](TraderFactory/references/SOURCE_MAP.md)
+- [references/Strategies.txt](TraderFactory/references/Strategies.txt)
+- [references/PUBLIC_STRATEGY_RESEARCH.md](TraderFactory/references/PUBLIC_STRATEGY_RESEARCH.md)
 
 ## How To Work In This Repo
 
@@ -475,8 +475,8 @@ The agreed rule from the current project is:
 
 That workflow is already formalized in:
 
-- [trader_factory/workflows/modes.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/workflows/modes.py)
-- [docs/WORKFLOW.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/WORKFLOW.md)
+- [trader_factory/workflows/modes.py](TraderFactory/trader_factory/workflows/modes.py)
+- [docs/WORKFLOW.md](TraderFactory/docs/WORKFLOW.md)
 
 ## How Another Agent Should Continue Work
 
@@ -501,7 +501,7 @@ Highest-priority remaining migrations:
 
 The recommended order is documented in:
 
-- [docs/MIGRATION_PLAN.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/docs/MIGRATION_PLAN.md)
+- [docs/MIGRATION_PLAN.md](TraderFactory/docs/MIGRATION_PLAN.md)
 
 ## What This Repo Must Not Become
 

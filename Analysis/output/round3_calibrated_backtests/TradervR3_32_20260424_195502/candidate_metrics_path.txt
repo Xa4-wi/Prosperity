@@ -1,1 +1,1 @@
-/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/r3_32_hydro_research/metrics.json
+ProsperityRustBacktester/runs/r3_32_hydro_research/metrics.json

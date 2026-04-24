@@ -1,8 +1,8 @@
 {
   "config_name": "TradervR1_8 Round 1 Focused CMA-ES",
-  "config_path": "/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_8_cmaes.json",
-  "source_bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_8.py",
-  "best_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_8_cmaes/bots/TradervR1_8_best.py",
+  "config_path": "TraderFactory/configs/round1/tradervr1_8_cmaes.json",
+  "source_bot": "Bots/Round1/TradervR1_8.py",
+  "best_bot": "Analysis/output/round1_tradervr1_8_cmaes/bots/TradervR1_8_best.py",
   "parameters": {
     "ASH_BASE_EDGE": 6.963193155612019,
     "ASH_IMBALANCE_FAIR_WEIGHT": 3.425625169991709,

@@ -1,4 +1,4 @@
 Deterministic engine: rust
-Metrics: /Users/xavierwinkelmann/Prosperity/Analysis/output/r1_39_3_day_-2/metrics.json
-Submission log: /Users/xavierwinkelmann/Prosperity/Analysis/output/r1_39_3_day_-2/submission.log
+Metrics: Analysis/output/r1_39_3_day_-2/metrics.json
+Submission log: Analysis/output/r1_39_3_day_-2/submission.log
 Final total PnL: 95289.5

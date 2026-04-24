@@ -3,7 +3,7 @@
 - Root scanned: `Data/Tutorial`
 - Price files: 2
 - Trade files: 2
-- Competitive intel reference: `/Users/xavierwinkelmann/Prosperity/Bots/Research/COMPETITIVE_INTEL.md`
+- Competitive intel reference: `Bots/Research/COMPETITIVE_INTEL.md`
 
 ## Product Table
 

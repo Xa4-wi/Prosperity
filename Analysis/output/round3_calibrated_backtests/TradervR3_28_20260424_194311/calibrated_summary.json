@@ -1,7 +1,7 @@
 {
   "candidate": {
     "label": "TradervR3_28",
-    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/r3_28_exit_eval/metrics.json",
+    "metrics_path": "ProsperityRustBacktester/runs/r3_28_exit_eval/metrics.json",
     "raw_total": -755873.0,
     "calibrated_total": 9163.497858816287,
     "by_product": {
@@ -96,92 +96,92 @@
       "label": "R3_1",
       "local_total": -49148.0,
       "online_total": -17068.676025390625,
-      "local_metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777036961439/metrics.json",
-      "official_log_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_1.log"
+      "local_metrics_path": "ProsperityRustBacktester/runs/backtest-1777036961439/metrics.json",
+      "official_log_path": "Bots/Round3/TradervR3_1.log"
     },
     {
       "label": "R3_3",
       "local_total": -35436.0,
       "online_total": -19178.068969726562,
-      "local_metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777037130637/metrics.json",
-      "official_log_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_3.log"
+      "local_metrics_path": "ProsperityRustBacktester/runs/backtest-1777037130637/metrics.json",
+      "official_log_path": "Bots/Round3/TradervR3_3.log"
     },
     {
       "label": "R3_6",
       "local_total": -48170.0,
       "online_total": -17329.613037109375,
-      "local_metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777038323824/metrics.json",
-      "official_log_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_6.log"
+      "local_metrics_path": "ProsperityRustBacktester/runs/backtest-1777038323824/metrics.json",
+      "official_log_path": "Bots/Round3/TradervR3_6.log"
     },
     {
       "label": "R3_7",
       "local_total": 83575.0,
       "online_total": -9201.628173828125,
-      "local_metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777038561079/metrics.json",
-      "official_log_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_7.log"
+      "local_metrics_path": "ProsperityRustBacktester/runs/backtest-1777038561079/metrics.json",
+      "official_log_path": "Bots/Round3/TradervR3_7.log"
     },
     {
       "label": "R3_8",
       "local_total": 6281.0,
       "online_total": -11894.090576171875,
-      "local_metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777038670732/metrics.json",
-      "official_log_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_8.log"
+      "local_metrics_path": "ProsperityRustBacktester/runs/backtest-1777038670732/metrics.json",
+      "official_log_path": "Bots/Round3/TradervR3_8.log"
     },
     {
       "label": "R3_10",
       "local_total": 71030.0,
       "online_total": -5094.375732421875,
-      "local_metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777037678396/metrics.json",
-      "official_log_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_10.log"
+      "local_metrics_path": "ProsperityRustBacktester/runs/backtest-1777037678396/metrics.json",
+      "official_log_path": "Bots/Round3/TradervR3_10.log"
     },
     {
       "label": "R3_16",
       "local_total": 269531.0,
       "online_total": 797.5003356933594,
-      "local_metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777040063871/metrics.json",
-      "official_log_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_16.log"
+      "local_metrics_path": "ProsperityRustBacktester/runs/backtest-1777040063871/metrics.json",
+      "official_log_path": "Bots/Round3/TradervR3_16.log"
     },
     {
       "label": "R3_17",
       "local_total": 297902.0,
       "online_total": 1540.6328125,
-      "local_metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777041785336/metrics.json",
-      "official_log_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_17.log"
+      "local_metrics_path": "ProsperityRustBacktester/runs/backtest-1777041785336/metrics.json",
+      "official_log_path": "Bots/Round3/TradervR3_17.log"
     },
     {
       "label": "R3_24",
       "local_total": 257977.0,
       "online_total": 8987.50033569336,
-      "local_metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777045497818/metrics.json",
-      "official_log_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_24.log"
+      "local_metrics_path": "ProsperityRustBacktester/runs/backtest-1777045497818/metrics.json",
+      "official_log_path": "Bots/Round3/TradervR3_24.log"
     },
     {
       "label": "R3_26",
       "local_total": 247725.0,
       "online_total": 8952.50033569336,
-      "local_metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/r3_26_exit_log/metrics.json",
-      "official_log_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_26.log"
+      "local_metrics_path": "ProsperityRustBacktester/runs/r3_26_exit_log/metrics.json",
+      "official_log_path": "Bots/Round3/TradervR3_26.log"
     },
     {
       "label": "R3_27",
       "local_total": 237157.0,
       "online_total": 9265.50033569336,
-      "local_metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/r3_27_exit_eval_fixed/metrics.json",
-      "official_log_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_27.log"
+      "local_metrics_path": "ProsperityRustBacktester/runs/r3_27_exit_eval_fixed/metrics.json",
+      "official_log_path": "Bots/Round3/TradervR3_27.log"
     },
     {
       "label": "R3_28",
       "local_total": -755873.0,
       "online_total": 10577.37533569336,
-      "local_metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/r3_28_exit_eval/metrics.json",
-      "official_log_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_28.log"
+      "local_metrics_path": "ProsperityRustBacktester/runs/r3_28_exit_eval/metrics.json",
+      "official_log_path": "Bots/Round3/TradervR3_28.log"
     },
     {
       "label": "R3_29",
       "local_total": 237146.0,
       "online_total": 9265.50033569336,
-      "local_metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/r3_29_split_holdcap/metrics.json",
-      "official_log_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_29.log"
+      "local_metrics_path": "ProsperityRustBacktester/runs/r3_29_split_holdcap/metrics.json",
+      "official_log_path": "Bots/Round3/TradervR3_29.log"
     }
   ],
   "product_stats": {

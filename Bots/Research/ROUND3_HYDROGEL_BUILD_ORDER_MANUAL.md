@@ -2,8 +2,8 @@
 
 Current working context:
 
-- Round 3 mainline workflow winner: [TradervR3_16.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_16.py)
-- Hydrogel risk-control foundation: [TradervR3_15.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_15.py)
+- Round 3 mainline workflow winner: [TradervR3_16.py](Bots/Round3/TradervR3_16.py)
+- Hydrogel risk-control foundation: [TradervR3_15.py](Bots/Round3/TradervR3_15.py)
 
 This manual is the concrete build order for the next Hydrogel iteration cycle.
 

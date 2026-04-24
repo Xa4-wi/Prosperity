@@ -1,1 +1,1 @@
-/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/tradervr3_42_20260424_225611/metrics.json
+ProsperityRustBacktester/runs/tradervr3_42_20260424_225611/metrics.json

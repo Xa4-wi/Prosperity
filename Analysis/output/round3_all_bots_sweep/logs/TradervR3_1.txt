@@ -1,9 +1,9 @@
 
 Traceback (most recent call last):
-  File "/Users/xavierwinkelmann/Prosperity/Analysis/scripts/run_round3_calibrated_backtest.py", line 209, in <module>
+  File "Analysis/scripts/run_round3_calibrated_backtest.py", line 209, in <module>
     raise SystemExit(main())
-  File "/Users/xavierwinkelmann/Prosperity/Analysis/scripts/run_round3_calibrated_backtest.py", line 168, in main
+  File "Analysis/scripts/run_round3_calibrated_backtest.py", line 168, in main
     metrics_path, raw_stdout = run_local_backtest(bot_path, Path(args.dataset).resolve())
-  File "/Users/xavierwinkelmann/Prosperity/Analysis/scripts/run_round3_calibrated_backtest.py", line 130, in run_local_backtest
+  File "Analysis/scripts/run_round3_calibrated_backtest.py", line 130, in run_local_backtest
     raise FileNotFoundError(f"metrics.json not found at {metrics_path}")
-FileNotFoundError: metrics.json not found at /Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/RUN_DIR/metrics.json
+FileNotFoundError: metrics.json not found at ProsperityRustBacktester/RUN_DIR/metrics.json

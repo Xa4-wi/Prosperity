@@ -1,6 +1,6 @@
 Round 2 backtest summary
 ========================
-Bot: /Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_accessGate_highHealthHighConv.py
+Bot: Bots/Round2/research_variants/TradervR2_28_accessGate_highHealthHighConv.py
 Mode: access
 Queue model: conservative
 Trader bid(): 25000

@@ -1,15 +1,15 @@
-Wrote markdown report to /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_capsule/capsule_product_diagnosis_report.md
-Wrote JSON summary to /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_capsule/capsule_product_diagnosis_summary.json
-Wrote dashboard to /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_capsule/dashboard/index.html
+Wrote markdown report to Bots/Tools/Product_Analysis/output/tutorial_capsule/capsule_product_diagnosis_report.md
+Wrote JSON summary to Bots/Tools/Product_Analysis/output/tutorial_capsule/capsule_product_diagnosis_summary.json
+Wrote dashboard to Bots/Tools/Product_Analysis/output/tutorial_capsule/dashboard/index.html
 run_name=tutorial_capsule
 root=Data/Tutorial
-intel_md=/Users/xavierwinkelmann/Prosperity/Bots/Research/COMPETITIVE_INTEL.md
-report_md=/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_capsule/capsule_product_diagnosis_report.md
-summary_json=/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_capsule/capsule_product_diagnosis_summary.json
-dashboard_dir=/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_capsule/dashboard
+intel_md=Bots/Research/COMPETITIVE_INTEL.md
+report_md=Bots/Tools/Product_Analysis/output/tutorial_capsule/capsule_product_diagnosis_report.md
+summary_json=Bots/Tools/Product_Analysis/output/tutorial_capsule/capsule_product_diagnosis_summary.json
+dashboard_dir=Bots/Tools/Product_Analysis/output/tutorial_capsule/dashboard
 
 >>> Diagnoser command
-/Library/Developer/CommandLineTools/usr/bin/python3 /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/capsule_product_diagnoser.py --root Data/Tutorial --intel-md /Users/xavierwinkelmann/Prosperity/Bots/Research/COMPETITIVE_INTEL.md --out-md /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_capsule/capsule_product_diagnosis_report.md --out-json /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_capsule/capsule_product_diagnosis_summary.json
+/Library/Developer/CommandLineTools/usr/bin/python3 Bots/Tools/Product_Analysis/capsule_product_diagnoser.py --root Data/Tutorial --intel-md Bots/Research/COMPETITIVE_INTEL.md --out-md Bots/Tools/Product_Analysis/output/tutorial_capsule/capsule_product_diagnosis_report.md --out-json Bots/Tools/Product_Analysis/output/tutorial_capsule/capsule_product_diagnosis_summary.json
 
 >>> Dashboard command
-/Library/Developer/CommandLineTools/usr/bin/python3 /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/build_dashboard.py --summary-json /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_capsule/capsule_product_diagnosis_summary.json --output-dir /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/tutorial_capsule/dashboard
+/Library/Developer/CommandLineTools/usr/bin/python3 Bots/Tools/Product_Analysis/build_dashboard.py --summary-json Bots/Tools/Product_Analysis/output/tutorial_capsule/capsule_product_diagnosis_summary.json --output-dir Bots/Tools/Product_Analysis/output/tutorial_capsule/dashboard

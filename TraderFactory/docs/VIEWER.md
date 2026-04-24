@@ -4,7 +4,7 @@
 
 Entry point:
 
-- [trader_factory/viewer/monte_carlo.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/viewer/monte_carlo.py)
+- [trader_factory/viewer/monte_carlo.py](TraderFactory/trader_factory/viewer/monte_carlo.py)
 
 CLI:
 

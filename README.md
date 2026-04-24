@@ -3,7 +3,7 @@ Coding an Algorithm that trades for you
 
 
 # Backtest
-Local backtesting is documented in [Backtest/README.md](/Users/xavierwinkelmann/Prosperity/Backtest/README.md).
+Local backtesting is documented in [Backtest/README.md](Backtest/README.md).
 
 Run it from the `Backtest` folder with:
 
@@ -46,7 +46,7 @@ These are the highest scores reached so far. The best single-product peak does n
 | TOMATOES PnL | `1'590.875` | `V39.4` |
 
 # Current Parameter Map:
-Based on [Traderv39_4.py](/Users/xavierwinkelmann/Prosperity/Bots/TutorialRound/Traderv39_4.py), which is the current best official bot.
+Based on [Traderv39_4.py](Bots/TutorialRound/Traderv39_4.py), which is the current best official bot.
 
 | Product | Fair Value | Inventory Skew | Take Logic | Quote Logic | Size Logic | Target / Bias |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -122,11 +122,11 @@ Tomatoes key levers:
 - `TREND_QUOTE_LIFT_EXTRA = 1.0`
 
 Version Log:
-See [BOT_VERSIONS.md](/Users/xavierwinkelmann/Prosperity/BOT_VERSIONS.md)
+See [BOT_VERSIONS.md](BOT_VERSIONS.md)
 
 Monte Carlo Comparison:
-See [MONTE_CARLO_COMPARISON.md](/Users/xavierwinkelmann/Prosperity/MONTE_CARLO_COMPARISON.md)
+See [MONTE_CARLO_COMPARISON.md](MONTE_CARLO_COMPARISON.md)
 
 Latest Monte Carlo note:
-- The heavier 1000-session run for [Traderv39_6.py](/Users/xavierwinkelmann/Prosperity/Bots/Traderv39_6.py) came in strong under the generator with mean total PnL `15,524.24` and mean TOMATOES PnL `7,990.81`, beating the earlier quick Monte Carlo means for `V39.2` and `V40.7`.
+- The heavier 1000-session run for [Traderv39_6.py](Bots/Traderv39_6.py) came in strong under the generator with mean total PnL `15,524.24` and mean TOMATOES PnL `7,990.81`, beating the earlier quick Monte Carlo means for `V39.2` and `V40.7`.
 - But `V39.6` still underperformed on the official replay, so Monte Carlo strength alone is not enough to promote a bot over `V39.4`.

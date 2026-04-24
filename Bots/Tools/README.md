@@ -9,7 +9,7 @@ Each major tool should live in its own subdirectory so we can add more tool fami
 ### Round 3 quick start
 
 Location:
-- [ROUND3_RUNBOOK.md](/Users/xavierwinkelmann/Prosperity/Bots/Tools/ROUND3_RUNBOOK.md)
+- [ROUND3_RUNBOOK.md](Bots/Tools/ROUND3_RUNBOOK.md)
 
 Use this first when a new round starts. It gives the exact command order for:
 - product diagnosis
@@ -20,7 +20,7 @@ Use this first when a new round starts. It gives the exact command order for:
 ### Product Analysis
 
 Location:
-- [Product_Analysis](/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis)
+- [Product_Analysis](Bots/Tools/Product_Analysis)
 
 What it contains:
 - product archetype diagnosis from capsule CSVs
@@ -29,12 +29,12 @@ What it contains:
 - per-run output folders and stored logs
 
 Start here:
-- [Product_Analysis/README.md](/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/README.md)
+- [Product_Analysis/README.md](Bots/Tools/Product_Analysis/README.md)
 
 ### Olivia detector toolkit
 
 Location:
-- [olivia_tool](/Users/xavierwinkelmann/Prosperity/Bots/Tools/olivia_tool)
+- [olivia_tool](Bots/Tools/olivia_tool)
 
 What it contains:
 - offline discovery and scoring for Olivia-style insider patterns
@@ -43,7 +43,7 @@ What it contains:
 - a standalone HTML dashboard generator
 
 Start here:
-- [olivia_tool/README.md](/Users/xavierwinkelmann/Prosperity/Bots/Tools/olivia_tool/README.md)
+- [olivia_tool/README.md](Bots/Tools/olivia_tool/README.md)
 
 ## Suggested layout for future tools
 

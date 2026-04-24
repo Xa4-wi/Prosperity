@@ -2,7 +2,7 @@
 
 Raw local Round 3 replay is currently **not a trustworthy final ranking signal**.
 
-The official logs for [TradervR3_6.log](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_6.log) and [TradervR3_7.log](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_7.log) showed a real inversion:
+The official logs for [TradervR3_6.log](Bots/Round3/TradervR3_6.log) and [TradervR3_7.log](Bots/Round3/TradervR3_7.log) showed a real inversion:
 
 - local public replay preferred `R3_6`
 - official submission result preferred `R3_7`
@@ -48,13 +48,13 @@ That command:
 
 1. runs the Rust Round 3 backtester in the faster `--carry --artifact-mode none` mode
 2. finds the new `metrics.json`
-3. applies the calibration samples from [round3_calibration_samples.json](/Users/xavierwinkelmann/Prosperity/Bots/Round3/round3_calibration_samples.json)
+3. applies the calibration samples from [round3_calibration_samples.json](Bots/Round3/round3_calibration_samples.json)
 4. prints:
    - `raw_local_total`
    - `calibrated_total`
    - top calibrated product contributions
 5. writes a saved report bundle under:
-   - [round3_calibrated_backtests](/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_calibrated_backtests)
+   - [round3_calibrated_backtests](Analysis/output/round3_calibrated_backtests)
 
 To calibrate an existing run without rerunning the Rust replay:
 
@@ -82,12 +82,12 @@ python3 Analysis/scripts/refresh_round3_calibration_samples.py
 
 That script scans:
 
-- [Bots/Round3](/Users/xavierwinkelmann/Prosperity/Bots/Round3) for uploaded official logs
-- [ProsperityRustBacktester/runs](/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs) for the latest matching `metrics.json`
+- [Bots/Round3](Bots/Round3) for uploaded official logs
+- [ProsperityRustBacktester/runs](ProsperityRustBacktester/runs) for the latest matching `metrics.json`
 
 and rewrites:
 
-- [round3_calibration_samples.json](/Users/xavierwinkelmann/Prosperity/Bots/Round3/round3_calibration_samples.json)
+- [round3_calibration_samples.json](Bots/Round3/round3_calibration_samples.json)
 
 ## Full Round 3 sweep
 
@@ -101,11 +101,11 @@ That command:
 
 1. discovers `Bots/Round3/TradervR3_*.py`
 2. reruns each bot through the Rust backtester
-3. scores each run with the calibration samples from [round3_calibration_samples.json](/Users/xavierwinkelmann/Prosperity/Bots/Round3/round3_calibration_samples.json)
+3. scores each run with the calibration samples from [round3_calibration_samples.json](Bots/Round3/round3_calibration_samples.json)
 4. writes:
-   - [summary.json](/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/summary.json)
-   - [report.md](/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/report.md)
-   - per-bot calibrated bundles under [calibrated_runs](/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs)
+   - [summary.json](Analysis/output/round3_all_bots_sweep/summary.json)
+   - [report.md](Analysis/output/round3_all_bots_sweep/report.md)
+   - per-bot calibrated bundles under [calibrated_runs](Analysis/output/round3_all_bots_sweep/calibrated_runs)
 
 ## What the calibration is doing
 

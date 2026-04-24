@@ -1,8 +1,8 @@
 {
   "config_name": "TradervR1_121_13 Round 1 Focused Ash CMA-ES",
-  "config_path": "/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_121_13_cmaes.json",
-  "source_bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_121_13.py",
-  "best_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_121_13_cmaes/bots/TradervR1_121_13_best.py",
+  "config_path": "TraderFactory/configs/round1/tradervr1_121_13_cmaes.json",
+  "source_bot": "Bots/Round1/TradervR1_121_13.py",
+  "best_bot": "Analysis/output/round1_tradervr1_121_13_cmaes/bots/TradervR1_121_13_best.py",
   "parameters": {
     "BASE_EDGE": -0.55,
     "JOIN_EDGE": 1.35,

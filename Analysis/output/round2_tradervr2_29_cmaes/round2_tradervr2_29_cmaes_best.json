@@ -1,8 +1,8 @@
 {
   "config_name": "TradervR2_29 Round 2 Focused Ash Robustness CMA-ES",
-  "config_path": "/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round2/tradervr2_29_cmaes.json",
-  "source_bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
-  "best_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_tradervr2_29_cmaes/bots/TradervR2_29_best.py",
+  "config_path": "TraderFactory/configs/round2/tradervr2_29_cmaes.json",
+  "source_bot": "Bots/Round2/TradervR2_29.py",
+  "best_bot": "Analysis/output/round2_tradervr2_29_cmaes/bots/TradervR2_29_best.py",
   "parameters": {
     "STABLE_MEMORY_BLEND": 0.35,
     "NOISY_TOUCH_GAP": 1.2,

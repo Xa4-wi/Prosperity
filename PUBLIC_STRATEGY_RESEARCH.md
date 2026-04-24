@@ -348,7 +348,7 @@ For us:
 ### Best next experiment
 
 Add a small "wall mid" / "popular mid" layer to the current best family:
-- start from [Traderv39_2.py](/Users/xavierwinkelmann/Prosperity/Bots/Traderv39_2.py) or [Traderv40_9_2.py](/Users/xavierwinkelmann/Prosperity/Bots/Traderv40_9_2.py)
+- start from [Traderv39_2.py](Bots/Traderv39_2.py) or [Traderv40_9_2.py](Bots/Traderv40_9_2.py)
 - estimate a size-filtered fair from persistent large bid/ask levels
 - blend it lightly into TOMATOES fair
 - do not change the rest of the execution stack initially

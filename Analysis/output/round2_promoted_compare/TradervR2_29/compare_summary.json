@@ -1,10 +1,10 @@
 {
-  "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+  "bot_path": "Bots/Round2/TradervR2_29.py",
   "queue_model": "conservative",
   "baseline_no_access_pnl": 301307.0,
   "access_runs": [
     {
-      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+      "bot_path": "Bots/Round2/TradervR2_29.py",
       "mode": "access",
       "queue_model": "conservative",
       "access_seed": 7,
@@ -31,7 +31,7 @@
       }
     },
     {
-      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+      "bot_path": "Bots/Round2/TradervR2_29.py",
       "mode": "access",
       "queue_model": "conservative",
       "access_seed": 8,
@@ -58,7 +58,7 @@
       }
     },
     {
-      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+      "bot_path": "Bots/Round2/TradervR2_29.py",
       "mode": "access",
       "queue_model": "conservative",
       "access_seed": 9,
@@ -85,7 +85,7 @@
       }
     },
     {
-      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+      "bot_path": "Bots/Round2/TradervR2_29.py",
       "mode": "access",
       "queue_model": "conservative",
       "access_seed": 10,
@@ -112,7 +112,7 @@
       }
     },
     {
-      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+      "bot_path": "Bots/Round2/TradervR2_29.py",
       "mode": "access",
       "queue_model": "conservative",
       "access_seed": 11,
@@ -139,7 +139,7 @@
       }
     },
     {
-      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+      "bot_path": "Bots/Round2/TradervR2_29.py",
       "mode": "access",
       "queue_model": "conservative",
       "access_seed": 12,
@@ -166,7 +166,7 @@
       }
     },
     {
-      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+      "bot_path": "Bots/Round2/TradervR2_29.py",
       "mode": "access",
       "queue_model": "conservative",
       "access_seed": 13,

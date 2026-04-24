@@ -1,8 +1,8 @@
 # TradervR1_35_HMMOsmium Round 1 Broad HMM Osmium CMA-ES CMA-ES Report
 
-- Config: `/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_35_hmmosmium_cmaes_broad.json`
-- Source bot: `/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_35_HMMOsmium.py`
-- Best bot: `/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_35_hmmosmium_cmaes_broad/bots/TradervR1_35_HMMOsmium_best.py`
+- Config: `TraderFactory/configs/round1/tradervr1_35_hmmosmium_cmaes_broad.json`
+- Source bot: `Bots/Round1/TradervR1_35_HMMOsmium.py`
+- Best bot: `Analysis/output/round1_tradervr1_35_hmmosmium_cmaes_broad/bots/TradervR1_35_HMMOsmium_best.py`
 - Total evaluations: `51`
 
 ## Baseline Replay

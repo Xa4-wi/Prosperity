@@ -1,8 +1,8 @@
 {
   "config_name": "TradervR1_34_1 Round 1 Broad Pepper Basin CMA-ES",
-  "config_path": "/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_34_1_cmaes_broad_pepper.json",
-  "source_bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_34_1.py",
-  "best_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_34_1_cmaes_broad_pepper/bots/TradervR1_34_1_best.py",
+  "config_path": "TraderFactory/configs/round1/tradervr1_34_1_cmaes_broad_pepper.json",
+  "source_bot": "Bots/Round1/TradervR1_34_1.py",
+  "best_bot": "Analysis/output/round1_tradervr1_34_1_cmaes_broad_pepper/bots/TradervR1_34_1_best.py",
   "parameters": {
     "IPR_RESIDUAL_ALPHA": 0.1,
     "IPR_LOOKAHEAD_BONUS": 4.8849030549,

@@ -1,8 +1,8 @@
 bot: TradervR3_4_1.py
-metrics: /Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777036266005/metrics.json
+metrics: ProsperityRustBacktester/runs/backtest-1777036266005/metrics.json
 raw_local_total: -54507.50
 calibrated_total: -36884.50
-output_dir: /Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_4_1_20260424_151219
+output_dir: Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_4_1_20260424_151219
 
 Top product contributions:
 - VEV_5100: local=-64563.00, weight=1.00, calibrated=-64563.00

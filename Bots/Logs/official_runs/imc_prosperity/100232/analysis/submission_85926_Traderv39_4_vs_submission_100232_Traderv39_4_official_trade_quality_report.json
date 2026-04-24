@@ -1,6 +1,6 @@
 {
-  "primary_log": "/Users/xavierwinkelmann/Prosperity/Bots/Logs/official_runs/imc_prosperity/100232/submission_100232_Traderv39_4.log",
-  "primary_json": "/Users/xavierwinkelmann/Prosperity/Bots/Logs/official_runs/imc_prosperity/100232/submission_100232_Traderv39_4.json",
+  "primary_log": "Bots/Logs/official_runs/imc_prosperity/100232/submission_100232_Traderv39_4.log",
+  "primary_json": "Bots/Logs/official_runs/imc_prosperity/100232/submission_100232_Traderv39_4.json",
   "primary_report": {
     "profit": 2640.875,
     "positions": {
@@ -14164,8 +14164,8 @@
       ]
     }
   },
-  "baseline_log": "/Users/xavierwinkelmann/Prosperity/Bots/Logs/official_runs/imc_prosperity/100232/baseline_85926/submission_85926_Traderv39_4.log",
-  "baseline_json": "/Users/xavierwinkelmann/Prosperity/Bots/Logs/official_runs/imc_prosperity/100232/baseline_85926/submission_85926_Traderv39_4.json",
+  "baseline_log": "Bots/Logs/official_runs/imc_prosperity/100232/baseline_85926/submission_85926_Traderv39_4.log",
+  "baseline_json": "Bots/Logs/official_runs/imc_prosperity/100232/baseline_85926/submission_85926_Traderv39_4.json",
   "baseline_report": {
     "profit": 2640.875,
     "positions": {

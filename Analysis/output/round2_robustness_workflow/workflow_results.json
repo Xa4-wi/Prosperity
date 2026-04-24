@@ -2,7 +2,7 @@
   {
     "idea": "2_fair_robustness",
     "bot_name": "TradervR2_28_fair_medianGuard",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_fair_medianGuard.py",
+    "bot_path": "Bots/Round2/research_variants/TradervR2_28_fair_medianGuard.py",
     "baseline_no_access_pnl": 300276.0,
     "access_total_stats": {
       "mean": 308710.1666666667,
@@ -30,12 +30,12 @@
         "inventory_blocked": 1
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_fair_medianGuard/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_28_fair_medianGuard/compare_summary.json"
   },
   {
     "idea": "1_book_health",
     "bot_name": "TradervR2_28_bookHealth_mild",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_bookHealth_mild.py",
+    "bot_path": "Bots/Round2/research_variants/TradervR2_28_bookHealth_mild.py",
     "baseline_no_access_pnl": 301303.0,
     "access_total_stats": {
       "mean": 308118.8333333333,
@@ -63,12 +63,12 @@
         "inventory_blocked": 3
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_bookHealth_mild/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_28_bookHealth_mild/compare_summary.json"
   },
   {
     "idea": "4_side_starvation",
     "bot_name": "TradervR2_28_starvation_strong",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_starvation_strong.py",
+    "bot_path": "Bots/Round2/research_variants/TradervR2_28_starvation_strong.py",
     "baseline_no_access_pnl": 301256.0,
     "access_total_stats": {
       "mean": 308091.5,
@@ -96,12 +96,12 @@
         "inventory_blocked": 3
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_starvation_strong/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_28_starvation_strong/compare_summary.json"
   },
   {
     "idea": "reference",
     "bot_name": "TradervR2_26",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_26.py",
+    "bot_path": "Bots/Round2/TradervR2_26.py",
     "baseline_no_access_pnl": 301262.0,
     "access_total_stats": {
       "mean": 308071.1666666667,
@@ -129,12 +129,12 @@
         "inventory_blocked": 3
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_26/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_26/compare_summary.json"
   },
   {
     "idea": "7_access_safe",
     "bot_name": "TradervR2_28_accessGate_highHealth",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_accessGate_highHealth.py",
+    "bot_path": "Bots/Round2/research_variants/TradervR2_28_accessGate_highHealth.py",
     "baseline_no_access_pnl": 301252.0,
     "access_total_stats": {
       "mean": 308069.8333333333,
@@ -162,12 +162,12 @@
         "inventory_blocked": 3
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_accessGate_highHealth/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_28_accessGate_highHealth/compare_summary.json"
   },
   {
     "idea": "7_access_safe",
     "bot_name": "TradervR2_28_accessGate_highHealthHighConv",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_accessGate_highHealthHighConv.py",
+    "bot_path": "Bots/Round2/research_variants/TradervR2_28_accessGate_highHealthHighConv.py",
     "baseline_no_access_pnl": 301252.0,
     "access_total_stats": {
       "mean": 308069.8333333333,
@@ -195,12 +195,12 @@
         "inventory_blocked": 3
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_accessGate_highHealthHighConv/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_28_accessGate_highHealthHighConv/compare_summary.json"
   },
   {
     "idea": "2_fair_robustness",
     "bot_name": "TradervR2_28_fair_anchorGuard",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_fair_anchorGuard.py",
+    "bot_path": "Bots/Round2/research_variants/TradervR2_28_fair_anchorGuard.py",
     "baseline_no_access_pnl": 301242.0,
     "access_total_stats": {
       "mean": 308082.5,
@@ -228,12 +228,12 @@
         "inventory_blocked": 3
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_fair_anchorGuard/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_28_fair_anchorGuard/compare_summary.json"
   },
   {
     "idea": "10_pepper_robustness",
     "bot_name": "TradervR2_28_pepper_cheapEarly",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_pepper_cheapEarly.py",
+    "bot_path": "Bots/Round2/research_variants/TradervR2_28_pepper_cheapEarly.py",
     "baseline_no_access_pnl": 301252.0,
     "access_total_stats": {
       "mean": 308055.5,
@@ -261,12 +261,12 @@
         "inventory_blocked": 3
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_pepper_cheapEarly/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_28_pepper_cheapEarly/compare_summary.json"
   },
   {
     "idea": "5_markout_passive",
     "bot_name": "TradervR2_28_markout_bucketedLight",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_markout_bucketedLight.py",
+    "bot_path": "Bots/Round2/research_variants/TradervR2_28_markout_bucketedLight.py",
     "baseline_no_access_pnl": 301252.0,
     "access_total_stats": {
       "mean": 308058.1666666667,
@@ -294,12 +294,12 @@
         "inventory_blocked": 3
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_markout_bucketedLight/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_28_markout_bucketedLight/compare_summary.json"
   },
   {
     "idea": "research_base",
     "bot_name": "TradervR2_27_researchBase",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_27_researchBase.py",
+    "bot_path": "Bots/Round2/TradervR2_27_researchBase.py",
     "baseline_no_access_pnl": 301252.0,
     "access_total_stats": {
       "mean": 308052.5,
@@ -327,12 +327,12 @@
         "inventory_blocked": 3
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_27_researchBase/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_27_researchBase/compare_summary.json"
   },
   {
     "idea": "1_book_health",
     "bot_name": "TradervR2_28_bookHealth_strong",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_bookHealth_strong.py",
+    "bot_path": "Bots/Round2/research_variants/TradervR2_28_bookHealth_strong.py",
     "baseline_no_access_pnl": 301252.0,
     "access_total_stats": {
       "mean": 308052.5,
@@ -360,12 +360,12 @@
         "inventory_blocked": 3
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_bookHealth_strong/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_28_bookHealth_strong/compare_summary.json"
   },
   {
     "idea": "3_vacuum_recovery",
     "bot_name": "TradervR2_28_vacuumRecovery_cooldown",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_vacuumRecovery_cooldown.py",
+    "bot_path": "Bots/Round2/research_variants/TradervR2_28_vacuumRecovery_cooldown.py",
     "baseline_no_access_pnl": 301252.0,
     "access_total_stats": {
       "mean": 308052.5,
@@ -393,12 +393,12 @@
         "inventory_blocked": 3
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_vacuumRecovery_cooldown/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_28_vacuumRecovery_cooldown/compare_summary.json"
   },
   {
     "idea": "3_vacuum_recovery",
     "bot_name": "TradervR2_28_vacuumRecovery_stableBars",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_vacuumRecovery_stableBars.py",
+    "bot_path": "Bots/Round2/research_variants/TradervR2_28_vacuumRecovery_stableBars.py",
     "baseline_no_access_pnl": 301252.0,
     "access_total_stats": {
       "mean": 308052.5,
@@ -426,12 +426,12 @@
         "inventory_blocked": 3
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_vacuumRecovery_stableBars/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_28_vacuumRecovery_stableBars/compare_summary.json"
   },
   {
     "idea": "6_terminal_risk",
     "bot_name": "TradervR2_28_terminalRisk_soft",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_terminalRisk_soft.py",
+    "bot_path": "Bots/Round2/research_variants/TradervR2_28_terminalRisk_soft.py",
     "baseline_no_access_pnl": 301252.0,
     "access_total_stats": {
       "mean": 308052.5,
@@ -459,12 +459,12 @@
         "inventory_blocked": 3
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_terminalRisk_soft/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_28_terminalRisk_soft/compare_summary.json"
   },
   {
     "idea": "6_terminal_risk",
     "bot_name": "TradervR2_28_terminalRisk_asymmetric",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_terminalRisk_asymmetric.py",
+    "bot_path": "Bots/Round2/research_variants/TradervR2_28_terminalRisk_asymmetric.py",
     "baseline_no_access_pnl": 301261.0,
     "access_total_stats": {
       "mean": 308052.5,
@@ -492,12 +492,12 @@
         "inventory_blocked": 3
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_terminalRisk_asymmetric/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_28_terminalRisk_asymmetric/compare_summary.json"
   },
   {
     "idea": "10_pepper_robustness",
     "bot_name": "TradervR2_28_pepper_lateTrim",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_pepper_lateTrim.py",
+    "bot_path": "Bots/Round2/research_variants/TradervR2_28_pepper_lateTrim.py",
     "baseline_no_access_pnl": 301252.0,
     "access_total_stats": {
       "mean": 308052.5,
@@ -525,12 +525,12 @@
         "inventory_blocked": 3
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_pepper_lateTrim/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_28_pepper_lateTrim/compare_summary.json"
   },
   {
     "idea": "4_side_starvation",
     "bot_name": "TradervR2_28_starvation_priority",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_starvation_priority.py",
+    "bot_path": "Bots/Round2/research_variants/TradervR2_28_starvation_priority.py",
     "baseline_no_access_pnl": 301252.0,
     "access_total_stats": {
       "mean": 308057.5,
@@ -558,12 +558,12 @@
         "inventory_blocked": 3
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_starvation_priority/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_28_starvation_priority/compare_summary.json"
   },
   {
     "idea": "5_markout_passive",
     "bot_name": "TradervR2_28_markout_bucketedStrong",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_markout_bucketedStrong.py",
+    "bot_path": "Bots/Round2/research_variants/TradervR2_28_markout_bucketedStrong.py",
     "baseline_no_access_pnl": 301231.0,
     "access_total_stats": {
       "mean": 308002.1666666667,
@@ -591,12 +591,12 @@
         "inventory_blocked": 3
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_markout_bucketedStrong/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_28_markout_bucketedStrong/compare_summary.json"
   },
   {
     "idea": "2_fair_robustness",
     "bot_name": "TradervR2_28_fair_thinTopIgnore",
-    "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_fair_thinTopIgnore.py",
+    "bot_path": "Bots/Round2/research_variants/TradervR2_28_fair_thinTopIgnore.py",
     "baseline_no_access_pnl": 301148.0,
     "access_total_stats": {
       "mean": 307909.3333333333,
@@ -624,6 +624,6 @@
         "inventory_blocked": 1
       }
     },
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_fair_thinTopIgnore/compare_summary.json"
+    "summary_path": "Analysis/output/round2_robustness_workflow/TradervR2_28_fair_thinTopIgnore/compare_summary.json"
   }
 ]

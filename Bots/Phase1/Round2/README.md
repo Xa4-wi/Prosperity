@@ -1,8 +1,8 @@
 ## `TradervR2_1`
 
 First Round 2 bot built from the Round 2 strategy guide on top of the strongest Round 1 trunk:
-- base bot: [TradervR1_121_13.py](/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_121_13.py)
-- new file: [TradervR2_1.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_1.py)
+- base bot: [TradervR1_121_13.py](Bots/Round1/TradervR1_121_13.py)
+- new file: [TradervR2_1.py](Bots/Round2/TradervR2_1.py)
 
 Round 2 design choices:
 - keep Pepper as a carry engine, but slow the drift assumptions down to match Round 2 public data
@@ -32,8 +32,8 @@ Three-day total:
 - `296'583.0`
 
 Comparison against the untouched Round 1 trunk on Round 2 public replay:
-- [TradervR1_121_13.py](/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_121_13.py): `298'946.0`
-- [TradervR2_1.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_1.py): `296'583.0`
+- [TradervR1_121_13.py](Bots/Round1/TradervR1_121_13.py): `298'946.0`
+- [TradervR2_1.py](Bots/Round2/TradervR2_1.py): `296'583.0`
 - delta: `-2'363.0`
 
 Read:
@@ -42,9 +42,9 @@ Read:
 - so `TradervR2_1` is a valid Round 2 starting branch, but not yet a better public-data replay bot than the untouched `TradervR1_121_13.py`
 
 Artifacts:
-- [day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_1_day_-1/metrics.json)
-- [day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_1_day_0/metrics.json)
-- [day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_1_day_1/metrics.json)
+- [day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_1_day_-1/metrics.json)
+- [day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_1_day_0/metrics.json)
+- [day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_1_day_1/metrics.json)
 
 ## `TradervR2_2`
 
@@ -54,7 +54,7 @@ Second Round 2 branch built from the same standalone base, but with the Round 2 
 - `Trader.bid()` is explicitly set to `25000` for direct Market Access Fee testing
 
 New file:
-- [TradervR2_2.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_2.py)
+- [TradervR2_2.py](Bots/Round2/TradervR2_2.py)
 
 Current `bid()`:
 - `25000`
@@ -74,9 +74,9 @@ Three-day total:
 - `299'081.0`
 
 Comparison:
-- [TradervR2_1.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_1.py): `296'583.0`
-- [TradervR1_121_13.py](/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_121_13.py): `298'946.0`
-- [TradervR2_2.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_2.py): `299'081.0`
+- [TradervR2_1.py](Bots/Round2/TradervR2_1.py): `296'583.0`
+- [TradervR1_121_13.py](Bots/Round1/TradervR1_121_13.py): `298'946.0`
+- [TradervR2_2.py](Bots/Round2/TradervR2_2.py): `299'081.0`
 
 Read:
 - restoring Pepper as the base engine was the right correction
@@ -84,9 +84,9 @@ Read:
 - this is the first Round 2 branch here that beats both `R2_1` and the untouched `R1_121_13` public Round 2 replay
 
 Artifacts:
-- [day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_2_day_-1/metrics.json)
-- [day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_2_day_0/metrics.json)
-- [day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_2_day_1/metrics.json)
+- [day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_2_day_-1/metrics.json)
+- [day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_2_day_0/metrics.json)
+- [day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_2_day_1/metrics.json)
 
 ## `TradervR2_3`
 
@@ -100,7 +100,7 @@ Third Round 2 branch built as an official-path refinement of `R2_2`:
   - stronger signal / conviction / magnet requirements
 
 New file:
-- [TradervR2_3.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_3.py)
+- [TradervR2_3.py](Bots/Round2/TradervR2_3.py)
 
 Current `bid()`:
 - `25000`
@@ -120,8 +120,8 @@ Three-day total:
 - `299'081.0`
 
 Comparison:
-- [TradervR2_2.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_2.py): `299'081.0`
-- [TradervR2_3.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_3.py): `299'081.0`
+- [TradervR2_2.py](Bots/Round2/TradervR2_2.py): `299'081.0`
+- [TradervR2_3.py](Bots/Round2/TradervR2_3.py): `299'081.0`
 
 Read:
 - `R2_3` is locally identical to `R2_2`
@@ -129,27 +129,27 @@ Read:
 - if `R2_3` helps at all, it would most likely be through the official access environment rather than the public deterministic replay
 
 Artifacts:
-- [day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_3_day_-1/metrics.json)
-- [day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_3_day_0/metrics.json)
-- [day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_3_day_1/metrics.json)
+- [day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_3_day_-1/metrics.json)
+- [day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_3_day_0/metrics.json)
+- [day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_3_day_1/metrics.json)
 
 ## Research Sweep
 
 Research map:
-- [BEST_APPROACH.md](/Users/xavierwinkelmann/Prosperity/Bots/Round2/BEST_APPROACH.md)
+- [BEST_APPROACH.md](Bots/Round2/BEST_APPROACH.md)
 
 Branches built from the research themes:
-- [TradervR2_4.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_4.py): bucketed markout / passive net-edge quoting
-- [TradervR2_5.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_5.py): higher-rank microprice and deep imbalance
-- [TradervR2_6.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_6.py): high-conviction throughput expansion
-- [TradervR2_7.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_7.py): Pepper schedule / catch-up execution
+- [TradervR2_4.py](Bots/Round2/TradervR2_4.py): bucketed markout / passive net-edge quoting
+- [TradervR2_5.py](Bots/Round2/TradervR2_5.py): higher-rank microprice and deep imbalance
+- [TradervR2_6.py](Bots/Round2/TradervR2_6.py): high-conviction throughput expansion
+- [TradervR2_7.py](Bots/Round2/TradervR2_7.py): Pepper schedule / catch-up execution
 
 Public Round 2 deterministic replay totals:
-- [TradervR2_2.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_2.py): `299'081.0`
-- [TradervR2_4.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_4.py): `293'041.0`
-- [TradervR2_5.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_5.py): `299'098.0`
-- [TradervR2_6.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_6.py): `299'081.0`
-- [TradervR2_7.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_7.py): `299'081.0`
+- [TradervR2_2.py](Bots/Round2/TradervR2_2.py): `299'081.0`
+- [TradervR2_4.py](Bots/Round2/TradervR2_4.py): `293'041.0`
+- [TradervR2_5.py](Bots/Round2/TradervR2_5.py): `299'098.0`
+- [TradervR2_6.py](Bots/Round2/TradervR2_6.py): `299'081.0`
+- [TradervR2_7.py](Bots/Round2/TradervR2_7.py): `299'081.0`
 
 Read:
 - `R2_5` is the only branch that improved the public replay, and only slightly: `+17.0` over `R2_2`
@@ -162,18 +162,18 @@ Product split highlights:
 - `R2_6` and `R2_7` preserved both product paths exactly on public replay
 
 Artifacts:
-- [R2_4 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_4_day_-1/metrics.json)
-- [R2_4 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_4_day_0/metrics.json)
-- [R2_4 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_4_day_1/metrics.json)
-- [R2_5 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_5_day_-1/metrics.json)
-- [R2_5 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_5_day_0/metrics.json)
-- [R2_5 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_5_day_1/metrics.json)
-- [R2_6 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_6_day_-1/metrics.json)
-- [R2_6 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_6_day_0/metrics.json)
-- [R2_6 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_6_day_1/metrics.json)
-- [R2_7 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_7_day_-1/metrics.json)
-- [R2_7 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_7_day_0/metrics.json)
-- [R2_7 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_7_day_1/metrics.json)
+- [R2_4 day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_4_day_-1/metrics.json)
+- [R2_4 day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_4_day_0/metrics.json)
+- [R2_4 day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_4_day_1/metrics.json)
+- [R2_5 day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_5_day_-1/metrics.json)
+- [R2_5 day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_5_day_0/metrics.json)
+- [R2_5 day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_5_day_1/metrics.json)
+- [R2_6 day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_6_day_-1/metrics.json)
+- [R2_6 day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_6_day_0/metrics.json)
+- [R2_6 day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_6_day_1/metrics.json)
+- [R2_7 day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_7_day_-1/metrics.json)
+- [R2_7 day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_7_day_0/metrics.json)
+- [R2_7 day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_7_day_1/metrics.json)
 
 ## `TradervR2_8`
 
@@ -185,7 +185,7 @@ Structural experiment from the critique of the current Pepper target model:
 - refresh Ash projected inventory again before quote sizing / quote permission checks
 
 New file:
-- [TradervR2_8.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_8.py)
+- [TradervR2_8.py](Bots/Round2/TradervR2_8.py)
 
 Public Round 2 deterministic replay (`rust` engine):
 - day `-1`: total `76'493.0`
@@ -208,14 +208,14 @@ Read:
 - the useful lesson is: Pepper does need a better target/exit model, but not one this restrictive on public Round 2 data
 
 Artifacts:
-- [R2_8 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_8_day_-1/metrics.json)
-- [R2_8 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_8_day_0/metrics.json)
-- [R2_8 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_8_day_1/metrics.json)
+- [R2_8 day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_8_day_-1/metrics.json)
+- [R2_8 day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_8_day_0/metrics.json)
+- [R2_8 day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_8_day_1/metrics.json)
 
 ## `TradervR2_9`
 
 Lighter retry after `R2_8` over-corrected:
-- start from the stronger [TradervR2_5.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_5.py) trunk
+- start from the stronger [TradervR2_5.py](Bots/Round2/TradervR2_5.py) trunk
 - keep the stronger top-3 Osmium signal unchanged
 - apply only a light Pepper cleanup:
   - make the hard long target internally consistent with intended behavior
@@ -225,7 +225,7 @@ Lighter retry after `R2_8` over-corrected:
 - keep the Ash projected-inventory refresh before quote permission / quote sizing
 
 New file:
-- [TradervR2_9.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_9.py)
+- [TradervR2_9.py](Bots/Round2/TradervR2_9.py)
 
 Public Round 2 deterministic replay (`rust` engine):
 - day `-1`: total `99'515.0`
@@ -242,8 +242,8 @@ Three-day total:
 - `299'131.0`
 
 Comparison:
-- [TradervR2_5.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_5.py): `299'098.0`
-- [TradervR2_9.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_9.py): `299'131.0`
+- [TradervR2_5.py](Bots/Round2/TradervR2_5.py): `299'098.0`
+- [TradervR2_9.py](Bots/Round2/TradervR2_9.py): `299'131.0`
 
 Read:
 - this is the first successful retry after the failed heavy Pepper rewrite
@@ -253,9 +253,9 @@ Read:
 - so the lighter Pepper cleanup looks like the right direction, while `R2_8` was simply too restrictive
 
 Artifacts:
-- [R2_9 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_9_day_-1/metrics.json)
-- [R2_9 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_9_day_0/metrics.json)
-- [R2_9 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_9_day_1/metrics.json)
+- [R2_9 day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_9_day_-1/metrics.json)
+- [R2_9 day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_9_day_0/metrics.json)
+- [R2_9 day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_9_day_1/metrics.json)
 
 ## `R2_10` Osmium Structure Sweep
 
@@ -266,24 +266,24 @@ Prompt used for this sweep:
 - separate high-quality alpha detection from baseline market-making activity
 
 Built variants:
-- [TradervR2_10_softMarkout.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_softMarkout.py): soften markout penalties so they act more like a warning than a brake
-- [TradervR2_10_shortCover.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_shortCover.py): explicit short-cover recycling when no longer strongly bearish
-- [TradervR2_10_baselineActive.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_baselineActive.py): keep a baseline maker/recycler alive in normal, low-toxicity states
-- [TradervR2_10_combo.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_combo.py): combine all three ideas
+- [TradervR2_10_softMarkout.py](Bots/Round2/TradervR2_10_softMarkout.py): soften markout penalties so they act more like a warning than a brake
+- [TradervR2_10_shortCover.py](Bots/Round2/TradervR2_10_shortCover.py): explicit short-cover recycling when no longer strongly bearish
+- [TradervR2_10_baselineActive.py](Bots/Round2/TradervR2_10_baselineActive.py): keep a baseline maker/recycler alive in normal, low-toxicity states
+- [TradervR2_10_combo.py](Bots/Round2/TradervR2_10_combo.py): combine all three ideas
 
 Public Round 2 deterministic replay (`rust` engine):
-- [TradervR2_9.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_9.py): `99'515.0 / 99'994.0 / 99'622.0` = `299'131.0`
-- [TradervR2_10_softMarkout.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_softMarkout.py): `99'705.0 / 99'994.0 / 99'622.0` = `299'321.0`
-- [TradervR2_10_shortCover.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_shortCover.py): `99'508.0 / 99'994.0 / 99'576.0` = `299'078.0`
-- [TradervR2_10_baselineActive.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_baselineActive.py): `99'611.0 / 99'994.0 / 99'622.0` = `299'227.0`
-- [TradervR2_10_combo.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_combo.py): `99'705.0 / 99'994.0 / 99'576.0` = `299'275.0`
+- [TradervR2_9.py](Bots/Round2/TradervR2_9.py): `99'515.0 / 99'994.0 / 99'622.0` = `299'131.0`
+- [TradervR2_10_softMarkout.py](Bots/Round2/TradervR2_10_softMarkout.py): `99'705.0 / 99'994.0 / 99'622.0` = `299'321.0`
+- [TradervR2_10_shortCover.py](Bots/Round2/TradervR2_10_shortCover.py): `99'508.0 / 99'994.0 / 99'576.0` = `299'078.0`
+- [TradervR2_10_baselineActive.py](Bots/Round2/TradervR2_10_baselineActive.py): `99'611.0 / 99'994.0 / 99'622.0` = `299'227.0`
+- [TradervR2_10_combo.py](Bots/Round2/TradervR2_10_combo.py): `99'705.0 / 99'994.0 / 99'576.0` = `299'275.0`
 
 Product split over the three public days:
-- [TradervR2_9.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_9.py): `ASH_COATED_OSMIUM = 60'781.0`, `INTARIAN_PEPPER_ROOT = 238'350.0`
-- [TradervR2_10_softMarkout.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_softMarkout.py): `ASH_COATED_OSMIUM = 60'971.0`, `INTARIAN_PEPPER_ROOT = 238'350.0`
-- [TradervR2_10_baselineActive.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_baselineActive.py): `ASH_COATED_OSMIUM = 60'877.0`, `INTARIAN_PEPPER_ROOT = 238'350.0`
-- [TradervR2_10_combo.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_combo.py): `ASH_COATED_OSMIUM = 60'925.0`, `INTARIAN_PEPPER_ROOT = 238'350.0`
-- [TradervR2_10_shortCover.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_shortCover.py): `ASH_COATED_OSMIUM = 60'728.0`, `INTARIAN_PEPPER_ROOT = 238'350.0`
+- [TradervR2_9.py](Bots/Round2/TradervR2_9.py): `ASH_COATED_OSMIUM = 60'781.0`, `INTARIAN_PEPPER_ROOT = 238'350.0`
+- [TradervR2_10_softMarkout.py](Bots/Round2/TradervR2_10_softMarkout.py): `ASH_COATED_OSMIUM = 60'971.0`, `INTARIAN_PEPPER_ROOT = 238'350.0`
+- [TradervR2_10_baselineActive.py](Bots/Round2/TradervR2_10_baselineActive.py): `ASH_COATED_OSMIUM = 60'877.0`, `INTARIAN_PEPPER_ROOT = 238'350.0`
+- [TradervR2_10_combo.py](Bots/Round2/TradervR2_10_combo.py): `ASH_COATED_OSMIUM = 60'925.0`, `INTARIAN_PEPPER_ROOT = 238'350.0`
+- [TradervR2_10_shortCover.py](Bots/Round2/TradervR2_10_shortCover.py): `ASH_COATED_OSMIUM = 60'728.0`, `INTARIAN_PEPPER_ROOT = 238'350.0`
 
 Read:
 - the winning change is the soft markout version
@@ -294,54 +294,54 @@ Read:
 - combining all three ideas is better than the trunk, but still worse than just softening markout
 
 Best current public-data branch from this line:
-- [TradervR2_10_softMarkout.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_softMarkout.py)
+- [TradervR2_10_softMarkout.py](Bots/Round2/TradervR2_10_softMarkout.py)
 
 Artifacts:
-- [softMarkout day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_10_softMarkout_day_-1/metrics.json)
-- [softMarkout day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_10_softMarkout_day_0/metrics.json)
-- [softMarkout day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_10_softMarkout_day_1/metrics.json)
-- [shortCover day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_10_shortCover_day_-1/metrics.json)
-- [shortCover day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_10_shortCover_day_0/metrics.json)
-- [shortCover day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_10_shortCover_day_1/metrics.json)
-- [baselineActive day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_10_baselineActive_day_-1/metrics.json)
-- [baselineActive day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_10_baselineActive_day_0/metrics.json)
-- [baselineActive day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_10_baselineActive_day_1/metrics.json)
-- [combo day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_10_combo_day_-1/metrics.json)
-- [combo day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_10_combo_day_0/metrics.json)
-- [combo day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_10_combo_day_1/metrics.json)
+- [softMarkout day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_10_softMarkout_day_-1/metrics.json)
+- [softMarkout day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_10_softMarkout_day_0/metrics.json)
+- [softMarkout day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_10_softMarkout_day_1/metrics.json)
+- [shortCover day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_10_shortCover_day_-1/metrics.json)
+- [shortCover day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_10_shortCover_day_0/metrics.json)
+- [shortCover day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_10_shortCover_day_1/metrics.json)
+- [baselineActive day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_10_baselineActive_day_-1/metrics.json)
+- [baselineActive day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_10_baselineActive_day_0/metrics.json)
+- [baselineActive day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_10_baselineActive_day_1/metrics.json)
+- [combo day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_10_combo_day_-1/metrics.json)
+- [combo day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_10_combo_day_0/metrics.json)
+- [combo day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_10_combo_day_1/metrics.json)
 
 ## `R2_11` SoftMarkout Follow-Up
 
 Goal:
-- continue from [TradervR2_10_softMarkout.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_softMarkout.py)
+- continue from [TradervR2_10_softMarkout.py](Bots/Round2/TradervR2_10_softMarkout.py)
 - test whether smaller refinements around the live markout lever unlock more public-data edge
 
 Branches:
-- [TradervR2_11_passiveOnly.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_11_passiveOnly.py): remove markout from take gating, keep it on passive quoting / sizing
-- [TradervR2_11_sizeFeather.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_11_sizeFeather.py): soften markout size penalty further
-- [TradervR2_11_baselineLite.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_11_baselineLite.py): lighter baseline maker/recycler support
-- [TradervR2_11_comboLite.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_11_comboLite.py): passive-only markout plus lighter baseline support
+- [TradervR2_11_passiveOnly.py](Bots/Round2/TradervR2_11_passiveOnly.py): remove markout from take gating, keep it on passive quoting / sizing
+- [TradervR2_11_sizeFeather.py](Bots/Round2/TradervR2_11_sizeFeather.py): soften markout size penalty further
+- [TradervR2_11_baselineLite.py](Bots/Round2/TradervR2_11_baselineLite.py): lighter baseline maker/recycler support
+- [TradervR2_11_comboLite.py](Bots/Round2/TradervR2_11_comboLite.py): passive-only markout plus lighter baseline support
 
 Public Round 2 deterministic replay (`rust` engine):
-- [TradervR2_10_softMarkout.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_softMarkout.py): `99'705.0 / 99'994.0 / 99'622.0` = `299'321.0`
-- [TradervR2_11_passiveOnly.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_11_passiveOnly.py): `99'705.0 / 99'994.0 / 99'622.0` = `299'321.0`
-- [TradervR2_11_sizeFeather.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_11_sizeFeather.py): `99'705.0 / 99'994.0 / 99'622.0` = `299'321.0`
-- [TradervR2_11_baselineLite.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_11_baselineLite.py): `99'705.0 / 99'994.0 / 99'622.0` = `299'321.0`
-- [TradervR2_11_comboLite.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_11_comboLite.py): `99'705.0 / 99'994.0 / 99'622.0` = `299'321.0`
+- [TradervR2_10_softMarkout.py](Bots/Round2/TradervR2_10_softMarkout.py): `99'705.0 / 99'994.0 / 99'622.0` = `299'321.0`
+- [TradervR2_11_passiveOnly.py](Bots/Round2/TradervR2_11_passiveOnly.py): `99'705.0 / 99'994.0 / 99'622.0` = `299'321.0`
+- [TradervR2_11_sizeFeather.py](Bots/Round2/TradervR2_11_sizeFeather.py): `99'705.0 / 99'994.0 / 99'622.0` = `299'321.0`
+- [TradervR2_11_baselineLite.py](Bots/Round2/TradervR2_11_baselineLite.py): `99'705.0 / 99'994.0 / 99'622.0` = `299'321.0`
+- [TradervR2_11_comboLite.py](Bots/Round2/TradervR2_11_comboLite.py): `99'705.0 / 99'994.0 / 99'622.0` = `299'321.0`
 
 Read:
 - all four `R2_11` variants are completely identical to `R2_10_softMarkout` on public replay
 - that means these lighter refinements do not cross a new visible fill boundary
-- the current best public-data trunk remains [TradervR2_10_softMarkout.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_softMarkout.py)
+- the current best public-data trunk remains [TradervR2_10_softMarkout.py](Bots/Round2/TradervR2_10_softMarkout.py)
 
 ## `TradervR2_12`
 
 Clean restart baseline:
 - goal: stop patching the layered `R2_9`/`R2_10` tree and rebuild from a simpler structure
-- restart notes: [RESTART_BASELINE.md](/Users/xavierwinkelmann/Prosperity/Bots/Round2/RESTART_BASELINE.md)
+- restart notes: [RESTART_BASELINE.md](Bots/Round2/RESTART_BASELINE.md)
 
 New file:
-- [TradervR2_12.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_12.py)
+- [TradervR2_12.py](Bots/Round2/TradervR2_12.py)
 
 Design:
 - Pepper rewritten as a simple drift/carry engine with:
@@ -377,19 +377,19 @@ Read:
 - the main value here is structural clarity: the file is much easier to reason about and extend
 
 Artifacts:
-- [R2_12 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_12_day_-1/metrics.json)
-- [R2_12 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_12_day_0/metrics.json)
-- [R2_12 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_12_day_1/metrics.json)
+- [R2_12 day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_12_day_-1/metrics.json)
+- [R2_12 day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_12_day_0/metrics.json)
+- [R2_12 day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_12_day_1/metrics.json)
 
 ## `TradervR2_13`
 
 First build-up on top of the clean restart baseline:
-- keep [TradervR2_12.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_12.py) structure
+- keep [TradervR2_12.py](Bots/Round2/TradervR2_12.py) structure
 - upgrade only Pepper using the stronger Round 2 carry/schedule logic from the older branch
 - leave the simple restart Osmium unchanged
 
 New file:
-- [TradervR2_13.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_13.py)
+- [TradervR2_13.py](Bots/Round2/TradervR2_13.py)
 
 Public Round 2 deterministic replay (`rust` engine):
 - day `-1`: total `86'529.0`
@@ -406,8 +406,8 @@ Three-day total:
 - `257'722.0`
 
 Comparison against the bare reset baseline:
-- [TradervR2_12.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_12.py): `218'217.0`
-- [TradervR2_13.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_13.py): `257'722.0`
+- [TradervR2_12.py](Bots/Round2/TradervR2_12.py): `218'217.0`
+- [TradervR2_13.py](Bots/Round2/TradervR2_13.py): `257'722.0`
 - delta: `+39'505.0`
 
 Read:
@@ -418,14 +418,14 @@ Read:
 - Osmium is identical to `R2_12`, so the next clean build-up step should now be Ash
 
 Artifacts:
-- [R2_13 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_13_day_-1/metrics.json)
-- [R2_13 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_13_day_0/metrics.json)
-- [R2_13 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_13_day_1/metrics.json)
+- [R2_13 day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_13_day_-1/metrics.json)
+- [R2_13 day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_13_day_0/metrics.json)
+- [R2_13 day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_13_day_1/metrics.json)
 
 ## `TradervR2_14`
 
 Second build-up on top of the restart line:
-- keep [TradervR2_13.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_13.py) Pepper unchanged
+- keep [TradervR2_13.py](Bots/Round2/TradervR2_13.py) Pepper unchanged
 - add only the first proven Osmium layer back in:
   - stable-gap / imbalance / micro / trade-confirm conviction
   - conviction only affects:
@@ -437,7 +437,7 @@ Second build-up on top of the restart line:
 - no markout
 
 New file:
-- [TradervR2_14.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_14.py)
+- [TradervR2_14.py](Bots/Round2/TradervR2_14.py)
 
 Public Round 2 deterministic replay (`rust` engine):
 - day `-1`: total `86'160.0`
@@ -454,8 +454,8 @@ Three-day total:
 - `256'640.0`
 
 Comparison:
-- [TradervR2_13.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_13.py): `257'722.0`
-- [TradervR2_14.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_14.py): `256'640.0`
+- [TradervR2_13.py](Bots/Round2/TradervR2_13.py): `257'722.0`
+- [TradervR2_14.py](Bots/Round2/TradervR2_14.py): `256'640.0`
 - delta: `-1'082.0`
 
 Read:
@@ -466,14 +466,14 @@ Read:
 - it is probably the next roadmap item instead: toxicity smoothing or a lighter conviction mapping
 
 Artifacts:
-- [R2_14 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_14_day_-1/metrics.json)
-- [R2_14 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_14_day_0/metrics.json)
-- [R2_14 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_14_day_1/metrics.json)
+- [R2_14 day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_14_day_-1/metrics.json)
+- [R2_14 day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_14_day_0/metrics.json)
+- [R2_14 day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_14_day_1/metrics.json)
 
 ## `TradervR2_15`
 
 Third build-up on top of the clean restart line:
-- keep [TradervR2_13.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_13.py) Pepper unchanged
+- keep [TradervR2_13.py](Bots/Round2/TradervR2_13.py) Pepper unchanged
 - keep the simple Ash local-fair stack from `R2_13`
 - add only a light side-specific toxicity smoothing layer to Ash:
   - raw bid/ask toxicity from imbalance + micro + spread + exposure
@@ -489,7 +489,7 @@ Third build-up on top of the clean restart line:
 - no markout
 
 New file:
-- [TradervR2_15.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_15.py)
+- [TradervR2_15.py](Bots/Round2/TradervR2_15.py)
 
 Public Round 2 deterministic replay (`rust` engine):
 - day `-1`: total `86'641.0`
@@ -506,8 +506,8 @@ Three-day total:
 - `257'970.0`
 
 Comparison:
-- [TradervR2_13.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_13.py): `257'722.0`
-- [TradervR2_15.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_15.py): `257'970.0`
+- [TradervR2_13.py](Bots/Round2/TradervR2_13.py): `257'722.0`
+- [TradervR2_15.py](Bots/Round2/TradervR2_15.py): `257'970.0`
 - delta: `+248.0`
 
 Read:
@@ -522,14 +522,14 @@ Read:
   - `+130.0` on day `1`
 
 Artifacts:
-- [R2_15 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_15_day_-1/metrics.json)
-- [R2_15 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_15_day_0/metrics.json)
-- [R2_15 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_15_day_1/metrics.json)
+- [R2_15 day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_15_day_-1/metrics.json)
+- [R2_15 day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_15_day_0/metrics.json)
+- [R2_15 day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_15_day_1/metrics.json)
 
 ## `TradervR2_16`
 
 Fourth build-up on top of the clean restart line:
-- keep [TradervR2_15.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_15.py) Pepper and Ash fair model unchanged
+- keep [TradervR2_15.py](Bots/Round2/TradervR2_15.py) Pepper and Ash fair model unchanged
 - keep the new light Ash toxicity smoothing
 - add only a light Ash re-entry / neutral-drip layer:
   - side-specific fill timestamps from `state.own_trades`
@@ -546,7 +546,7 @@ Fourth build-up on top of the clean restart line:
 - no markout
 
 New file:
-- [TradervR2_16.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_16.py)
+- [TradervR2_16.py](Bots/Round2/TradervR2_16.py)
 
 Public Round 2 deterministic replay (`rust` engine):
 - day `-1`: total `86'668.0`
@@ -563,8 +563,8 @@ Three-day total:
 - `258'078.0`
 
 Comparison:
-- [TradervR2_15.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_15.py): `257'970.0`
-- [TradervR2_16.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_16.py): `258'078.0`
+- [TradervR2_15.py](Bots/Round2/TradervR2_15.py): `257'970.0`
+- [TradervR2_16.py](Bots/Round2/TradervR2_16.py): `258'078.0`
 - delta: `+108.0`
 
 Read:
@@ -577,14 +577,14 @@ Read:
 - so it looks useful, but more fragile than the toxicity layer underneath it
 
 Artifacts:
-- [R2_16 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_16_day_-1/metrics.json)
-- [R2_16 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_16_day_0/metrics.json)
-- [R2_16 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_16_day_1/metrics.json)
+- [R2_16 day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_16_day_-1/metrics.json)
+- [R2_16 day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_16_day_0/metrics.json)
+- [R2_16 day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_16_day_1/metrics.json)
 
 ## `TradervR2_17`
 
 Fifth build-up on top of the clean restart line:
-- keep [TradervR2_16.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_16.py) Pepper, Ash fair model, toxicity smoothing, and re-entry unchanged
+- keep [TradervR2_16.py](Bots/Round2/TradervR2_16.py) Pepper, Ash fair model, toxicity smoothing, and re-entry unchanged
 - add only a narrow passive-only Ash markout memory:
   - infer post-fill quality from position change and next mid move
   - keep buy/sell markout EMA separately
@@ -595,7 +595,7 @@ Fifth build-up on top of the clean restart line:
 - no hard shutdowns from markout
 
 New file:
-- [TradervR2_17.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_17.py)
+- [TradervR2_17.py](Bots/Round2/TradervR2_17.py)
 
 Public Round 2 deterministic replay (`rust` engine):
 - day `-1`: total `86'676.0`
@@ -612,8 +612,8 @@ Three-day total:
 - `258'086.0`
 
 Comparison:
-- [TradervR2_16.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_16.py): `258'078.0`
-- [TradervR2_17.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_17.py): `258'086.0`
+- [TradervR2_16.py](Bots/Round2/TradervR2_16.py): `258'078.0`
+- [TradervR2_17.py](Bots/Round2/TradervR2_17.py): `258'086.0`
 - delta: `+8.0`
 
 Read:
@@ -629,19 +629,19 @@ Read:
   - then re-entry in `R2_16`
 
 Artifacts:
-- [R2_17 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_17_day_-1/metrics.json)
-- [R2_17 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_17_day_0/metrics.json)
-- [R2_17 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_17_day_1/metrics.json)
+- [R2_17 day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_17_day_-1/metrics.json)
+- [R2_17 day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_17_day_0/metrics.json)
+- [R2_17 day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_17_day_1/metrics.json)
 
 ## `TradervR2_18` and `TradervR2_19`
 
-Alpha-route split experiments on top of [TradervR2_17.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_17.py):
+Alpha-route split experiments on top of [TradervR2_17.py](Bots/Round2/TradervR2_17.py):
 
-- [TradervR2_18.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_18.py)
+- [TradervR2_18.py](Bots/Round2/TradervR2_18.py)
   - stronger alpha split
   - `take_alpha` leans much more on micro / imbalance / deeper book flow
   - `quote_alpha` leans more on stable-book center with disagreement damping
-- [TradervR2_19.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_19.py)
+- [TradervR2_19.py](Bots/Round2/TradervR2_19.py)
   - lighter version of the same idea
   - quote path kept closer to the `R2_17` winner
   - take path only modestly shifted toward directional flow
@@ -673,9 +673,9 @@ Public Round 2 deterministic replay (`rust` engine):
   - three-day total: `257'329.0`
 
 Comparison:
-- [TradervR2_17.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_17.py): `258'086.0`
-- [TradervR2_18.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_18.py): `256'499.0`
-- [TradervR2_19.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_19.py): `257'329.0`
+- [TradervR2_17.py](Bots/Round2/TradervR2_17.py): `258'086.0`
+- [TradervR2_18.py](Bots/Round2/TradervR2_18.py): `256'499.0`
+- [TradervR2_19.py](Bots/Round2/TradervR2_19.py): `257'329.0`
 
 Read:
 - separating Ash alpha paths did change behavior
@@ -686,77 +686,77 @@ Read:
 - current conclusion: the clean rebuild benefits more from execution-quality layers than from splitting Ash alpha more aggressively
 
 Artifacts:
-- [R2_18 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_18_day_-1/metrics.json)
-- [R2_18 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_18_day_0/metrics.json)
-- [R2_18 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_18_day_1/metrics.json)
-- [R2_19 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_19_day_-1/metrics.json)
-- [R2_19 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_19_day_0/metrics.json)
-- [R2_19 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_19_day_1/metrics.json)
+- [R2_18 day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_18_day_-1/metrics.json)
+- [R2_18 day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_18_day_0/metrics.json)
+- [R2_18 day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_18_day_1/metrics.json)
+- [R2_19 day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_19_day_-1/metrics.json)
+- [R2_19 day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_19_day_0/metrics.json)
+- [R2_19 day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_19_day_1/metrics.json)
 
 ## Research Family From Round 2 Data Study
 
-Built directly from the findings in [round2_data_research_report.md](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_data_research/round2_data_research_report.md), using [TradervR2_10_softMarkout.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_softMarkout.py) as the strongest public-data trunk:
+Built directly from the findings in [round2_data_research_report.md](Analysis/output/round2_data_research/round2_data_research_report.md), using [TradervR2_10_softMarkout.py](Bots/Round2/TradervR2_10_softMarkout.py) as the strongest public-data trunk:
 
-- [TradervR2_20_pepperResidual.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_20_pepperResidual.py)
+- [TradervR2_20_pepperResidual.py](Bots/Round2/TradervR2_20_pepperResidual.py)
   - stronger Pepper residual-to-drift execution
   - buy harder in deep negative residual states
   - reduce patience in rich positive residual states
-- [TradervR2_21_agreementUnlock.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_21_agreementUnlock.py)
+- [TradervR2_21_agreementUnlock.py](Bots/Round2/TradervR2_21_agreementUnlock.py)
   - Osmium throughput unlock only when stable gap, imbalance, and micro all align
   - shallower public sweep
   - stronger join / front size in full agreement states
-- [TradervR2_22_vacuumRefill.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_22_vacuumRefill.py)
+- [TradervR2_22_vacuumRefill.py](Bots/Round2/TradervR2_22_vacuumRefill.py)
   - stronger refill-side bias after one-sided Osmium vacuums
   - quote/take/join nudge on the refill direction
-- [TradervR2_23_researchCombo.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_23_researchCombo.py)
+- [TradervR2_23_researchCombo.py](Bots/Round2/TradervR2_23_researchCombo.py)
   - lighter combination of all three research findings
 
 Public Round 2 deterministic replay (`rust` engine):
 
-- [TradervR2_10_softMarkout.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_softMarkout.py)
+- [TradervR2_10_softMarkout.py](Bots/Round2/TradervR2_10_softMarkout.py)
   - day `-1`: `99'705.0`
   - day `0`: `99'994.0`
   - day `1`: `99'622.0`
   - total: `299'321.0`
 
-- [TradervR2_20_pepperResidual.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_20_pepperResidual.py)
+- [TradervR2_20_pepperResidual.py](Bots/Round2/TradervR2_20_pepperResidual.py)
   - day `-1`: `99'705.0`
   - day `0`: `99'994.0`
   - day `1`: `99'622.0`
   - total: `299'321.0`
 
-- [TradervR2_21_agreementUnlock.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_21_agreementUnlock.py)
+- [TradervR2_21_agreementUnlock.py](Bots/Round2/TradervR2_21_agreementUnlock.py)
   - day `-1`: `99'689.0`
   - day `0`: `99'994.0`
   - day `1`: `99'612.0`
   - total: `299'295.0`
 
-- [TradervR2_22_vacuumRefill.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_22_vacuumRefill.py)
+- [TradervR2_22_vacuumRefill.py](Bots/Round2/TradervR2_22_vacuumRefill.py)
   - day `-1`: `99'705.0`
   - day `0`: `99'989.0`
   - day `1`: `99'622.0`
   - total: `299'316.0`
 
-- [TradervR2_23_researchCombo.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_23_researchCombo.py)
+- [TradervR2_23_researchCombo.py](Bots/Round2/TradervR2_23_researchCombo.py)
   - day `-1`: `99'697.0`
   - day `0`: `99'989.0`
   - day `1`: `99'613.0`
   - total: `299'299.0`
 
 Product split:
-- baseline [TradervR2_10_softMarkout.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_10_softMarkout.py)
+- baseline [TradervR2_10_softMarkout.py](Bots/Round2/TradervR2_10_softMarkout.py)
   - `ASH_COATED_OSMIUM`: `60'971.0`
   - `INTARIAN_PEPPER_ROOT`: `238'350.0`
-- [TradervR2_20_pepperResidual.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_20_pepperResidual.py)
+- [TradervR2_20_pepperResidual.py](Bots/Round2/TradervR2_20_pepperResidual.py)
   - `ASH_COATED_OSMIUM`: `60'971.0`
   - `INTARIAN_PEPPER_ROOT`: `238'350.0`
-- [TradervR2_21_agreementUnlock.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_21_agreementUnlock.py)
+- [TradervR2_21_agreementUnlock.py](Bots/Round2/TradervR2_21_agreementUnlock.py)
   - `ASH_COATED_OSMIUM`: `60'945.0`
   - `INTARIAN_PEPPER_ROOT`: `238'350.0`
-- [TradervR2_22_vacuumRefill.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_22_vacuumRefill.py)
+- [TradervR2_22_vacuumRefill.py](Bots/Round2/TradervR2_22_vacuumRefill.py)
   - `ASH_COATED_OSMIUM`: `60'966.0`
   - `INTARIAN_PEPPER_ROOT`: `238'350.0`
-- [TradervR2_23_researchCombo.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_23_researchCombo.py)
+- [TradervR2_23_researchCombo.py](Bots/Round2/TradervR2_23_researchCombo.py)
   - `ASH_COATED_OSMIUM`: `60'949.0`
   - `INTARIAN_PEPPER_ROOT`: `238'350.0`
 
@@ -768,46 +768,46 @@ Read:
 - overall conclusion: the research findings are real, but the current `R2_10_softMarkout` trunk already captures most of the easy public-data edge from them
 
 Artifacts:
-- [R2_20 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_20_pepperResidual_day_-1/metrics.json)
-- [R2_20 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_20_pepperResidual_day_0/metrics.json)
-- [R2_20 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_20_pepperResidual_day_1/metrics.json)
-- [R2_21 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_21_agreementUnlock_day_-1/metrics.json)
-- [R2_21 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_21_agreementUnlock_day_0/metrics.json)
-- [R2_21 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_21_agreementUnlock_day_1/metrics.json)
-- [R2_22 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_22_vacuumRefill_day_-1/metrics.json)
-- [R2_22 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_22_vacuumRefill_day_0/metrics.json)
-- [R2_22 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_22_vacuumRefill_day_1/metrics.json)
-- [R2_23 day -1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_23_researchCombo_day_-1/metrics.json)
-- [R2_23 day 0 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_23_researchCombo_day_0/metrics.json)
-- [R2_23 day 1 metrics](/Users/xavierwinkelmann/Prosperity/TraderFactory/generated/runs/deterministic/rust/TradervR2_23_researchCombo_day_1/metrics.json)
+- [R2_20 day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_20_pepperResidual_day_-1/metrics.json)
+- [R2_20 day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_20_pepperResidual_day_0/metrics.json)
+- [R2_20 day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_20_pepperResidual_day_1/metrics.json)
+- [R2_21 day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_21_agreementUnlock_day_-1/metrics.json)
+- [R2_21 day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_21_agreementUnlock_day_0/metrics.json)
+- [R2_21 day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_21_agreementUnlock_day_1/metrics.json)
+- [R2_22 day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_22_vacuumRefill_day_-1/metrics.json)
+- [R2_22 day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_22_vacuumRefill_day_0/metrics.json)
+- [R2_22 day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_22_vacuumRefill_day_1/metrics.json)
+- [R2_23 day -1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_23_researchCombo_day_-1/metrics.json)
+- [R2_23 day 0 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_23_researchCombo_day_0/metrics.json)
+- [R2_23 day 1 metrics](TraderFactory/generated/runs/deterministic/rust/TradervR2_23_researchCombo_day_1/metrics.json)
 
 ## `TradervR2_24.py` / `TradervR2_25.py` Sam-analysis recycler follow-up
 
 These two branches were built after reviewing the Sam variance report in
-[Analysis_Sam_Bot/preview.html](/Users/xavierwinkelmann/Prosperity/Bots/Round2/Analysis_Sam_Bot/preview.html),
+[Analysis_Sam_Bot/preview.html](Bots/Round2/Analysis_Sam_Bot/preview.html),
 which recommended:
 - keep the Logic-A-style moderate Osmium core,
 - avoid baking in access-heavy aggression in the default harness,
 - and test a stronger Osmium terminal recycler to reduce short-side variance.
 
 Implemented:
-- [TradervR2_24.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_24.py)
+- [TradervR2_24.py](Bots/Round2/TradervR2_24.py)
   - stronger late short-cover recycler
   - more explicit late buy relief and sell throttling
-- [TradervR2_25.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_25.py)
+- [TradervR2_25.py](Bots/Round2/TradervR2_25.py)
   - gentler version of the same idea
   - quote-shaping only, without stronger take/allow suppression
 
 Round2Backtester compare results (`conservative` queue model):
-- baseline [TradervR2_23_researchCombo.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_23_researchCombo.py)
+- baseline [TradervR2_23_researchCombo.py](Bots/Round2/TradervR2_23_researchCombo.py)
   - baseline no-access: `301'169.0`
   - access mean delta: `6'477.7`
   - access p25 delta: `6'336.5`
-- [TradervR2_24.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_24.py)
+- [TradervR2_24.py](Bots/Round2/TradervR2_24.py)
   - baseline no-access: `301'069.0`
   - access mean delta: `6'360.4`
   - access p25 delta: `6'316.0`
-- [TradervR2_25.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_25.py)
+- [TradervR2_25.py](Bots/Round2/TradervR2_25.py)
   - baseline no-access: `301'169.0`
   - access mean delta: `6'477.1`
   - access p25 delta: `6'336.5`
@@ -819,9 +819,9 @@ Read:
 - the more likely remaining margin is still in robust stable-mid / vacuum-aware Osmium behavior under quote thinning, not in a standalone late flattening overlay
 
 Artifacts:
-- [R2_23 compare summary](/Users/xavierwinkelmann/Prosperity/Round2Backtester/output/TradervR2_23_researchCombo/summary.json)
-- [R2_24 compare summary](/Users/xavierwinkelmann/Prosperity/Round2Backtester/output/TradervR2_24/summary.json)
-- [R2_25 compare summary](/Users/xavierwinkelmann/Prosperity/Round2Backtester/output/TradervR2_25/summary.json)
+- [R2_23 compare summary](Round2Backtester/output/TradervR2_23_researchCombo/summary.json)
+- [R2_24 compare summary](Round2Backtester/output/TradervR2_24/summary.json)
+- [R2_25 compare summary](Round2Backtester/output/TradervR2_25/summary.json)
 
 ## `TradervR2_26.py` stronger stable-mid / vacuum robustness
 
@@ -833,22 +833,22 @@ This branch follows the Sam variance review more literally:
 - and access-style aggression disabled when the visible touch looks unstable.
 
 Implemented:
-- [TradervR2_26.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_26.py)
+- [TradervR2_26.py](Bots/Round2/TradervR2_26.py)
 - distribution scorer:
-  [round2_distribution_score.py](/Users/xavierwinkelmann/Prosperity/Analysis/scripts/round2_distribution_score.py)
+  [round2_distribution_score.py](Analysis/scripts/round2_distribution_score.py)
 
 Repeated-run distribution ranking (`conservative` queue model, access seeds `7..13`):
-- [TradervR2_26.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_26.py)
+- [TradervR2_26.py](Bots/Round2/TradervR2_26.py)
   - baseline no-access: `301'262.0`
   - access mean/std: `308'156.9 / 225.7`
   - access p25/p10: `307'943.0 / 307'880.5`
   - robust score `mean - 0.5*std`: `308'044.1`
-- [TradervR2_23_researchCombo.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_23_researchCombo.py)
+- [TradervR2_23_researchCombo.py](Bots/Round2/TradervR2_23_researchCombo.py)
   - baseline no-access: `301'169.0`
   - access mean/std: `307'652.9 / 88.6`
   - access p25/p10: `307'567.5 / 307'505.5`
   - robust score `mean - 0.5*std`: `307'608.6`
-- [TradervR2_25.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_25.py)
+- [TradervR2_25.py](Bots/Round2/TradervR2_25.py)
   - baseline no-access: `301'169.0`
   - access mean/std: `307'652.4 / 88.2`
   - access p25/p10: `307'567.5 / 307'505.5`
@@ -861,31 +861,31 @@ Read:
 - that makes stronger stable-mid / vacuum robustness look like a real lever, unlike the recycler-only experiments
 
 Artifacts:
-- [distribution score report](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_distribution_score/distribution_score.md)
-- [distribution score json](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_distribution_score/distribution_score.json)
-- [R2_26 compare summary](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_distribution_score/TradervR2_26/compare_summary.json)
+- [distribution score report](Analysis/output/round2_distribution_score/distribution_score.md)
+- [distribution score json](Analysis/output/round2_distribution_score/distribution_score.json)
+- [R2_26 compare summary](Analysis/output/round2_distribution_score/TradervR2_26/compare_summary.json)
 
 ## Promoted robustness branches: `TradervR2_28.py` and `TradervR2_29.py`
 
 After the robustness workflow, I promoted the best practical winner and a lighter hybrid:
-- [TradervR2_28.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_28.py)
+- [TradervR2_28.py](Bots/Round2/TradervR2_28.py)
   - clean standalone promotion of the `bookHealth_mild` branch
-- [TradervR2_29.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py)
+- [TradervR2_29.py](Bots/Round2/TradervR2_29.py)
   - `bookHealth_mild` plus a lighter `medianGuard` fair
   - only uses the median of anchor / stable / last-good fair when book health is degraded
 
 Repeated-run validation (`conservative` queue model, access seeds `7..13`):
-- [TradervR2_29.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py)
+- [TradervR2_29.py](Bots/Round2/TradervR2_29.py)
   - baseline no-access: `301'307.0`
   - access mean/std: `308'172.6 / 215.6`
   - access p25/p10: `307'974.5 / 307'937.0`
   - robust score `mean - 0.5*std`: `308'064.8`
-- [TradervR2_28.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_28.py)
+- [TradervR2_28.py](Bots/Round2/TradervR2_28.py)
   - baseline no-access: `301'303.0`
   - access mean/std: `308'168.9 / 222.7`
   - access p25/p10: `307'966.0 / 307'886.5`
   - robust score `mean - 0.5*std`: `308'057.6`
-- [TradervR2_26.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_26.py)
+- [TradervR2_26.py](Bots/Round2/TradervR2_26.py)
   - baseline no-access: `301'262.0`
   - access mean/std: `308'156.9 / 225.7`
   - access p25/p10: `307'943.0 / 307'880.5`
@@ -897,15 +897,15 @@ Read:
 - the hybrid kept the main benefit of `bookHealth_mild` while avoiding the big downside of the full `medianGuard` branch
 
 Artifacts:
-- [promoted compare report](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_promoted_compare/distribution_score.md)
-- [promoted compare json](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_promoted_compare/distribution_score.json)
-- [R2_28 compare summary](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_promoted_compare/TradervR2_28/compare_summary.json)
-- [R2_29 compare summary](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_promoted_compare/TradervR2_29/compare_summary.json)
+- [promoted compare report](Analysis/output/round2_promoted_compare/distribution_score.md)
+- [promoted compare json](Analysis/output/round2_promoted_compare/distribution_score.json)
+- [R2_28 compare summary](Analysis/output/round2_promoted_compare/TradervR2_28/compare_summary.json)
+- [R2_29 compare summary](Analysis/output/round2_promoted_compare/TradervR2_29/compare_summary.json)
 
 ## Risk rebuild line: `TradervR2_33*`
 
 To rebuild risk management from the ground up without repeating the old blunt overlay mistake, I added a product-aware design note at:
-- [RISK_MANAGEMENT_REBUILD.md](/Users/xavierwinkelmann/Prosperity/Bots/Round2/RISK_MANAGEMENT_REBUILD.md)
+- [RISK_MANAGEMENT_REBUILD.md](Bots/Round2/RISK_MANAGEMENT_REBUILD.md)
 
 The core idea was:
 - Pepper risk should protect entry quality and avoid fighting carry
@@ -913,21 +913,21 @@ The core idea was:
 - risk should scale behavior locally inside each engine, not prune orders globally at the portfolio level
 
 Tested branches:
-- [TradervR2_33.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_33.py)
+- [TradervR2_33.py](Bots/Round2/TradervR2_33.py)
   - first full rebuild: product-level equity drawdown tracking, Ash confidence/risk context, volatility/fair-disagreement sizing, terminal Ash inventory pressure, and lighter Pepper chase / inventory risk
   - replay: `99'534.0 / 100'001.0 / 99'519.0` = `299'054.0`
-- [TradervR2_33_1.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_33_1.py)
+- [TradervR2_33_1.py](Bots/Round2/TradervR2_33_1.py)
   - lighter variant: removed the Ash double-tax on taking, softened terminal pressure, softened Pepper penalties
   - replay: `99'589.0 / 100'011.0 / 99'551.0` = `299'151.0`
-- [TradervR2_33_2.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_33_2.py)
+- [TradervR2_33_2.py](Bots/Round2/TradervR2_33_2.py)
   - best rebuild variant: drawdown mostly shapes size / access / mode instead of acting like a standing quote surcharge
   - replay: `99'653.0 / 100'128.0 / 99'588.0` = `299'369.0`
 
 Reference:
-- [TradervR2_31.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_31.py): `299'433.0`
+- [TradervR2_31.py](Bots/Round2/TradervR2_31.py): `299'433.0`
 
 Read:
 - the rebuilt risk architecture is viable
 - the first fully integrated version was too heavy
 - once the risk signals were narrowed to steering size / mode / late inventory instead of taxing every Ash action, the branch got back to near-parity
-- [TradervR2_33_2.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_33_2.py) is the best version of the rebuild line so far
+- [TradervR2_33_2.py](Bots/Round2/TradervR2_33_2.py) is the best version of the rebuild line so far

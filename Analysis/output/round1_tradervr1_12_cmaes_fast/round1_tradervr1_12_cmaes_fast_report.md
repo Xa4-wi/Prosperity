@@ -1,8 +1,8 @@
 # TradervR1_12 Round 1 Fast Osmium CMA-ES CMA-ES Report
 
-- Config: `/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_12_cmaes_fast.json`
-- Source bot: `/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_12.py`
-- Best bot: `/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_12_cmaes_fast/bots/TradervR1_12_best.py`
+- Config: `TraderFactory/configs/round1/tradervr1_12_cmaes_fast.json`
+- Source bot: `Bots/Round1/TradervR1_12.py`
+- Best bot: `Analysis/output/round1_tradervr1_12_cmaes_fast/bots/TradervR1_12_best.py`
 - Total evaluations: `4`
 
 ## Baseline Replay

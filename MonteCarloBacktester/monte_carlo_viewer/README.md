@@ -67,5 +67,5 @@ PYTHONDONTWRITEBYTECODE=1 python3 MonteCarloBacktester/monte_carlo_viewer/server
 
 ## Files
 
-- server: [server.py](/Users/xavierwinkelmann/Prosperity/MonteCarloBacktester/monte_carlo_viewer/server.py)
-- frontend: [index.html](/Users/xavierwinkelmann/Prosperity/MonteCarloBacktester/monte_carlo_viewer/index.html)
+- server: [server.py](MonteCarloBacktester/monte_carlo_viewer/server.py)
+- frontend: [index.html](MonteCarloBacktester/monte_carlo_viewer/index.html)

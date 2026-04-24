@@ -1,6 +1,6 @@
 [
   {
-    "bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py",
+    "bot": "Bots/Round2/TradervR2_29.py",
     "bot_name": "TradervR2_29",
     "baseline_no_access_pnl": 301307.0,
     "access_total_stats": {
@@ -21,10 +21,10 @@
     },
     "access_total_robust_score": 308064.82623750845,
     "delta_robust_score": 6757.826237508462,
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_promoted_compare/TradervR2_29/compare_summary.json"
+    "summary_path": "Analysis/output/round2_promoted_compare/TradervR2_29/compare_summary.json"
   },
   {
-    "bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_28.py",
+    "bot": "Bots/Round2/TradervR2_28.py",
     "bot_name": "TradervR2_28",
     "baseline_no_access_pnl": 301303.0,
     "access_total_stats": {
@@ -45,10 +45,10 @@
     },
     "access_total_robust_score": 308057.6020384781,
     "delta_robust_score": 6754.602038478086,
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_promoted_compare/TradervR2_28/compare_summary.json"
+    "summary_path": "Analysis/output/round2_promoted_compare/TradervR2_28/compare_summary.json"
   },
   {
-    "bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_26.py",
+    "bot": "Bots/Round2/TradervR2_26.py",
     "bot_name": "TradervR2_26",
     "baseline_no_access_pnl": 301262.0,
     "access_total_stats": {
@@ -69,6 +69,6 @@
     },
     "access_total_robust_score": 308044.07726054854,
     "delta_robust_score": 6782.077260548516,
-    "summary_path": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_promoted_compare/TradervR2_26/compare_summary.json"
+    "summary_path": "Analysis/output/round2_promoted_compare/TradervR2_26/compare_summary.json"
   }
 ]

@@ -1,8 +1,8 @@
 {
   "config_name": "TradervR1_12 Round 1 Fast Osmium CMA-ES",
-  "config_path": "/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_12_cmaes_fast.json",
-  "source_bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_12.py",
-  "best_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_12_cmaes_fast/bots/TradervR1_12_best.py",
+  "config_path": "TraderFactory/configs/round1/tradervr1_12_cmaes_fast.json",
+  "source_bot": "Bots/Round1/TradervR1_12.py",
+  "best_bot": "Analysis/output/round1_tradervr1_12_cmaes_fast/bots/TradervR1_12_best.py",
   "parameters": {
     "ASH_INVENTORY_SKEW": 0.1197820182,
     "ASH_BASE_EDGE": 2.0,

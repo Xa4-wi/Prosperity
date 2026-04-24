@@ -2,11 +2,11 @@
 
 Base comparison:
 
-- [TradervR3_7.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_7.py)
-- [TradervR3_16.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_16.py)
+- [TradervR3_7.py](Bots/Round3/TradervR3_7.py)
+- [TradervR3_16.py](Bots/Round3/TradervR3_16.py)
 - official logs:
-  - [TradervR3_7.log](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_7.log)
-  - [TradervR3_16.log](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_16.log)
+  - [TradervR3_7.log](Bots/Round3/TradervR3_7.log)
+  - [TradervR3_16.log](Bots/Round3/TradervR3_16.log)
 
 ## Main Read
 
@@ -217,7 +217,7 @@ Next rule:
 
 Goal:
 
-- start from [TradervR3_16.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_16.py)
+- start from [TradervR3_16.py](Bots/Round3/TradervR3_16.py)
 - loosen only the low-strike lane
 
 Changes:

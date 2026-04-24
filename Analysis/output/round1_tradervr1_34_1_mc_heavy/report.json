@@ -101,7 +101,7 @@
       }
     ],
     "bots": [
-      "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_34_1.py"
+      "Bots/Round1/TradervR1_34_1.py"
     ]
   },
   "baseline": {

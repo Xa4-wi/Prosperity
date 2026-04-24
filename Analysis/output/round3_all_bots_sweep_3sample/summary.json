@@ -429,7 +429,7 @@
   "results": [
     {
       "bot": "TradervR3_2.py",
-      "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777037051801/metrics.json",
+      "metrics_path": "ProsperityRustBacktester/runs/backtest-1777037051801/metrics.json",
       "raw_total": -44685.5,
       "calibrated_total": 29001.0,
       "top_products": [
@@ -473,7 +473,7 @@
     },
     {
       "bot": "TradervR3_3.py",
-      "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777036109153/metrics.json",
+      "metrics_path": "ProsperityRustBacktester/runs/backtest-1777036109153/metrics.json",
       "raw_total": -35436.0,
       "calibrated_total": 28556.5,
       "top_products": [
@@ -517,7 +517,7 @@
     },
     {
       "bot": "TradervR3_1.py",
-      "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777036961439/metrics.json",
+      "metrics_path": "ProsperityRustBacktester/runs/backtest-1777036961439/metrics.json",
       "raw_total": -49148.0,
       "calibrated_total": 27565.65,
       "top_products": [
@@ -561,7 +561,7 @@
     },
     {
       "bot": "TradervR3_7.py",
-      "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777036575539/metrics.json",
+      "metrics_path": "ProsperityRustBacktester/runs/backtest-1777036575539/metrics.json",
       "raw_total": 83575.0,
       "calibrated_total": 26329.100000000002,
       "top_products": [
@@ -605,7 +605,7 @@
     },
     {
       "bot": "TradervR3_8.py",
-      "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777036650303/metrics.json",
+      "metrics_path": "ProsperityRustBacktester/runs/backtest-1777036650303/metrics.json",
       "raw_total": 6281.0,
       "calibrated_total": 25943.75,
       "top_products": [
@@ -649,7 +649,7 @@
     },
     {
       "bot": "TradervR3_5.py",
-      "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777036425647/metrics.json",
+      "metrics_path": "ProsperityRustBacktester/runs/backtest-1777036425647/metrics.json",
       "raw_total": -52049.0,
       "calibrated_total": 25295.199999999997,
       "top_products": [
@@ -693,7 +693,7 @@
     },
     {
       "bot": "TradervR3_6.py",
-      "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777036502866/metrics.json",
+      "metrics_path": "ProsperityRustBacktester/runs/backtest-1777036502866/metrics.json",
       "raw_total": -48170.0,
       "calibrated_total": 24368.75,
       "top_products": [
@@ -737,7 +737,7 @@
     },
     {
       "bot": "TradervR3_4.py",
-      "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777036187365/metrics.json",
+      "metrics_path": "ProsperityRustBacktester/runs/backtest-1777036187365/metrics.json",
       "raw_total": -54616.5,
       "calibrated_total": 23902.899999999998,
       "top_products": [
@@ -781,7 +781,7 @@
     },
     {
       "bot": "TradervR3_4_1.py",
-      "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777036266005/metrics.json",
+      "metrics_path": "ProsperityRustBacktester/runs/backtest-1777036266005/metrics.json",
       "raw_total": -54507.5,
       "calibrated_total": 23902.899999999998,
       "top_products": [
@@ -825,7 +825,7 @@
     },
     {
       "bot": "TradervR3_4_2.py",
-      "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777036343483/metrics.json",
+      "metrics_path": "ProsperityRustBacktester/runs/backtest-1777036343483/metrics.json",
       "raw_total": -55025.5,
       "calibrated_total": 22726.199999999997,
       "top_products": [

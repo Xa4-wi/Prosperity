@@ -11,4 +11,4 @@ Current keepers:
 - `Traderv88_b.py`
 - `Traderv88_c.py`
 
-Everything else from older tutorial-round exploration lives in [archive](/Users/xavierwinkelmann/Prosperity/Bots/archive).
+Everything else from older tutorial-round exploration lives in [archive](Bots/archive).

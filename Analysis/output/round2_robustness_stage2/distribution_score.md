@@ -13,7 +13,7 @@ Robust score: `mean - 0.50 * std`
 - access delta mean/std: `8429.2 / 374.8`
 - access delta p25/p10: `8043.5 / 8000.0`
 - access delta robust score: `8241.8`
-- summary: [TradervR2_28_fair_medianGuard summary](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_stage2/TradervR2_28_fair_medianGuard/compare_summary.json)
+- summary: [TradervR2_28_fair_medianGuard summary](Analysis/output/round2_robustness_stage2/TradervR2_28_fair_medianGuard/compare_summary.json)
 
 ## `TradervR2_28_bookHealth_mild`
 
@@ -24,7 +24,7 @@ Robust score: `mean - 0.50 * std`
 - access delta mean/std: `6865.9 / 222.7`
 - access delta p25/p10: `6663.0 / 6583.5`
 - access delta robust score: `6754.6`
-- summary: [TradervR2_28_bookHealth_mild summary](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_stage2/TradervR2_28_bookHealth_mild/compare_summary.json)
+- summary: [TradervR2_28_bookHealth_mild summary](Analysis/output/round2_robustness_stage2/TradervR2_28_bookHealth_mild/compare_summary.json)
 
 ## `TradervR2_26`
 
@@ -35,7 +35,7 @@ Robust score: `mean - 0.50 * std`
 - access delta mean/std: `6894.9 / 225.7`
 - access delta p25/p10: `6681.0 / 6618.5`
 - access delta robust score: `6782.1`
-- summary: [TradervR2_26 summary](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_stage2/TradervR2_26/compare_summary.json)
+- summary: [TradervR2_26 summary](Analysis/output/round2_robustness_stage2/TradervR2_26/compare_summary.json)
 
 ## `TradervR2_28_starvation_strong`
 
@@ -46,5 +46,5 @@ Robust score: `mean - 0.50 * std`
 - access delta mean/std: `6855.1 / 184.9`
 - access delta p25/p10: `6674.5 / 6652.5`
 - access delta robust score: `6762.7`
-- summary: [TradervR2_28_starvation_strong summary](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_stage2/TradervR2_28_starvation_strong/compare_summary.json)
+- summary: [TradervR2_28_starvation_strong summary](Analysis/output/round2_robustness_stage2/TradervR2_28_starvation_strong/compare_summary.json)
 

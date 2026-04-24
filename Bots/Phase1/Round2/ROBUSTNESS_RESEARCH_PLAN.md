@@ -15,7 +15,7 @@ The target is:
 - less dependence on raw touch noise
 
 Current strong reference:
-- [TradervR2_26.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_26.py)
+- [TradervR2_26.py](Bots/Round2/TradervR2_26.py)
 
 Primary score style:
 - repeated-run distribution
@@ -165,7 +165,7 @@ Success:
 
 ## Workflow
 
-1. Use [TradervR2_26.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_26.py) as the research base.
+1. Use [TradervR2_26.py](Bots/Round2/TradervR2_26.py) as the research base.
 2. Generate per-idea mild/strong variants from a single research-capable base.
 3. Run repeated-run distribution scoring on each variant.
 4. Keep only ideas that move:

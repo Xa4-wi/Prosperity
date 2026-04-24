@@ -1,5 +1,5 @@
 {
-  "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_bookHealth_mild.py",
+  "bot_path": "Bots/Round2/research_variants/TradervR2_28_bookHealth_mild.py",
   "mode": "access",
   "queue_model": "conservative",
   "access_seed": 13,

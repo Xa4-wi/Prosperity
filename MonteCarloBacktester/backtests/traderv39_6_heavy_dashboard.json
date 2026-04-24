@@ -1,7 +1,7 @@
 {
   "kind": "monte_carlo_dashboard",
   "meta": {
-    "algorithmPath": "/Users/xavierwinkelmann/Prosperity/Bots/Traderv39_6.py",
+    "algorithmPath": "Bots/Traderv39_6.py",
     "sessionCount": 1000,
     "bandSessionCount": 100,
     "fvMode": "simulate",

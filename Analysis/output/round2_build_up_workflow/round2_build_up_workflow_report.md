@@ -6,7 +6,7 @@ This report tracks the clean Round 2 rebuild path from the staged build-up plan,
 
 ## Current Best
 
-- Best tested branch: [`R2_17`](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_17.py)
+- Best tested branch: [`R2_17`](Bots/Round2/TradervR2_17.py)
 - Three-day total: `258086.0`
 - Split: Ash `19736.0`, Pepper `238350.0`
 

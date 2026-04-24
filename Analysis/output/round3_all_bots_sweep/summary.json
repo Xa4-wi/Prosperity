@@ -1,10 +1,10 @@
 [
   {
     "bot": "TradervR3_1.py",
-    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777036961439/metrics.json",
+    "metrics_path": "ProsperityRustBacktester/runs/backtest-1777036961439/metrics.json",
     "raw_total": -49148.0,
     "calibrated_total": 27565.65,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_1_20260424_152407",
+    "output_dir": "Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_1_20260424_152407",
     "top_products": [
       {
         "product": "HYDROGEL_PACK",
@@ -46,10 +46,10 @@
   },
   {
     "bot": "TradervR3_2.py",
-    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777037051801/metrics.json",
+    "metrics_path": "ProsperityRustBacktester/runs/backtest-1777037051801/metrics.json",
     "raw_total": -44685.5,
     "calibrated_total": 29001.0,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_2_20260424_152524",
+    "output_dir": "Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_2_20260424_152524",
     "top_products": [
       {
         "product": "HYDROGEL_PACK",
@@ -91,10 +91,10 @@
   },
   {
     "bot": "TradervR3_3.py",
-    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777037130637/metrics.json",
+    "metrics_path": "ProsperityRustBacktester/runs/backtest-1777037130637/metrics.json",
     "raw_total": -35436.0,
     "calibrated_total": 28556.5,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_3_20260424_152750",
+    "output_dir": "Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_3_20260424_152750",
     "top_products": [
       {
         "product": "HYDROGEL_PACK",
@@ -136,10 +136,10 @@
   },
   {
     "bot": "TradervR3_4.py",
-    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777037278579/metrics.json",
+    "metrics_path": "ProsperityRustBacktester/runs/backtest-1777037278579/metrics.json",
     "raw_total": -54616.5,
     "calibrated_total": 23902.899999999998,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_4_20260424_153121",
+    "output_dir": "Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_4_20260424_153121",
     "top_products": [
       {
         "product": "HYDROGEL_PACK",
@@ -181,10 +181,10 @@
   },
   {
     "bot": "TradervR3_4_1.py",
-    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777037489469/metrics.json",
+    "metrics_path": "ProsperityRustBacktester/runs/backtest-1777037489469/metrics.json",
     "raw_total": -54507.5,
     "calibrated_total": 23902.899999999998,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_4_1_20260424_153402",
+    "output_dir": "Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_4_1_20260424_153402",
     "top_products": [
       {
         "product": "HYDROGEL_PACK",
@@ -226,10 +226,10 @@
   },
   {
     "bot": "TradervR3_4_2.py",
-    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777037648331/metrics.json",
+    "metrics_path": "ProsperityRustBacktester/runs/backtest-1777037648331/metrics.json",
     "raw_total": -55025.5,
     "calibrated_total": 22726.199999999997,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_4_2_20260424_153550",
+    "output_dir": "Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_4_2_20260424_153550",
     "top_products": [
       {
         "product": "HYDROGEL_PACK",
@@ -271,10 +271,10 @@
   },
   {
     "bot": "TradervR3_5.py",
-    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777037755769/metrics.json",
+    "metrics_path": "ProsperityRustBacktester/runs/backtest-1777037755769/metrics.json",
     "raw_total": -52049.0,
     "calibrated_total": 25295.199999999997,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_5_20260424_154505",
+    "output_dir": "Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_5_20260424_154505",
     "top_products": [
       {
         "product": "HYDROGEL_PACK",
@@ -316,10 +316,10 @@
   },
   {
     "bot": "TradervR3_6.py",
-    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777038323824/metrics.json",
+    "metrics_path": "ProsperityRustBacktester/runs/backtest-1777038323824/metrics.json",
     "raw_total": -48170.0,
     "calibrated_total": 24368.75,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_6_20260424_154914",
+    "output_dir": "Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_6_20260424_154914",
     "top_products": [
       {
         "product": "HYDROGEL_PACK",
@@ -361,10 +361,10 @@
   },
   {
     "bot": "TradervR3_7.py",
-    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777038561079/metrics.json",
+    "metrics_path": "ProsperityRustBacktester/runs/backtest-1777038561079/metrics.json",
     "raw_total": 83575.0,
     "calibrated_total": 26329.100000000002,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_7_20260424_155105",
+    "output_dir": "Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_7_20260424_155105",
     "top_products": [
       {
         "product": "HYDROGEL_PACK",
@@ -406,10 +406,10 @@
   },
   {
     "bot": "TradervR3_8.py",
-    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777038670732/metrics.json",
+    "metrics_path": "ProsperityRustBacktester/runs/backtest-1777038670732/metrics.json",
     "raw_total": 6281.0,
     "calibrated_total": 25943.75,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_8_20260424_155323",
+    "output_dir": "Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_8_20260424_155323",
     "top_products": [
       {
         "product": "HYDROGEL_PACK",

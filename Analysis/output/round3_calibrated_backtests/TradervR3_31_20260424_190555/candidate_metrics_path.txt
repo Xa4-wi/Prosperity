@@ -1,1 +1,1 @@
-/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/r3_31_split_exechard/metrics.json
+ProsperityRustBacktester/runs/r3_31_split_exechard/metrics.json

@@ -1,10 +1,10 @@
 {
-  "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_25.py",
+  "bot_path": "Bots/Round2/TradervR2_25.py",
   "queue_model": "conservative",
   "baseline_no_access_pnl": 301169.0,
   "access_runs": [
     {
-      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_25.py",
+      "bot_path": "Bots/Round2/TradervR2_25.py",
       "mode": "access",
       "queue_model": "conservative",
       "access_seed": 7,
@@ -31,7 +31,7 @@
       }
     },
     {
-      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_25.py",
+      "bot_path": "Bots/Round2/TradervR2_25.py",
       "mode": "access",
       "queue_model": "conservative",
       "access_seed": 8,
@@ -58,7 +58,7 @@
       }
     },
     {
-      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_25.py",
+      "bot_path": "Bots/Round2/TradervR2_25.py",
       "mode": "access",
       "queue_model": "conservative",
       "access_seed": 9,
@@ -85,7 +85,7 @@
       }
     },
     {
-      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_25.py",
+      "bot_path": "Bots/Round2/TradervR2_25.py",
       "mode": "access",
       "queue_model": "conservative",
       "access_seed": 10,
@@ -112,7 +112,7 @@
       }
     },
     {
-      "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_25.py",
+      "bot_path": "Bots/Round2/TradervR2_25.py",
       "mode": "access",
       "queue_model": "conservative",
       "access_seed": 11,

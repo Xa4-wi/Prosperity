@@ -14,7 +14,7 @@ The idea is simple:
 ### Product Analysis
 
 Location:
-- [Product_Analysis](/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis)
+- [Product_Analysis](Bots/Tools/Product_Analysis)
 
 Best for:
 - identifying product archetypes
@@ -36,12 +36,12 @@ Expected outputs:
 - run log
 
 Output location:
-- [Product_Analysis/output](/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output)
+- [Product_Analysis/output](Bots/Tools/Product_Analysis/output)
 
 ### Olivia detector toolkit
 
 Location:
-- [olivia_tool](/Users/xavierwinkelmann/Prosperity/Bots/Tools/olivia_tool)
+- [olivia_tool](Bots/Tools/olivia_tool)
 
 Best for:
 - detecting repeated lot-size / daily-extrema behavior
@@ -66,7 +66,7 @@ Expected outputs:
 - HTML dashboard
 
 Output location:
-- [olivia_tool/output](/Users/xavierwinkelmann/Prosperity/Bots/Tools/olivia_tool/output)
+- [olivia_tool/output](Bots/Tools/olivia_tool/output)
 
 ## Round 3 startup workflow
 
@@ -102,11 +102,11 @@ python3 Bots/Tools/Product_Analysis/run_product_diagnosis.py \
 
 Then inspect:
 - report:
-  [capsule_product_diagnosis_report.md](/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/round3_capsule_initial/capsule_product_diagnosis_report.md)
+  [capsule_product_diagnosis_report.md](Bots/Tools/Product_Analysis/output/round3_capsule_initial/capsule_product_diagnosis_report.md)
 - summary:
-  [capsule_product_diagnosis_summary.json](/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/round3_capsule_initial/capsule_product_diagnosis_summary.json)
+  [capsule_product_diagnosis_summary.json](Bots/Tools/Product_Analysis/output/round3_capsule_initial/capsule_product_diagnosis_summary.json)
 - dashboard:
-  [index.html](/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/round3_capsule_initial/dashboard/index.html)
+  [index.html](Bots/Tools/Product_Analysis/output/round3_capsule_initial/dashboard/index.html)
 
 Questions to answer immediately:
 - Which products are likely maker products?
@@ -133,11 +133,11 @@ python3 Bots/Tools/olivia_tool/run_olivia_pipeline.py \
 
 Then inspect:
 - validated products:
-  [validated_products.json](/Users/xavierwinkelmann/Prosperity/Bots/Tools/olivia_tool/output/olivia_round3/validated_products.json)
+  [validated_products.json](Bots/Tools/olivia_tool/output/olivia_round3/validated_products.json)
 - runtime config:
-  [runtime_config.json](/Users/xavierwinkelmann/Prosperity/Bots/Tools/olivia_tool/output/olivia_round3/runtime_config.json)
+  [runtime_config.json](Bots/Tools/olivia_tool/output/olivia_round3/runtime_config.json)
 - dashboard:
-  [index.html](/Users/xavierwinkelmann/Prosperity/Bots/Tools/olivia_tool/output/olivia_round3/dashboard/index.html)
+  [index.html](Bots/Tools/olivia_tool/output/olivia_round3/dashboard/index.html)
 
 Questions to answer immediately:
 - Is there a strong per-product candidate cluster?

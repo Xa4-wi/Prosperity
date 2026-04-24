@@ -1,8 +1,8 @@
 # TradervR1_1 Round 1 Focused CMA-ES CMA-ES Report
 
-- Config: `/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_1_cmaes.json`
-- Source bot: `/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_1.py`
-- Best bot: `/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_1_cmaes/bots/TradervR1_1_best.py`
+- Config: `TraderFactory/configs/round1/tradervr1_1_cmaes.json`
+- Source bot: `Bots/Round1/TradervR1_1.py`
+- Best bot: `Analysis/output/round1_tradervr1_1_cmaes/bots/TradervR1_1_best.py`
 - Total evaluations: `9`
 
 ## Baseline Replay

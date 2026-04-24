@@ -1,6 +1,6 @@
 # Round 3 Workflow Tracker
 
-Base bot: [TradervR3_7.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_7.py)
+Base bot: [TradervR3_7.py](Bots/Round3/TradervR3_7.py)
 
 ## Current Status
 
@@ -14,31 +14,31 @@ Base bot: [TradervR3_7.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/Trader
 - Phase 4 strip risk limits: in progress
 - Phase 5 overlay A/B validation: pending
 - Phase 6 acceptance workflow enforcement: in progress
-- Current Phase 1 follow-up bot: [TradervR3_8.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_8.py)
-- Current Phase 2 strip-risk bot: [TradervR3_9.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_9.py)
-- Current strip-risk winner: [TradervR3_10.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_10.py)
-- Current Hydrogel risk-control bot: [TradervR3_15.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_15.py)
-- Current BS-first voucher bot: [TradervR3_16.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_16.py)
+- Current Phase 1 follow-up bot: [TradervR3_8.py](Bots/Round3/TradervR3_8.py)
+- Current Phase 2 strip-risk bot: [TradervR3_9.py](Bots/Round3/TradervR3_9.py)
+- Current strip-risk winner: [TradervR3_10.py](Bots/Round3/TradervR3_10.py)
+- Current Hydrogel risk-control bot: [TradervR3_15.py](Bots/Round3/TradervR3_15.py)
+- Current BS-first voucher bot: [TradervR3_16.py](Bots/Round3/TradervR3_16.py)
 
 ## Calibration Refresh
 
 - The Round 3 calibration is now **orientation-aware**:
   - if a product is consistently inverted between local replay and official logs, the calibrated scorer can flip it instead of zeroing it out
 - Helper added:
-  - [refresh_round3_calibration_samples.py](/Users/xavierwinkelmann/Prosperity/Analysis/scripts/refresh_round3_calibration_samples.py)
+  - [refresh_round3_calibration_samples.py](Analysis/scripts/refresh_round3_calibration_samples.py)
 - The sample set now auto-refreshes from the uploaded official logs in:
-  - [round3_calibration_samples.json](/Users/xavierwinkelmann/Prosperity/Bots/Round3/round3_calibration_samples.json)
+  - [round3_calibration_samples.json](Bots/Round3/round3_calibration_samples.json)
 - This matters most for `HYDROGEL_PACK`, which is currently behaving like an **inverted** local signal rather than just a noisy one.
 
 Current calibrated comparison on the refreshed sample set:
 
-- [TradervR3_16.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_16.py)
+- [TradervR3_16.py](Bots/Round3/TradervR3_16.py)
   - raw local total: `269531.0`
   - calibrated total: `2860.12`
-- [TradervR3_27.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_27.py)
+- [TradervR3_27.py](Bots/Round3/TradervR3_27.py)
   - raw local total: `237157.0`
   - calibrated total: `3075.71`
-- [TradervR3_28.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_28.py)
+- [TradervR3_28.py](Bots/Round3/TradervR3_28.py)
   - raw local total: `-755873.0`
   - calibrated total: `9688.55`
 
@@ -50,7 +50,7 @@ Interpretation:
 
 ## Hydrogel Research Branch
 
-- [TradervR3_32.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_32.py)
+- [TradervR3_32.py](Bots/Round3/TradervR3_32.py)
   - Hydrogel-only research branch built from the `R3_28` follow-up priorities:
     - adaptive Hydrogel fair from book health
     - small time-of-day prior
@@ -74,67 +74,67 @@ Interpretation:
 
 ## Latest Phase Result
 
-- [TradervR3_8.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_8.py)
+- [TradervR3_8.py](Bots/Round3/TradervR3_8.py)
   - raw local total: `6281.0`
   - calibrated total: `25943.75`
-- [TradervR3_9.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_9.py)
+- [TradervR3_9.py](Bots/Round3/TradervR3_9.py)
   - raw local total: `-54616.5`
   - calibrated total: `23902.9`
-- [TradervR3_10.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_10.py)
+- [TradervR3_10.py](Bots/Round3/TradervR3_10.py)
   - raw local total: `76375.5`
   - calibrated total: `32668.82`
-- [TradervR3_13.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_13.py)
+- [TradervR3_13.py](Bots/Round3/TradervR3_13.py)
   - raw local total: `63290.0`
   - calibrated total: `31964.45`
-- [TradervR3_14.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_14.py)
+- [TradervR3_14.py](Bots/Round3/TradervR3_14.py)
   - raw local total: `51807.0`
   - calibrated total: `30133.6`
-- [TradervR3_15.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_15.py)
+- [TradervR3_15.py](Bots/Round3/TradervR3_15.py)
   - raw local total: `74352.0`
   - calibrated total: `33750.5`
-- [TradervR3_16.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_16.py)
+- [TradervR3_16.py](Bots/Round3/TradervR3_16.py)
   - raw local total: `269531.0`
   - calibrated total: `51278.85`
-- [TradervR3_17.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_17.py)
+- [TradervR3_17.py](Bots/Round3/TradervR3_17.py)
   - raw local total: `297902.0`
   - calibrated total: `50743.0`
-- [TradervR3_18.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_18.py)
+- [TradervR3_18.py](Bots/Round3/TradervR3_18.py)
   - raw local total: `269521.0`
   - calibrated total: `51278.85`
-- [TradervR3_19.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_19.py)
+- [TradervR3_19.py](Bots/Round3/TradervR3_19.py)
   - raw local total: `264696.0`
   - calibrated total: `49586.60`
-- [TradervR3_20.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_20.py)
+- [TradervR3_20.py](Bots/Round3/TradervR3_20.py)
   - raw local total: `266240.0`
   - calibrated total: `50127.00`
-- [TradervR3_21.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_21.py)
+- [TradervR3_21.py](Bots/Round3/TradervR3_21.py)
   - raw local total: `269531.0`
   - calibrated total: `51278.85`
-- [TradervR3_22.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_22.py)
+- [TradervR3_22.py](Bots/Round3/TradervR3_22.py)
   - raw local total: `269533.0`
   - calibrated total: `51278.85`
-- [TradervR3_23.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_23.py)
+- [TradervR3_23.py](Bots/Round3/TradervR3_23.py)
   - raw local total: `269531.0`
   - calibrated total: `51278.85`
-- [TradervR3_24.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_24.py)
+- [TradervR3_24.py](Bots/Round3/TradervR3_24.py)
   - raw local total: `257977.0`
   - calibrated total: `47234.95`
-- [TradervR3_32.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_32.py)
+- [TradervR3_32.py](Bots/Round3/TradervR3_32.py)
   - raw local total: `258990.0`
   - calibrated total: `2930.32`
-- [TradervR3_33.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_33.py)
+- [TradervR3_33.py](Bots/Round3/TradervR3_33.py)
   - raw local total: `-690686.0`
   - calibrated total: `9254.45`
-- [TradervR3_34.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_34.py)
+- [TradervR3_34.py](Bots/Round3/TradervR3_34.py)
   - raw local total: `-737471.0`
   - calibrated total: `9566.01`
-- [TradervR3_35.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_35.py)
+- [TradervR3_35.py](Bots/Round3/TradervR3_35.py)
   - raw local total: `137122.0`
   - calibrated total: `3741.87`
-- [TradervR3_36.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_36.py)
+- [TradervR3_36.py](Bots/Round3/TradervR3_36.py)
   - raw local total: `-803186.0`
   - calibrated total: `10003.62`
-- [TradervR3_37.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_37.py)
+- [TradervR3_37.py](Bots/Round3/TradervR3_37.py)
   - raw local total: `-1422945.0`
   - calibrated total: `14130.75`
 
@@ -175,8 +175,8 @@ Interpretation:
   - calibrated total is identical to `R3_16`
 - The useful conclusion is that the mode is not harmful, but it is mostly dormant under the current replay and should not replace `R3_16` as trunk.
 - Hydrogel measurement now has an explicit artifact:
-  - [round3_hydrogel_diagnostics.py](/Users/xavierwinkelmann/Prosperity/Analysis/scripts/round3_hydrogel_diagnostics.py)
-  - [report.md](/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_hydrogel_diagnostics/report.md)
+  - [round3_hydrogel_diagnostics.py](Analysis/scripts/round3_hydrogel_diagnostics.py)
+  - [report.md](Analysis/output/round3_hydrogel_diagnostics/report.md)
 - The Hydrogel diagnostics say:
   - classification still looks anchored local-fair MM
   - stretched same-side fills have negative 20-bar markout
@@ -210,8 +210,8 @@ Interpretation:
   - the likely reason is that `R3_16` already suppresses the near-ATM middle strip hard enough that vanna logic has very little live exposure to shape
   - so vanna is probably a second-order overlay, not the next main driver, unless we first reopen a controlled amount of near-ATM voucher activity
 - A Hydrogel oracle class study is now available:
-  - [round3_hydrogel_oracle_study.py](/Users/xavierwinkelmann/Prosperity/Analysis/scripts/round3_hydrogel_oracle_study.py)
-  - [report.md](/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_hydrogel_oracle_study/report.md)
+  - [round3_hydrogel_oracle_study.py](Analysis/scripts/round3_hydrogel_oracle_study.py)
+  - [report.md](Analysis/output/round3_hydrogel_oracle_study/report.md)
 - The oracle result is very strong:
   - `two_flip`: `167600.0`
   - `one_flip`: `107600.0`
@@ -362,13 +362,13 @@ Interpretation:
 
 Use:
 
-- [run_round3_calibrated_backtest.py](/Users/xavierwinkelmann/Prosperity/Analysis/scripts/run_round3_calibrated_backtest.py)
+- [run_round3_calibrated_backtest.py](Analysis/scripts/run_round3_calibrated_backtest.py)
 
 Do not select Round 3 bots from raw local total alone.
 
 ## Immediate Next Deliverables
 
-1. Keep [TradervR3_16.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_16.py) as the current workflow winner.
+1. Keep [TradervR3_16.py](Bots/Round3/TradervR3_16.py) as the current workflow winner.
 2. Keep VEV hedge/alpha separation as a research lane, but do not promote `R3_13` or `R3_14` yet.
 3. Build the next voucher branch from `R3_16`, not `R3_17`, and reintroduce low-strike alpha more selectively than the first `R3_17` pass.
 4. If we revisit strip-wide shock logic, add explicit diagnostics so we can tell whether the mode is actually triggering often enough to matter.

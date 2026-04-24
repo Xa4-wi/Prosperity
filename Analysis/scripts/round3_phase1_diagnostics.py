@@ -240,7 +240,7 @@ def render_markdown(results: List[Dict[str, object]], out_path: Path) -> None:
     lines = [
         "# Round 3 Phase 1 Diagnostics",
         "",
-        "Base bot under review: [TradervR3_7.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_7.py)",
+        "Base bot under review: [TradervR3_7.py](Bots/Round3/TradervR3_7.py)",
         "",
         "This report is the Phase 1 hard-classification pass for the two delta-1 products.",
         "",

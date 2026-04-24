@@ -1,6 +1,6 @@
 Round 2 backtest summary
 ========================
-Bot: /Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_25.py
+Bot: Bots/Round2/TradervR2_25.py
 Mode: no_access
 Queue model: conservative
 Trader bid(): 25000

@@ -6,8 +6,8 @@ It exists so that `TraderFactory` does not depend entirely on chat memory or on 
 
 Start with:
 
-- [SOURCE_MAP.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/references/SOURCE_MAP.md)
-- [Strategies.txt](/Users/xavierwinkelmann/Prosperity/TraderFactory/references/Strategies.txt)
-- [PUBLIC_STRATEGY_RESEARCH.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/references/PUBLIC_STRATEGY_RESEARCH.md)
-- [execution_probes/DISCOVERIES.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/references/execution_probes/DISCOVERIES.md)
-- [execution_probes/RESEARCH_HANDOFF.md](/Users/xavierwinkelmann/Prosperity/TraderFactory/references/execution_probes/RESEARCH_HANDOFF.md)
+- [SOURCE_MAP.md](TraderFactory/references/SOURCE_MAP.md)
+- [Strategies.txt](TraderFactory/references/Strategies.txt)
+- [PUBLIC_STRATEGY_RESEARCH.md](TraderFactory/references/PUBLIC_STRATEGY_RESEARCH.md)
+- [execution_probes/DISCOVERIES.md](TraderFactory/references/execution_probes/DISCOVERIES.md)
+- [execution_probes/RESEARCH_HANDOFF.md](TraderFactory/references/execution_probes/RESEARCH_HANDOFF.md)

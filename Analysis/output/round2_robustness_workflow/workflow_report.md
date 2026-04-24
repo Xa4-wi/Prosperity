@@ -1,7 +1,7 @@
 # Round 2 Robustness Workflow
 
-Base research file: [TradervR2_27_researchBase.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_27_researchBase.py)
-Reference bot: [TradervR2_26.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_26.py)
+Base research file: [TradervR2_27_researchBase.py](Bots/Round2/TradervR2_27_researchBase.py)
+Reference bot: [TradervR2_26.py](Bots/Round2/TradervR2_26.py)
 
 Queue model: `conservative`
 Access seeds: `7` to `9`
@@ -29,7 +29,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `307998.5`
 - plateau count / longest: `44 / 37`
 - plateau classes: `{'signal_neutral': 41, 'inventory_blocked': 3}`
-- summary: [TradervR2_26 compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_26/compare_summary.json)
+- summary: [TradervR2_26 compare](Analysis/output/round2_robustness_workflow/TradervR2_26/compare_summary.json)
 
 ## `research_base`
 
@@ -40,7 +40,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `307982.3`
 - plateau count / longest: `47 / 81`
 - plateau classes: `{'signal_neutral': 44, 'inventory_blocked': 3}`
-- summary: [TradervR2_27_researchBase compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_27_researchBase/compare_summary.json)
+- summary: [TradervR2_27_researchBase compare](Analysis/output/round2_robustness_workflow/TradervR2_27_researchBase/compare_summary.json)
 
 ## `1_book_health`
 
@@ -51,7 +51,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `308030.4`
 - plateau count / longest: `46 / 81`
 - plateau classes: `{'signal_neutral': 43, 'inventory_blocked': 3}`
-- summary: [TradervR2_28_bookHealth_mild compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_bookHealth_mild/compare_summary.json)
+- summary: [TradervR2_28_bookHealth_mild compare](Analysis/output/round2_robustness_workflow/TradervR2_28_bookHealth_mild/compare_summary.json)
 
 ### `TradervR2_28_bookHealth_strong`
 
@@ -60,7 +60,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `307982.3`
 - plateau count / longest: `47 / 81`
 - plateau classes: `{'signal_neutral': 44, 'inventory_blocked': 3}`
-- summary: [TradervR2_28_bookHealth_strong compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_bookHealth_strong/compare_summary.json)
+- summary: [TradervR2_28_bookHealth_strong compare](Analysis/output/round2_robustness_workflow/TradervR2_28_bookHealth_strong/compare_summary.json)
 
 ## `2_fair_robustness`
 
@@ -71,7 +71,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `308455.8`
 - plateau count / longest: `42 / 116`
 - plateau classes: `{'signal_neutral': 41, 'inventory_blocked': 1}`
-- summary: [TradervR2_28_fair_medianGuard compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_fair_medianGuard/compare_summary.json)
+- summary: [TradervR2_28_fair_medianGuard compare](Analysis/output/round2_robustness_workflow/TradervR2_28_fair_medianGuard/compare_summary.json)
 
 ### `TradervR2_28_fair_anchorGuard`
 
@@ -80,7 +80,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `307989.5`
 - plateau count / longest: `47 / 81`
 - plateau classes: `{'signal_neutral': 44, 'inventory_blocked': 3}`
-- summary: [TradervR2_28_fair_anchorGuard compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_fair_anchorGuard/compare_summary.json)
+- summary: [TradervR2_28_fair_anchorGuard compare](Analysis/output/round2_robustness_workflow/TradervR2_28_fair_anchorGuard/compare_summary.json)
 
 ### `TradervR2_28_fair_thinTopIgnore`
 
@@ -89,7 +89,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `307828.2`
 - plateau count / longest: `36 / 44`
 - plateau classes: `{'signal_neutral': 35, 'inventory_blocked': 1}`
-- summary: [TradervR2_28_fair_thinTopIgnore compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_fair_thinTopIgnore/compare_summary.json)
+- summary: [TradervR2_28_fair_thinTopIgnore compare](Analysis/output/round2_robustness_workflow/TradervR2_28_fair_thinTopIgnore/compare_summary.json)
 
 ## `3_vacuum_recovery`
 
@@ -100,7 +100,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `307982.3`
 - plateau count / longest: `47 / 81`
 - plateau classes: `{'signal_neutral': 44, 'inventory_blocked': 3}`
-- summary: [TradervR2_28_vacuumRecovery_cooldown compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_vacuumRecovery_cooldown/compare_summary.json)
+- summary: [TradervR2_28_vacuumRecovery_cooldown compare](Analysis/output/round2_robustness_workflow/TradervR2_28_vacuumRecovery_cooldown/compare_summary.json)
 
 ### `TradervR2_28_vacuumRecovery_stableBars`
 
@@ -109,7 +109,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `307982.3`
 - plateau count / longest: `47 / 81`
 - plateau classes: `{'signal_neutral': 44, 'inventory_blocked': 3}`
-- summary: [TradervR2_28_vacuumRecovery_stableBars compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_vacuumRecovery_stableBars/compare_summary.json)
+- summary: [TradervR2_28_vacuumRecovery_stableBars compare](Analysis/output/round2_robustness_workflow/TradervR2_28_vacuumRecovery_stableBars/compare_summary.json)
 
 ## `4_side_starvation`
 
@@ -120,7 +120,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `308023.0`
 - plateau count / longest: `47 / 81`
 - plateau classes: `{'signal_neutral': 44, 'inventory_blocked': 3}`
-- summary: [TradervR2_28_starvation_strong compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_starvation_strong/compare_summary.json)
+- summary: [TradervR2_28_starvation_strong compare](Analysis/output/round2_robustness_workflow/TradervR2_28_starvation_strong/compare_summary.json)
 
 ### `TradervR2_28_starvation_priority`
 
@@ -129,7 +129,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `307973.2`
 - plateau count / longest: `47 / 81`
 - plateau classes: `{'signal_neutral': 44, 'inventory_blocked': 3}`
-- summary: [TradervR2_28_starvation_priority compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_starvation_priority/compare_summary.json)
+- summary: [TradervR2_28_starvation_priority compare](Analysis/output/round2_robustness_workflow/TradervR2_28_starvation_priority/compare_summary.json)
 
 ## `5_markout_passive`
 
@@ -140,7 +140,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `307987.1`
 - plateau count / longest: `47 / 81`
 - plateau classes: `{'signal_neutral': 44, 'inventory_blocked': 3}`
-- summary: [TradervR2_28_markout_bucketedLight compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_markout_bucketedLight/compare_summary.json)
+- summary: [TradervR2_28_markout_bucketedLight compare](Analysis/output/round2_robustness_workflow/TradervR2_28_markout_bucketedLight/compare_summary.json)
 
 ### `TradervR2_28_markout_bucketedStrong`
 
@@ -149,7 +149,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `307932.9`
 - plateau count / longest: `47 / 81`
 - plateau classes: `{'signal_neutral': 44, 'inventory_blocked': 3}`
-- summary: [TradervR2_28_markout_bucketedStrong compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_markout_bucketedStrong/compare_summary.json)
+- summary: [TradervR2_28_markout_bucketedStrong compare](Analysis/output/round2_robustness_workflow/TradervR2_28_markout_bucketedStrong/compare_summary.json)
 
 ## `6_terminal_risk`
 
@@ -160,7 +160,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `307982.3`
 - plateau count / longest: `47 / 81`
 - plateau classes: `{'signal_neutral': 44, 'inventory_blocked': 3}`
-- summary: [TradervR2_28_terminalRisk_soft compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_terminalRisk_soft/compare_summary.json)
+- summary: [TradervR2_28_terminalRisk_soft compare](Analysis/output/round2_robustness_workflow/TradervR2_28_terminalRisk_soft/compare_summary.json)
 
 ### `TradervR2_28_terminalRisk_asymmetric`
 
@@ -169,7 +169,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `307982.3`
 - plateau count / longest: `47 / 81`
 - plateau classes: `{'signal_neutral': 44, 'inventory_blocked': 3}`
-- summary: [TradervR2_28_terminalRisk_asymmetric compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_terminalRisk_asymmetric/compare_summary.json)
+- summary: [TradervR2_28_terminalRisk_asymmetric compare](Analysis/output/round2_robustness_workflow/TradervR2_28_terminalRisk_asymmetric/compare_summary.json)
 
 ## `7_access_safe`
 
@@ -180,7 +180,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `307996.2`
 - plateau count / longest: `47 / 81`
 - plateau classes: `{'signal_neutral': 44, 'inventory_blocked': 3}`
-- summary: [TradervR2_28_accessGate_highHealth compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_accessGate_highHealth/compare_summary.json)
+- summary: [TradervR2_28_accessGate_highHealth compare](Analysis/output/round2_robustness_workflow/TradervR2_28_accessGate_highHealth/compare_summary.json)
 
 ### `TradervR2_28_accessGate_highHealthHighConv`
 
@@ -189,7 +189,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `307996.2`
 - plateau count / longest: `47 / 81`
 - plateau classes: `{'signal_neutral': 44, 'inventory_blocked': 3}`
-- summary: [TradervR2_28_accessGate_highHealthHighConv compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_accessGate_highHealthHighConv/compare_summary.json)
+- summary: [TradervR2_28_accessGate_highHealthHighConv compare](Analysis/output/round2_robustness_workflow/TradervR2_28_accessGate_highHealthHighConv/compare_summary.json)
 
 ## `10_pepper_robustness`
 
@@ -200,7 +200,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `307987.3`
 - plateau count / longest: `47 / 81`
 - plateau classes: `{'signal_neutral': 44, 'inventory_blocked': 3}`
-- summary: [TradervR2_28_pepper_cheapEarly compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_pepper_cheapEarly/compare_summary.json)
+- summary: [TradervR2_28_pepper_cheapEarly compare](Analysis/output/round2_robustness_workflow/TradervR2_28_pepper_cheapEarly/compare_summary.json)
 
 ### `TradervR2_28_pepper_lateTrim`
 
@@ -209,7 +209,7 @@ Robust score: `mean - 0.50 * std`
 - access robust score: `307982.3`
 - plateau count / longest: `47 / 81`
 - plateau classes: `{'signal_neutral': 44, 'inventory_blocked': 3}`
-- summary: [TradervR2_28_pepper_lateTrim compare](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_robustness_workflow/TradervR2_28_pepper_lateTrim/compare_summary.json)
+- summary: [TradervR2_28_pepper_lateTrim compare](Analysis/output/round2_robustness_workflow/TradervR2_28_pepper_lateTrim/compare_summary.json)
 
 ## Plateau Classification Heuristic
 

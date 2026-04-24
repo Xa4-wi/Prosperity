@@ -13,7 +13,7 @@ Its purpose is not to dump every strategy ever mentioned in quant trading. Its p
 Use this taxonomy in three layers:
 
 - `references/` for broad background and examples
-- [trader_factory/core/registry.py](/Users/xavierwinkelmann/Prosperity/TraderFactory/trader_factory/core/registry.py) for capabilities the factory can actively recommend today
+- [trader_factory/core/registry.py](TraderFactory/trader_factory/core/registry.py) for capabilities the factory can actively recommend today
 - generation and planning output for deciding what to build first for a new round
 
 The most important distinction is:

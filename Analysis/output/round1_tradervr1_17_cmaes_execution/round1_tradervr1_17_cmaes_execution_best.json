@@ -1,8 +1,8 @@
 {
   "config_name": "TradervR1_17 Round 1 Pepper Execution CMA-ES",
-  "config_path": "/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_17_cmaes_execution.json",
-  "source_bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_17.py",
-  "best_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_17_cmaes_execution/bots/TradervR1_17_best.py",
+  "config_path": "TraderFactory/configs/round1/tradervr1_17_cmaes_execution.json",
+  "source_bot": "Bots/Round1/TradervR1_17.py",
+  "best_bot": "Analysis/output/round1_tradervr1_17_cmaes_execution/bots/TradervR1_17_best.py",
   "parameters": {
     "IPR_RESIDUAL_ALPHA": 0.1,
     "IPR_SHORT_MID_ALPHA": 0.18,

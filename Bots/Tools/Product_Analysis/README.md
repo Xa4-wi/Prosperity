@@ -4,23 +4,23 @@ This tool profiles Prosperity capsule CSVs and classifies products into strategy
 
 It is set up to work directly with this repo:
 
-- data root default: [Data](/Users/xavierwinkelmann/Prosperity/Data)
-- competitive intel default: [COMPETITIVE_INTEL.md](/Users/xavierwinkelmann/Prosperity/Bots/Research/COMPETITIVE_INTEL.md)
+- data root default: [Data](Data)
+- competitive intel default: [COMPETITIVE_INTEL.md](Bots/Research/COMPETITIVE_INTEL.md)
 
 ## Files
 
-- [capsule_product_diagnoser.py](/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/capsule_product_diagnoser.py)
+- [capsule_product_diagnoser.py](Bots/Tools/Product_Analysis/capsule_product_diagnoser.py)
   - core profiler and markdown/JSON report writer
-- [build_dashboard.py](/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/build_dashboard.py)
+- [build_dashboard.py](Bots/Tools/Product_Analysis/build_dashboard.py)
   - builds a standalone HTML dashboard from the JSON summary
-- [run_product_diagnosis.py](/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/run_product_diagnosis.py)
+- [run_product_diagnosis.py](Bots/Tools/Product_Analysis/run_product_diagnosis.py)
   - wrapper that runs the diagnoser and dashboard together
 
 ## Output layout
 
-- [output](/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output)
+- [output](Bots/Tools/Product_Analysis/output)
   - one subdirectory per run
-- [logs](/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/logs)
+- [logs](Bots/Tools/Product_Analysis/logs)
   - one log file per run
 
 ## Recommended usage

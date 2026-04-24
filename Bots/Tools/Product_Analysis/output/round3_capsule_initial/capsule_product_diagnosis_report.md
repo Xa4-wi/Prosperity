@@ -3,7 +3,7 @@
 - Root scanned: `Data/ROUND_3`
 - Price files: 3
 - Trade files: 3
-- Competitive intel reference: `/Users/xavierwinkelmann/Prosperity/Bots/Research/COMPETITIVE_INTEL.md`
+- Competitive intel reference: `Bots/Research/COMPETITIVE_INTEL.md`
 
 ## Product Table
 

@@ -1,7 +1,7 @@
 # Round 2 Parameter Categories
 
 This note matches the grouped parameter blocks in
-[TradervR2_33_2.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_33_2.py).
+[TradervR2_33_2.py](Bots/Round2/TradervR2_33_2.py).
 
 ## Tier legend
 

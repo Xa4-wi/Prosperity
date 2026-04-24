@@ -1,8 +1,8 @@
 {
   "config_name": "TradervR1_34_1 Round 1 Mixed Escape CMA-ES",
-  "config_path": "/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_34_1_cmaes_mixed_escape.json",
-  "source_bot": "/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_34_1.py",
-  "best_bot": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_34_1_cmaes_mixed_escape/bots/TradervR1_34_1_best.py",
+  "config_path": "TraderFactory/configs/round1/tradervr1_34_1_cmaes_mixed_escape.json",
+  "source_bot": "Bots/Round1/TradervR1_34_1.py",
+  "best_bot": "Analysis/output/round1_tradervr1_34_1_cmaes_mixed_escape/bots/TradervR1_34_1_best.py",
   "parameters": {
     "ASH_ANCHOR_WEIGHT": 0.42,
     "ASH_WALL_MID_BLEND": 0.32,

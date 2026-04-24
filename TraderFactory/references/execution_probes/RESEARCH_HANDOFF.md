@@ -6,13 +6,13 @@ The goal of this phase is not to squeeze more micro-tuning out of `v52`. The goa
 
 The canonical running discovery log is:
 
-- [DISCOVERIES.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/DISCOVERIES.md)
+- [DISCOVERIES.md](Research/execution_probes/DISCOVERIES.md)
 
 ## 1. Where The Bot Line Stands
 
-- [Traderv37.py](/Users/xavierwinkelmann/Prosperity/Bots/Traderv37.py) was the original strong official baseline.
-- [Traderv51.py](/Users/xavierwinkelmann/Prosperity/Bots/Traderv51.py) is the faithful clean reconstruction of `v37`.
-- [Traderv52.py](/Users/xavierwinkelmann/Prosperity/Bots/Traderv52.py) is the current best clean official result.
+- [Traderv37.py](Bots/Traderv37.py) was the original strong official baseline.
+- [Traderv51.py](Bots/Traderv51.py) is the faithful clean reconstruction of `v37`.
+- [Traderv52.py](Bots/Traderv52.py) is the current best clean official result.
 
 Official scores already established:
 
@@ -25,11 +25,11 @@ That gain is real, but small. It came entirely from TOMATOES execution.
 
 The most important pre-probe findings are preserved in:
 
-- [docs/execution_research_phase1.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/docs/execution_research_phase1.md)
-- [reports/v37_vs_v52_official_trade_quality_report.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v37_vs_v52_official_trade_quality_report.md)
-- [reports/v37_vs_v42_official_trade_quality_report.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v37_vs_v42_official_trade_quality_report.md)
-- [reports/v37_vs_v46_official_trade_quality_report.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v37_vs_v46_official_trade_quality_report.md)
-- [reports/v52_vs_v54_official_trade_quality_report.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v52_vs_v54_official_trade_quality_report.md)
+- [docs/execution_research_phase1.md](Research/execution_probes/docs/execution_research_phase1.md)
+- [reports/v37_vs_v52_official_trade_quality_report.md](Research/execution_probes/reports/v37_vs_v52_official_trade_quality_report.md)
+- [reports/v37_vs_v42_official_trade_quality_report.md](Research/execution_probes/reports/v37_vs_v42_official_trade_quality_report.md)
+- [reports/v37_vs_v46_official_trade_quality_report.md](Research/execution_probes/reports/v37_vs_v46_official_trade_quality_report.md)
+- [reports/v52_vs_v54_official_trade_quality_report.md](Research/execution_probes/reports/v52_vs_v54_official_trade_quality_report.md)
 
 The reliable conclusions were:
 
@@ -43,11 +43,11 @@ The reliable conclusions were:
 
 Probe 0 bot:
 
-- [bots/Traderv55.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv55.py)
+- [bots/Traderv55.py](Research/execution_probes/bots/Traderv55.py)
 
 Probe 0 tool:
 
-- [tools/official_boundary_probe_report.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/tools/official_boundary_probe_report.py)
+- [tools/official_boundary_probe_report.py](Research/execution_probes/tools/official_boundary_probe_report.py)
 
 Official result summary:
 
@@ -60,7 +60,7 @@ Official result summary:
 
 Copied summary:
 
-- [reports/v55_boundary_probe_summary.txt](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/reports/v55_boundary_probe_summary.txt)
+- [reports/v55_boundary_probe_summary.txt](Research/execution_probes/reports/v55_boundary_probe_summary.txt)
 
 Why this matters:
 
@@ -71,11 +71,11 @@ Why this matters:
 
 Probe 1 bot:
 
-- [bots/Traderv56.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv56.py)
+- [bots/Traderv56.py](Research/execution_probes/bots/Traderv56.py)
 
 Probe 1 tool:
 
-- [tools/official_passive_ladder_report.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/tools/official_passive_ladder_report.py)
+- [tools/official_passive_ladder_report.py](Research/execution_probes/tools/official_passive_ladder_report.py)
 
 Probe 1 local result:
 
@@ -97,7 +97,7 @@ What is proven from that run:
 
 What went wrong in the probe implementation:
 
-- [bots/Traderv56.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv56.py) uses `PROBE_ROUND_LENGTH = 1_000_000.0`
+- [bots/Traderv56.py](Research/execution_probes/bots/Traderv56.py) uses `PROBE_ROUND_LENGTH = 1_000_000.0`
 - the official run only reaches about `199900`
 - so the end-of-round `lp_summary` condition never fired
 
@@ -132,9 +132,9 @@ Best next move:
 
 Current Probe 2 files:
 
-- [bots/Traderv57.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv57.py)
-- [bots/Traderv58.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv58.py)
-- [tools/official_aggressive_markout_probe_report.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/tools/official_aggressive_markout_probe_report.py)
+- [bots/Traderv57.py](Research/execution_probes/bots/Traderv57.py)
+- [bots/Traderv58.py](Research/execution_probes/bots/Traderv58.py)
+- [tools/official_aggressive_markout_probe_report.py](Research/execution_probes/tools/official_aggressive_markout_probe_report.py)
 
 What `v57` does:
 
@@ -157,8 +157,8 @@ Implication:
 
 Current follow-up draft:
 
-- [bots/Traderv58.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv58.py)
-- [bots/Traderv59.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv59.py)
+- [bots/Traderv58.py](Research/execution_probes/bots/Traderv58.py)
+- [bots/Traderv59.py](Research/execution_probes/bots/Traderv59.py)
 
 What changed in `v58`:
 
@@ -187,7 +187,7 @@ Meaning:
 
 Current sell-side follow-up:
 
-- [bots/Traderv59.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv59.py)
+- [bots/Traderv59.py](Research/execution_probes/bots/Traderv59.py)
 
 What changed in `v59`:
 
@@ -214,7 +214,7 @@ Meaning:
 
 The clean contexts to test are already described in:
 
-- [docs/execution_probe_suite.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/docs/execution_probe_suite.md)
+- [docs/execution_probe_suite.md](Research/execution_probes/docs/execution_probe_suite.md)
 
 The short version:
 
@@ -228,11 +228,11 @@ The probe must keep sizes tiny, log context explicitly, and preserve EMERALDS be
 
 ## 8. Files Another Agent Should Read First
 
-1. [DISCOVERIES.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/DISCOVERIES.md)
-2. [RESEARCH_HANDOFF.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/RESEARCH_HANDOFF.md)
-3. [docs/probe_results.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/docs/probe_results.md)
-4. [docs/execution_probe_suite.md](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/docs/execution_probe_suite.md)
-5. [bots/Traderv55.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv55.py)
-6. [bots/Traderv56.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/bots/Traderv56.py)
-7. [tools/official_boundary_probe_report.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/tools/official_boundary_probe_report.py)
-8. [tools/official_passive_ladder_report.py](/Users/xavierwinkelmann/Prosperity/Research/execution_probes/tools/official_passive_ladder_report.py)
+1. [DISCOVERIES.md](Research/execution_probes/DISCOVERIES.md)
+2. [RESEARCH_HANDOFF.md](Research/execution_probes/RESEARCH_HANDOFF.md)
+3. [docs/probe_results.md](Research/execution_probes/docs/probe_results.md)
+4. [docs/execution_probe_suite.md](Research/execution_probes/docs/execution_probe_suite.md)
+5. [bots/Traderv55.py](Research/execution_probes/bots/Traderv55.py)
+6. [bots/Traderv56.py](Research/execution_probes/bots/Traderv56.py)
+7. [tools/official_boundary_probe_report.py](Research/execution_probes/tools/official_boundary_probe_report.py)
+8. [tools/official_passive_ladder_report.py](Research/execution_probes/tools/official_passive_ladder_report.py)

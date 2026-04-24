@@ -1,5 +1,5 @@
 {
-  "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_1.py",
+  "bot_path": "Bots/Round2/TradervR2_1.py",
   "mode": "access",
   "queue_model": "conservative",
   "access_seed": 9,

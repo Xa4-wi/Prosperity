@@ -13,7 +13,7 @@ Robust score: `mean - 0.50 * std`
 - access delta mean/std: `6894.9 / 225.7`
 - access delta p25/p10: `6681.0 / 6618.5`
 - access delta robust score: `6782.1`
-- summary: [TradervR2_26 summary](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_distribution_score/TradervR2_26/compare_summary.json)
+- summary: [TradervR2_26 summary](Analysis/output/round2_distribution_score/TradervR2_26/compare_summary.json)
 
 ## `TradervR2_23_researchCombo`
 
@@ -24,7 +24,7 @@ Robust score: `mean - 0.50 * std`
 - access delta mean/std: `6483.9 / 88.6`
 - access delta p25/p10: `6398.5 / 6336.5`
 - access delta robust score: `6439.6`
-- summary: [TradervR2_23_researchCombo summary](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_distribution_score/TradervR2_23_researchCombo/compare_summary.json)
+- summary: [TradervR2_23_researchCombo summary](Analysis/output/round2_distribution_score/TradervR2_23_researchCombo/compare_summary.json)
 
 ## `TradervR2_25`
 
@@ -35,4 +35,4 @@ Robust score: `mean - 0.50 * std`
 - access delta mean/std: `6483.4 / 88.2`
 - access delta p25/p10: `6398.5 / 6336.5`
 - access delta robust score: `6439.3`
-- summary: [TradervR2_25 summary](/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_distribution_score/TradervR2_25/compare_summary.json)
+- summary: [TradervR2_25 summary](Analysis/output/round2_distribution_score/TradervR2_25/compare_summary.json)

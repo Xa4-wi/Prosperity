@@ -4550,7 +4550,7 @@ Conclusion:
 ### CMA-ES on `TradervR1_121_13.py`
 
 I ran a focused CMA-ES pass on the current best bot using:
-- [tradervr1_121_13_cmaes.json](/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_121_13_cmaes.json)
+- [tradervr1_121_13_cmaes.json](TraderFactory/configs/round1/tradervr1_121_13_cmaes.json)
 - search space:
   - `BASE_EDGE`
   - `JOIN_EDGE`
@@ -4564,8 +4564,8 @@ I ran a focused CMA-ES pass on the current best bot using:
   - `MARKOUT_SIZE_PENALTY`
 
 Artifacts:
-- best bot: [TradervR1_121_13_best.py](/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_121_13_cmaes/bots/TradervR1_121_13_best.py)
-- report: [round1_tradervr1_121_13_cmaes_report.md](/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_121_13_cmaes/round1_tradervr1_121_13_cmaes_report.md)
+- best bot: [TradervR1_121_13_best.py](Analysis/output/round1_tradervr1_121_13_cmaes/bots/TradervR1_121_13_best.py)
+- report: [round1_tradervr1_121_13_cmaes_report.md](Analysis/output/round1_tradervr1_121_13_cmaes/round1_tradervr1_121_13_cmaes_report.md)
 
 Result:
 - baseline replay: `97'973.5 / 98'932.0 / 98'008.0`
@@ -4585,7 +4585,7 @@ Conclusion:
 ### CMA-ES on `TradervR1_110.py`
 
 I also ran a broader CMA-ES pass on the older `TradervR1_110.py` branch using:
-- [tradervr1_110_cmaes.json](/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_110_cmaes.json)
+- [tradervr1_110_cmaes.json](TraderFactory/configs/round1/tradervr1_110_cmaes.json)
 - search space:
   - `ANCHOR_WEIGHT`
   - `STABLE_MID_WEIGHT`
@@ -4601,8 +4601,8 @@ I also ran a broader CMA-ES pass on the older `TradervR1_110.py` branch using:
   - `FAST_QUOTE_WEIGHT`
 
 Artifacts:
-- best bot: [TradervR1_110_best.py](/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_110_cmaes/bots/TradervR1_110_best.py)
-- report: [round1_tradervr1_110_cmaes_report.md](/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_110_cmaes/round1_tradervr1_110_cmaes_report.md)
+- best bot: [TradervR1_110_best.py](Analysis/output/round1_tradervr1_110_cmaes/bots/TradervR1_110_best.py)
+- report: [round1_tradervr1_110_cmaes_report.md](Analysis/output/round1_tradervr1_110_cmaes/round1_tradervr1_110_cmaes_report.md)
 
 Result:
 - baseline replay: `97'957.0 / 98'906.0 / 97'953.0`
@@ -4623,15 +4623,15 @@ Conclusion:
 
 I tested three clean corrective branches off `TradervR1_121_13.py`:
 
-- [TradervR1_121_fixDecay.py](/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_121_fixDecay.py)
+- [TradervR1_121_fixDecay.py](Bots/Round1/TradervR1_121_fixDecay.py)
   - changes `quiet_non_toxic_ticks` to use a bar-based measure (`no_fill_ticks // 100`) instead of raw timestamp distance
   - same intent as the old `bars_since_fill` correction, but isolated to toxicity decay only
-- [TradervR1_121_fixReentryExecution.py](/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_121_fixReentryExecution.py)
+- [TradervR1_121_fixReentryExecution.py](Bots/Round1/TradervR1_121_fixReentryExecution.py)
   - keeps side-specific `bars_since_buy_fill` / `bars_since_sell_fill`
   - restores the `v116`-style execution fix:
     - wider `join_edge` during reactivation
     - front quote pushed toward the book on the reactivating side
-- [TradervR1_121_markoutPassiveOnly.py](/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_121_markoutPassiveOnly.py)
+- [TradervR1_121_markoutPassiveOnly.py](Bots/Round1/TradervR1_121_markoutPassiveOnly.py)
   - removes markout from aggressive take gating
   - keeps markout only in passive quote edge and passive quote size penalties
 

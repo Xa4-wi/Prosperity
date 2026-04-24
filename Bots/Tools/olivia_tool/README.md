@@ -1,6 +1,6 @@
 # Olivia Detector Toolkit
 
-This folder contains the Olivia-style discovery and runtime detection toolkit as a self-contained tool inside [Bots/Tools](/Users/xavierwinkelmann/Prosperity/Bots/Tools).
+This folder contains the Olivia-style discovery and runtime detection toolkit as a self-contained tool inside [Bots/Tools](Bots/Tools).
 
 The toolkit is split into:
 
@@ -79,7 +79,7 @@ Notes:
 
 Direct file fallback:
 
-- you can also open [index.html](/Users/xavierwinkelmann/Prosperity/Bots/Tools/olivia_tool/output/olivia_round2_smoke/dashboard/index.html) directly, but the local server is usually the cleaner option for browser inspection.
+- you can also open [index.html](Bots/Tools/olivia_tool/output/olivia_round2_smoke/dashboard/index.html) directly, but the local server is usually the cleaner option for browser inspection.
 
 ## What each stage does
 

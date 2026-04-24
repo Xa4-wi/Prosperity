@@ -1,8 +1,8 @@
 # TradervR1_17 Round 1 Pepper Execution CMA-ES CMA-ES Report
 
-- Config: `/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_17_cmaes_execution.json`
-- Source bot: `/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_17.py`
-- Best bot: `/Users/xavierwinkelmann/Prosperity/Analysis/output/round1_tradervr1_17_cmaes_execution/bots/TradervR1_17_best.py`
+- Config: `TraderFactory/configs/round1/tradervr1_17_cmaes_execution.json`
+- Source bot: `Bots/Round1/TradervR1_17.py`
+- Best bot: `Analysis/output/round1_tradervr1_17_cmaes_execution/bots/TradervR1_17_best.py`
 - Total evaluations: `16`
 
 ## Baseline Replay

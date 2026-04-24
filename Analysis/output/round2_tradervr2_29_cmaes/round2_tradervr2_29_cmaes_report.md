@@ -1,8 +1,8 @@
 # TradervR2_29 Round 2 Focused Ash Robustness CMA-ES CMA-ES Report
 
-- Config: `/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round2/tradervr2_29_cmaes.json`
-- Source bot: `/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_29.py`
-- Best bot: `/Users/xavierwinkelmann/Prosperity/Analysis/output/round2_tradervr2_29_cmaes/bots/TradervR2_29_best.py`
+- Config: `TraderFactory/configs/round2/tradervr2_29_cmaes.json`
+- Source bot: `Bots/Round2/TradervR2_29.py`
+- Best bot: `Analysis/output/round2_tradervr2_29_cmaes/bots/TradervR2_29_best.py`
 - Total evaluations: `19`
 
 ## Baseline Replay

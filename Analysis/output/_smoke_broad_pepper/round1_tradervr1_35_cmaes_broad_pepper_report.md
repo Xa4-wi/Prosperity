@@ -1,8 +1,8 @@
 # TradervR1_35 Round 1 Broad Pepper Basin CMA-ES CMA-ES Report
 
-- Config: `/Users/xavierwinkelmann/Prosperity/TraderFactory/configs/round1/tradervr1_35_cmaes_broad_pepper.json`
-- Source bot: `/Users/xavierwinkelmann/Prosperity/Bots/Round1/TradervR1_35.py`
-- Best bot: `/Users/xavierwinkelmann/Prosperity/Analysis/output/_smoke_broad_pepper/bots/TradervR1_35_best.py`
+- Config: `TraderFactory/configs/round1/tradervr1_35_cmaes_broad_pepper.json`
+- Source bot: `Bots/Round1/TradervR1_35.py`
+- Best bot: `Analysis/output/_smoke_broad_pepper/bots/TradervR1_35_best.py`
 - Total evaluations: `3`
 
 ## Baseline Replay

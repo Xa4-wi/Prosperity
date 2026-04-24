@@ -1,7 +1,7 @@
 # Round 2 Restart Baseline
 
 Baseline file:
-- [TradervR2_12.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_12.py)
+- [TradervR2_12.py](Bots/Round2/TradervR2_12.py)
 
 Purpose:
 - clear out the layered `R2_9`/`R2_10` execution stack

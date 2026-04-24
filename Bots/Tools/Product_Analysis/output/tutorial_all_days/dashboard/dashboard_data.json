@@ -1,7 +1,7 @@
 {
   "generated_at": "2026-04-23T15:37:30.863311",
   "root": "Data/Tutorial",
-  "intel_md": "/Users/xavierwinkelmann/Prosperity/Bots/Research/COMPETITIVE_INTEL.md",
+  "intel_md": "Bots/Research/COMPETITIVE_INTEL.md",
   "notes": [
     "Advice rules were selected to align with Competitive Intelligence themes: Take \u2192 Clear \u2192 Make, wall/stable mid over raw mid, O-U for mean reversion, Black\u2013Scholes + smile for option families, and bot-detection overlays."
   ],

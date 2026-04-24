@@ -4,15 +4,15 @@ Date: 2026-04-07
 
 This note records the 100-session Monte Carlo quick-test comparison for the current top bots:
 
-- [Traderv29_9.py](/Users/xavierwinkelmann/Prosperity/Bots/Traderv29_9.py)
-- [Traderv39_2.py](/Users/xavierwinkelmann/Prosperity/Bots/Traderv39_2.py)
-- [Traderv40_7.py](/Users/xavierwinkelmann/Prosperity/Bots/Traderv40_7.py)
+- [Traderv29_9.py](Bots/Traderv29_9.py)
+- [Traderv39_2.py](Bots/Traderv39_2.py)
+- [Traderv40_7.py](Bots/Traderv40_7.py)
 
 Dashboard outputs:
 
-- [traderv29_9_quick_dashboard.json](/Users/xavierwinkelmann/Prosperity/MonteCarloBacktester/backtests/traderv29_9_quick_dashboard.json)
-- [traderv39_2_quick_dashboard.json](/Users/xavierwinkelmann/Prosperity/MonteCarloBacktester/backtests/traderv39_2_quick_dashboard.json)
-- [traderv40_7_quick_dashboard.json](/Users/xavierwinkelmann/Prosperity/MonteCarloBacktester/backtests/traderv40_7_quick_dashboard.json)
+- [traderv29_9_quick_dashboard.json](MonteCarloBacktester/backtests/traderv29_9_quick_dashboard.json)
+- [traderv39_2_quick_dashboard.json](MonteCarloBacktester/backtests/traderv39_2_quick_dashboard.json)
+- [traderv40_7_quick_dashboard.json](MonteCarloBacktester/backtests/traderv40_7_quick_dashboard.json)
 
 ## Summary Table
 

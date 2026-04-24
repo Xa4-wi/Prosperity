@@ -3,8 +3,8 @@
 ## Scope
 
 This note inspects the alpha path in:
-- current visible Round 2 branch: [TradervR2_3.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_3.py)
-- stronger later branch kept in archive: [TradervR2_9.py](/Users/xavierwinkelmann/Prosperity/Bots/Round2/archive/TradervR2_9.py)
+- current visible Round 2 branch: [TradervR2_3.py](Bots/Round2/TradervR2_3.py)
+- stronger later branch kept in archive: [TradervR2_9.py](Bots/Round2/archive/TradervR2_9.py)
 
 The goal is to understand:
 - where alpha is created
@@ -16,10 +16,10 @@ The goal is to understand:
 ### In `R2_3`
 
 Signal construction lives in:
-- [_stable_mid](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_3.py#L233)
-- [_slow_fair](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_3.py#L254)
-- [_trade_confirmation](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_3.py#L261)
-- [_signal_components](/Users/xavierwinkelmann/Prosperity/Bots/Round2/TradervR2_3.py#L297)
+- [_stable_mid](Bots/Round2/TradervR2_3.py#L233)
+- [_slow_fair](Bots/Round2/TradervR2_3.py#L254)
+- [_trade_confirmation](Bots/Round2/TradervR2_3.py#L261)
+- [_signal_components](Bots/Round2/TradervR2_3.py#L297)
 
 What it does:
 - `slow_fair` is anchored:
@@ -41,8 +41,8 @@ Then it gets compressed into:
 ### In `R2_9`
 
 The stronger Osmium branch adds:
-- [_deep_micro_signal](/Users/xavierwinkelmann/Prosperity/Bots/Round2/archive/TradervR2_9.py#L269)
-- higher-rank depth imbalance inside [_signal_components](/Users/xavierwinkelmann/Prosperity/Bots/Round2/archive/TradervR2_9.py#L321)
+- [_deep_micro_signal](Bots/Round2/archive/TradervR2_9.py#L269)
+- higher-rank depth imbalance inside [_signal_components](Bots/Round2/archive/TradervR2_9.py#L321)
 
 This is the key improvement:
 - `R2_3` mostly uses level-1 micro/imbalance
@@ -107,7 +107,7 @@ That is a cleaner next research route than adding more fair-value constants.
 ## `INTARIAN_PEPPER_ROOT` Alpha Path
 
 Pepper alpha lives in:
-- [build_orders](/Users/xavierwinkelmann/Prosperity/Bots/Round2/archive/TradervR2_9.py#L1180)
+- [build_orders](Bots/Round2/archive/TradervR2_9.py#L1180)
 
 Core pieces:
 - `trend_line = anchor + drift * timestamp`

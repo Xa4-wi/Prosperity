@@ -1,5 +1,5 @@
 {
-  "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_accessGate_highHealth.py",
+  "bot_path": "Bots/Round2/research_variants/TradervR2_28_accessGate_highHealth.py",
   "mode": "access",
   "queue_model": "conservative",
   "access_seed": 8,

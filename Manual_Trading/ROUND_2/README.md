@@ -9,7 +9,7 @@ This folder contains a standalone optimizer for the Prosperity manual trading "I
 
 The script in this repo is:
 
-- [invest_expand_optimizer.py](/Users/xavierwinkelmann/Prosperity/Manual_Trading/ROUND_2/invest_expand_optimizer.py)
+- [invest_expand_optimizer.py](Manual_Trading/ROUND_2/invest_expand_optimizer.py)
 
 ## What the script solves
 

@@ -1,6 +1,6 @@
 # Round 3 Hydrogel Diagnostics
 
-Source log: [TradervR3_16.log](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_16.log)
+Source log: [TradervR3_16.log](Bots/Round3/TradervR3_16.log)
 
 This report follows the Hydrogel build-order manual:
 

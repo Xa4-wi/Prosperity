@@ -1,6 +1,6 @@
 # Round 3 Phased Workflow
 
-Base bot: [TradervR3_7.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_7.py)
+Base bot: [TradervR3_7.py](Bots/Round3/TradervR3_7.py)
 
 This workflow is the exact staged process we follow for Round 3 from this point forward. The goal is to keep us out of premature optimization, use the calibrated backtest workflow correctly, and improve the bot one layer at a time.
 
@@ -16,7 +16,7 @@ Do not optimize thresholds before the product and strip structure are classified
 
 ## Round 3 Working Principles
 
-- Use [run_round3_calibrated_backtest.py](/Users/xavierwinkelmann/Prosperity/Analysis/scripts/run_round3_calibrated_backtest.py) for evaluation, not raw local total alone.
+- Use [run_round3_calibrated_backtest.py](Analysis/scripts/run_round3_calibrated_backtest.py) for evaluation, not raw local total alone.
 - Keep `VELVETFRUIT_EXTRACT` as the default hedge anchor unless diagnostics prove otherwise.
 - Treat vouchers as one strip first and 10 products second.
 - Prefer relative-value voucher logic before outright directional voucher trading.
@@ -211,7 +211,7 @@ Reject if:
 
 ## Exact Implementation Sequence From Here
 
-Starting point: [TradervR3_7.py](/Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_7.py)
+Starting point: [TradervR3_7.py](Bots/Round3/TradervR3_7.py)
 
 ### Step 1
 
@@ -219,8 +219,8 @@ Run harder Hydrogel and Velvet diagnostics.
 
 Output:
 
-- [round3_phase1_diagnostics.py](/Users/xavierwinkelmann/Prosperity/Analysis/scripts/round3_phase1_diagnostics.py)
-- a saved report under [Analysis/output/round3_phase1_diagnostics](/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_phase1_diagnostics)
+- [round3_phase1_diagnostics.py](Analysis/scripts/round3_phase1_diagnostics.py)
+- a saved report under [Analysis/output/round3_phase1_diagnostics](Analysis/output/round3_phase1_diagnostics)
 
 ### Step 2
 

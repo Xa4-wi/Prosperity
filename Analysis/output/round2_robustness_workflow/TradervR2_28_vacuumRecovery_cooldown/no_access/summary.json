@@ -1,5 +1,5 @@
 {
-  "bot_path": "/Users/xavierwinkelmann/Prosperity/Bots/Round2/research_variants/TradervR2_28_vacuumRecovery_cooldown.py",
+  "bot_path": "Bots/Round2/research_variants/TradervR2_28_vacuumRecovery_cooldown.py",
   "mode": "no_access",
   "queue_model": "conservative",
   "access_seed": 7,
