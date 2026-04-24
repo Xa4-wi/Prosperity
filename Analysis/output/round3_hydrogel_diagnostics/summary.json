@@ -1,0 +1,104 @@
+{
+  "log_path": "Bots/Round3/TradervR3_16.log",
+  "product": "HYDROGEL_PACK",
+  "final_pnl": -612.375,
+  "min_pnl": -9564.25,
+  "max_pnl": 6805.25,
+  "final_position": 200,
+  "max_abs_position": 200,
+  "time_abs_pos_ge_150": 75500,
+  "time_abs_pos_ge_200": 69600,
+  "inventory_tables": {
+    "pnl": {
+      "|pos| < 50": -1413.09375,
+      "50 <= |pos| < 120": -1209.78125,
+      "|pos| >= 120": 2010.5
+    },
+    "time": {
+      "|pos| < 50": 2300.0,
+      "50 <= |pos| < 120": 20500.0,
+      "|pos| >= 120": 77100.0
+    }
+  },
+  "quarter_stats": [
+    {
+      "window": "0-25%",
+      "pnl_delta": 4375.625,
+      "avg_abs_pos": 184.204,
+      "max_abs_pos": 200,
+      "start_pos": 0,
+      "end_pos": -180
+    },
+    {
+      "window": "25-50%",
+      "pnl_delta": -6332.875,
+      "avg_abs_pos": 87.272,
+      "max_abs_pos": 200,
+      "start_pos": -180,
+      "end_pos": 200
+    },
+    {
+      "window": "50-75%",
+      "pnl_delta": 5382.875,
+      "avg_abs_pos": 199.832,
+      "max_abs_pos": 200,
+      "start_pos": 200,
+      "end_pos": 200
+    },
+    {
+      "window": "75-100%",
+      "pnl_delta": -4173.5,
+      "avg_abs_pos": 199.972,
+      "max_abs_pos": 200,
+      "start_pos": 200,
+      "end_pos": 200
+    }
+  ],
+  "first_hit_markouts": [
+    {
+      "threshold": 150,
+      "episodes": 2,
+      "long_count": 1,
+      "short_count": 1,
+      "long_markout_20bars": -17.0,
+      "short_markout_20bars": 0.0
+    },
+    {
+      "threshold": 180,
+      "episodes": 2,
+      "long_count": 1,
+      "short_count": 1,
+      "long_markout_20bars": -12.0,
+      "short_markout_20bars": 0.0
+    },
+    {
+      "threshold": 200,
+      "episodes": 11,
+      "long_count": 9,
+      "short_count": 2,
+      "long_markout_20bars": -1.3333333333333333,
+      "short_markout_20bars": -12.0
+    }
+  ],
+  "same_side_stretch_markouts": [
+    {
+      "threshold": 120,
+      "same_side_buy_fill_count": 13,
+      "same_side_buy_markout_20bars": -13.115384615384615,
+      "same_side_sell_fill_count": 7,
+      "same_side_sell_markout_20bars": -5.285714285714286
+    },
+    {
+      "threshold": 150,
+      "same_side_buy_fill_count": 11,
+      "same_side_buy_markout_20bars": -10.954545454545455,
+      "same_side_sell_fill_count": 5,
+      "same_side_sell_markout_20bars": -3.0
+    }
+  ],
+  "interpretation": {
+    "classification_note": "Hydrogel still behaves like an anchored local-fair inventory trader, not a drift product.",
+    "main_risk_note": "The worst hidden-data behavior is same-side accumulation while already stretched and then carrying near-full inventory too late into the session.",
+    "execution_note": "Same-side fills while stretched have strongly negative 20-bar markout, which argues for earlier same-side blocking, harder late-session clearing, and smaller stretched quote size before any fair rewrite."
+  }
+}

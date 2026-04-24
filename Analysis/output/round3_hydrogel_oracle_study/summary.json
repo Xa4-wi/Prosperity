@@ -1,0 +1,169 @@
+{
+  "product": "HYDROGEL_PACK",
+  "anchor_reference": 10000.0,
+  "daily": {
+    "0": {
+      "hold": {
+        "pattern": "all_day_short",
+        "size": 200,
+        "pnl": 6800.0
+      },
+      "one_flip": {
+        "pattern": "long_short",
+        "size": 200,
+        "flip_idx": 3770,
+        "flip_timestamp": 377000,
+        "pnl": 32000.0
+      },
+      "two_flip": {
+        "pattern": "short_long_short",
+        "size": 200,
+        "first_flip_idx": 1094,
+        "first_flip_timestamp": 109400,
+        "second_flip_idx": 3770,
+        "second_flip_timestamp": 377000,
+        "pnl": 56000.0
+      },
+      "anchored_mean_reverter": {
+        "pattern": "anchored_mean_reverter",
+        "size": 200,
+        "entry_threshold": 52,
+        "exit_threshold": 26.0,
+        "pnl": 26600.0
+      },
+      "local_fair_mm": {
+        "pattern": "local_fair_mean_reverter",
+        "size": 40,
+        "entry_threshold": 2.0,
+        "exit_threshold": 1.0,
+        "pnl": -54040.0
+      }
+    },
+    "1": {
+      "hold": {
+        "pattern": "all_day_long",
+        "size": 200,
+        "pnl": 9800.0
+      },
+      "one_flip": {
+        "pattern": "long_short",
+        "size": 200,
+        "flip_idx": 7224,
+        "flip_timestamp": 722400,
+        "pnl": 32200.0
+      },
+      "two_flip": {
+        "pattern": "long_short_long",
+        "size": 200,
+        "first_flip_idx": 1894,
+        "first_flip_timestamp": 189400,
+        "second_flip_idx": 4412,
+        "second_flip_timestamp": 441200,
+        "pnl": 53800.0
+      },
+      "anchored_mean_reverter": {
+        "pattern": "anchored_mean_reverter",
+        "size": 200,
+        "entry_threshold": 58,
+        "exit_threshold": 29.0,
+        "pnl": 25200.0
+      },
+      "local_fair_mm": {
+        "pattern": "local_fair_mean_reverter",
+        "size": 40,
+        "entry_threshold": 1.0,
+        "exit_threshold": 0.5,
+        "pnl": -55080.0
+      }
+    },
+    "2": {
+      "hold": {
+        "pattern": "all_day_short",
+        "size": 200,
+        "pnl": -1400.0
+      },
+      "one_flip": {
+        "pattern": "short_long",
+        "size": 200,
+        "flip_idx": 2800,
+        "flip_timestamp": 280000,
+        "pnl": 43400.0
+      },
+      "two_flip": {
+        "pattern": "short_long_short",
+        "size": 200,
+        "first_flip_idx": 2800,
+        "first_flip_timestamp": 280000,
+        "second_flip_idx": 7228,
+        "second_flip_timestamp": 722800,
+        "pnl": 57800.0
+      },
+      "anchored_mean_reverter": {
+        "pattern": "anchored_mean_reverter",
+        "size": 200,
+        "entry_threshold": 44,
+        "exit_threshold": 22.0,
+        "pnl": 19800.0
+      },
+      "local_fair_mm": {
+        "pattern": "local_fair_mean_reverter",
+        "size": 40,
+        "entry_threshold": 1.2000000000000002,
+        "exit_threshold": 0.6000000000000001,
+        "pnl": -45520.0
+      }
+    }
+  },
+  "class_totals": {
+    "hold": 15200.0,
+    "one_flip": 107600.0,
+    "two_flip": 167600.0,
+    "anchored_mean_reverter": 71600.0,
+    "local_fair_mm": -154640.0
+  },
+  "phase_profile": {
+    "avg_bucket_return": {
+      "0": -0.032773780975219824,
+      "1": 0.03041216486594638,
+      "2": -0.02901160464185674,
+      "3": 0.020208083233293317,
+      "4": -0.014788169464428458,
+      "5": 0.020808323329331732,
+      "6": 0.006002400960384154,
+      "7": 0.028411364545818326,
+      "8": 0.01618705035971223,
+      "9": -0.023609443777511004,
+      "10": -0.013805522208883553,
+      "11": -0.0024009603841536613
+    },
+    "positive_sign_agreement": {
+      "0": 0.39888089528377296,
+      "1": 0.41936774709883956,
+      "2": 0.40456182472989194,
+      "3": 0.41936774709883956,
+      "4": 0.41007194244604317,
+      "5": 0.42016806722689076,
+      "6": 0.42016806722689076,
+      "7": 0.4133653461384554,
+      "8": 0.40207833733013587,
+      "9": 0.40456182472989194,
+      "10": 0.4053621448579432,
+      "11": 0.4021608643457383
+    },
+    "cumulative_mean_return": {
+      "0": -0.032773780975219824,
+      "1": -0.002361616109273445,
+      "2": -0.031373220751130186,
+      "3": -0.01116513751783687,
+      "4": -0.025953306982265327,
+      "5": -0.005144983652933595,
+      "6": 0.000857417307450559,
+      "7": 0.029268781853268887,
+      "8": 0.04545583221298112,
+      "9": 0.021846388435470116,
+      "10": 0.008040866226586563,
+      "11": 0.005639905842432902
+    }
+  },
+  "interpretation": "Hydrogel ceiling looks regime / phase driven."
+}

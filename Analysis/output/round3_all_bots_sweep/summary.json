@@ -1,28 +1,22 @@
 [
   {
     "bot": "TradervR3_1.py",
-    "returncode": 0,
+    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777036961439/metrics.json",
     "raw_total": -49148.0,
-    "calibrated_total": -30128.5,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_1_20260424_150640",
+    "calibrated_total": 27565.65,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_1_20260424_152407",
     "top_products": [
-      {
-        "product": "VEV_5100",
-        "local_pnl": -54167.0,
-        "weight": 1.0,
-        "calibrated_contribution": -54167.0
-      },
-      {
-        "product": "VEV_5000",
-        "local_pnl": 24038.5,
-        "weight": 1.0,
-        "calibrated_contribution": 24038.5
-      },
       {
         "product": "HYDROGEL_PACK",
         "local_pnl": 132926.0,
-        "weight": 0.0,
-        "calibrated_contribution": 0.0
+        "weight": 0.35,
+        "calibrated_contribution": 46524.1
+      },
+      {
+        "product": "VEV_5100",
+        "local_pnl": -54167.0,
+        "weight": 0.35,
+        "calibrated_contribution": -18958.449999999997
       },
       {
         "product": "VELVETFRUIT_EXTRACT",
@@ -41,33 +35,33 @@
         "local_pnl": 37814.5,
         "weight": 0.0,
         "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_5000",
+        "local_pnl": 24038.5,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
       }
     ]
   },
   {
     "bot": "TradervR3_2.py",
-    "returncode": 0,
+    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777037051801/metrics.json",
     "raw_total": -44685.5,
-    "calibrated_total": -26872.0,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_2_20260424_150824",
+    "calibrated_total": 29001.0,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_2_20260424_152524",
     "top_products": [
-      {
-        "product": "VEV_5100",
-        "local_pnl": -50066.0,
-        "weight": 1.0,
-        "calibrated_contribution": -50066.0
-      },
-      {
-        "product": "VEV_5000",
-        "local_pnl": 23194.0,
-        "weight": 1.0,
-        "calibrated_contribution": 23194.0
-      },
       {
         "product": "HYDROGEL_PACK",
         "local_pnl": 132926.0,
-        "weight": 0.0,
-        "calibrated_contribution": 0.0
+        "weight": 0.35,
+        "calibrated_contribution": 46524.1
+      },
+      {
+        "product": "VEV_5100",
+        "local_pnl": -50066.0,
+        "weight": 0.35,
+        "calibrated_contribution": -17523.1
       },
       {
         "product": "VELVETFRUIT_EXTRACT",
@@ -86,33 +80,33 @@
         "local_pnl": 38923.5,
         "weight": 0.0,
         "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_5000",
+        "local_pnl": 23194.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
       }
     ]
   },
   {
     "bot": "TradervR3_3.py",
-    "returncode": 0,
+    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777037130637/metrics.json",
     "raw_total": -35436.0,
-    "calibrated_total": -23917.0,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_3_20260424_150942",
+    "calibrated_total": 28556.5,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_3_20260424_152750",
     "top_products": [
-      {
-        "product": "VEV_5100",
-        "local_pnl": -51267.0,
-        "weight": 1.0,
-        "calibrated_contribution": -51267.0
-      },
-      {
-        "product": "VEV_5000",
-        "local_pnl": 27350.0,
-        "weight": 1.0,
-        "calibrated_contribution": 27350.0
-      },
       {
         "product": "HYDROGEL_PACK",
         "local_pnl": 132857.0,
-        "weight": 0.0,
-        "calibrated_contribution": 0.0
+        "weight": 0.35,
+        "calibrated_contribution": 46499.95
+      },
+      {
+        "product": "VEV_5100",
+        "local_pnl": -51267.0,
+        "weight": 0.35,
+        "calibrated_contribution": -17943.449999999997
       },
       {
         "product": "VELVETFRUIT_EXTRACT",
@@ -131,33 +125,33 @@
         "local_pnl": 49216.0,
         "weight": 0.0,
         "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_5000",
+        "local_pnl": 27350.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
       }
     ]
   },
   {
     "bot": "TradervR3_4.py",
-    "returncode": 0,
+    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777037278579/metrics.json",
     "raw_total": -54616.5,
-    "calibrated_total": -36884.5,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_4_20260424_151101",
+    "calibrated_total": 23902.899999999998,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_4_20260424_153121",
     "top_products": [
-      {
-        "product": "VEV_5100",
-        "local_pnl": -64563.0,
-        "weight": 1.0,
-        "calibrated_contribution": -64563.0
-      },
-      {
-        "product": "VEV_5000",
-        "local_pnl": 27678.5,
-        "weight": 1.0,
-        "calibrated_contribution": 27678.5
-      },
       {
         "product": "HYDROGEL_PACK",
         "local_pnl": 132857.0,
-        "weight": 0.0,
-        "calibrated_contribution": 0.0
+        "weight": 0.35,
+        "calibrated_contribution": 46499.95
+      },
+      {
+        "product": "VEV_5100",
+        "local_pnl": -64563.0,
+        "weight": 0.35,
+        "calibrated_contribution": -22597.05
       },
       {
         "product": "VELVETFRUIT_EXTRACT",
@@ -176,33 +170,33 @@
         "local_pnl": 43309.0,
         "weight": 0.0,
         "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_5000",
+        "local_pnl": 27678.5,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
       }
     ]
   },
   {
     "bot": "TradervR3_4_1.py",
-    "returncode": 0,
+    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777037489469/metrics.json",
     "raw_total": -54507.5,
-    "calibrated_total": -36884.5,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_4_1_20260424_151219",
+    "calibrated_total": 23902.899999999998,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_4_1_20260424_153402",
     "top_products": [
-      {
-        "product": "VEV_5100",
-        "local_pnl": -64563.0,
-        "weight": 1.0,
-        "calibrated_contribution": -64563.0
-      },
-      {
-        "product": "VEV_5000",
-        "local_pnl": 27678.5,
-        "weight": 1.0,
-        "calibrated_contribution": 27678.5
-      },
       {
         "product": "HYDROGEL_PACK",
         "local_pnl": 132857.0,
-        "weight": 0.0,
-        "calibrated_contribution": 0.0
+        "weight": 0.35,
+        "calibrated_contribution": 46499.95
+      },
+      {
+        "product": "VEV_5100",
+        "local_pnl": -64563.0,
+        "weight": 0.35,
+        "calibrated_contribution": -22597.05
       },
       {
         "product": "VELVETFRUIT_EXTRACT",
@@ -221,33 +215,33 @@
         "local_pnl": 43309.0,
         "weight": 0.0,
         "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_5000",
+        "local_pnl": 27678.5,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
       }
     ]
   },
   {
     "bot": "TradervR3_4_2.py",
-    "returncode": 0,
+    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777037648331/metrics.json",
     "raw_total": -55025.5,
-    "calibrated_total": -38426.5,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_4_2_20260424_151341",
+    "calibrated_total": 22726.199999999997,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_4_2_20260424_153550",
     "top_products": [
-      {
-        "product": "VEV_5100",
-        "local_pnl": -67925.0,
-        "weight": 1.0,
-        "calibrated_contribution": -67925.0
-      },
-      {
-        "product": "VEV_5000",
-        "local_pnl": 29498.5,
-        "weight": 1.0,
-        "calibrated_contribution": 29498.5
-      },
       {
         "product": "HYDROGEL_PACK",
         "local_pnl": 132857.0,
-        "weight": 0.0,
-        "calibrated_contribution": 0.0
+        "weight": 0.35,
+        "calibrated_contribution": 46499.95
+      },
+      {
+        "product": "VEV_5100",
+        "local_pnl": -67925.0,
+        "weight": 0.35,
+        "calibrated_contribution": -23773.75
       },
       {
         "product": "VELVETFRUIT_EXTRACT",
@@ -266,33 +260,33 @@
         "local_pnl": 44644.0,
         "weight": 0.0,
         "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_5000",
+        "local_pnl": 29498.5,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
       }
     ]
   },
   {
     "bot": "TradervR3_5.py",
-    "returncode": 0,
+    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777037755769/metrics.json",
     "raw_total": -52049.0,
-    "calibrated_total": -35177.5,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_5_20260424_151458",
+    "calibrated_total": 25295.199999999997,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_5_20260424_154505",
     "top_products": [
-      {
-        "product": "VEV_5100",
-        "local_pnl": -60585.0,
-        "weight": 1.0,
-        "calibrated_contribution": -60585.0
-      },
-      {
-        "product": "VEV_5000",
-        "local_pnl": 25407.5,
-        "weight": 1.0,
-        "calibrated_contribution": 25407.5
-      },
       {
         "product": "HYDROGEL_PACK",
         "local_pnl": 132857.0,
-        "weight": 0.0,
-        "calibrated_contribution": 0.0
+        "weight": 0.35,
+        "calibrated_contribution": 46499.95
+      },
+      {
+        "product": "VEV_5100",
+        "local_pnl": -60585.0,
+        "weight": 0.35,
+        "calibrated_contribution": -21204.75
       },
       {
         "product": "VELVETFRUIT_EXTRACT",
@@ -311,33 +305,33 @@
         "local_pnl": 38372.5,
         "weight": 0.0,
         "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_5000",
+        "local_pnl": 25407.5,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
       }
     ]
   },
   {
     "bot": "TradervR3_6.py",
-    "returncode": 0,
+    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777038323824/metrics.json",
     "raw_total": -48170.0,
-    "calibrated_total": -36368.0,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_6_20260424_151611",
+    "calibrated_total": 24368.75,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_6_20260424_154914",
     "top_products": [
-      {
-        "product": "VEV_5100",
-        "local_pnl": -63232.0,
-        "weight": 1.0,
-        "calibrated_contribution": -63232.0
-      },
-      {
-        "product": "VEV_5000",
-        "local_pnl": 26864.0,
-        "weight": 1.0,
-        "calibrated_contribution": 26864.0
-      },
       {
         "product": "HYDROGEL_PACK",
         "local_pnl": 132857.0,
-        "weight": 0.0,
-        "calibrated_contribution": 0.0
+        "weight": 0.35,
+        "calibrated_contribution": 46499.95
+      },
+      {
+        "product": "VEV_5100",
+        "local_pnl": -63232.0,
+        "weight": 0.35,
+        "calibrated_contribution": -22131.199999999997
       },
       {
         "product": "VELVETFRUIT_EXTRACT",
@@ -356,33 +350,33 @@
         "local_pnl": 38773.0,
         "weight": 0.0,
         "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_5000",
+        "local_pnl": 26864.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
       }
     ]
   },
   {
     "bot": "TradervR3_7.py",
-    "returncode": 0,
+    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777038561079/metrics.json",
     "raw_total": 83575.0,
-    "calibrated_total": 54343.0,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_7_20260424_151725",
+    "calibrated_total": 26329.100000000002,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_7_20260424_155105",
     "top_products": [
       {
-        "product": "VEV_5000",
-        "local_pnl": 111352.0,
-        "weight": 1.0,
-        "calibrated_contribution": 111352.0
+        "product": "HYDROGEL_PACK",
+        "local_pnl": 132235.0,
+        "weight": 0.35,
+        "calibrated_contribution": 46282.25
       },
       {
         "product": "VEV_5100",
         "local_pnl": -57009.0,
-        "weight": 1.0,
-        "calibrated_contribution": -57009.0
-      },
-      {
-        "product": "HYDROGEL_PACK",
-        "local_pnl": 132235.0,
-        "weight": 0.0,
-        "calibrated_contribution": 0.0
+        "weight": 0.35,
+        "calibrated_contribution": -19953.149999999998
       },
       {
         "product": "VELVETFRUIT_EXTRACT",
@@ -401,33 +395,33 @@
         "local_pnl": 85964.0,
         "weight": 0.0,
         "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_5000",
+        "local_pnl": 111352.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
       }
     ]
   },
   {
     "bot": "TradervR3_8.py",
-    "returncode": 0,
+    "metrics_path": "/Users/xavierwinkelmann/Prosperity/ProsperityRustBacktester/runs/backtest-1777038670732/metrics.json",
     "raw_total": 6281.0,
-    "calibrated_total": 13044.0,
-    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_8_20260424_151847",
+    "calibrated_total": 25943.75,
+    "output_dir": "/Users/xavierwinkelmann/Prosperity/Analysis/output/round3_all_bots_sweep/calibrated_runs/TradervR3_8_20260424_155323",
     "top_products": [
       {
-        "product": "VEV_5000",
-        "local_pnl": 68006.0,
-        "weight": 1.0,
-        "calibrated_contribution": 68006.0
+        "product": "HYDROGEL_PACK",
+        "local_pnl": 129087.0,
+        "weight": 0.35,
+        "calibrated_contribution": 45180.45
       },
       {
         "product": "VEV_5100",
         "local_pnl": -54962.0,
-        "weight": 1.0,
-        "calibrated_contribution": -54962.0
-      },
-      {
-        "product": "HYDROGEL_PACK",
-        "local_pnl": 129087.0,
-        "weight": 0.0,
-        "calibrated_contribution": 0.0
+        "weight": 0.35,
+        "calibrated_contribution": -19236.699999999997
       },
       {
         "product": "VELVETFRUIT_EXTRACT",
@@ -444,6 +438,12 @@
       {
         "product": "VEV_4500",
         "local_pnl": 61576.0,
+        "weight": 0.0,
+        "calibrated_contribution": 0.0
+      },
+      {
+        "product": "VEV_5000",
+        "local_pnl": 68006.0,
         "weight": 0.0,
         "calibrated_contribution": 0.0
       }

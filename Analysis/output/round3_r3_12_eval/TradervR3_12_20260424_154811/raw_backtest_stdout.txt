@@ -1,0 +1,20 @@
+trader: TradervR3_12.py
+dataset: ROUND-3
+mode: fast
+artifacts: saved
+SET             DAY    TICKS  OWN_TRADES    FINAL_PNL  RUN_DIR
+ROUND_3-carry    all    30000       12010     63290.00  runs/backtest-1777038094747
+
+PRODUCT             ROUND_3-carry
+HYDROGEL_PACK           129087.00
+VELVETFRUIT_EXTRACT      61906.00
+VEV_4000                 10577.00
+VEV_4500                 43026.00
+VEV_5000                 68521.00
+VEV_5100                -37760.00
+VEV_5200               -112257.00
+VEV_5300                -76223.00
+VEV_5400                -14130.00
+VEV_5500                 -9457.00
+VEV_6000                     0.00
+VEV_6500                     0.00
