@@ -20,6 +20,13 @@ DEFAULT_LOGS_DIR = REPO_ROOT / "Bots" / "Round3"
 DEFAULT_OUTPUT_ROOT = Path(__file__).resolve().parent / "output"
 
 
+def display_path(path: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(REPO_ROOT))
+    except Exception:
+        return str(path)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Monte Carlo backtester for Prosperity Round 3 bots with fill calibration from official logs."
@@ -133,8 +140,8 @@ def main() -> int:
         output_dir = DEFAULT_OUTPUT_ROOT / f"{bot_path.stem}_{timestamp}"
     write_summary(output_dir, summary)
 
-    print(f"Bot: {bot_path}")
-    print(f"Dataset: {dataset_dir}")
+    print(f"Bot: {display_path(bot_path)}")
+    print(f"Dataset: {display_path(dataset_dir)}")
     print(f"Calibrated from logs: {len(log_paths)}")
     print(f"Days: {run_days}")
     print(f"Simulations: {args.sims}")
@@ -144,7 +151,7 @@ def main() -> int:
     if summary.compared_log:
         print(f"Official total: {summary.compared_log['total_pnl']:.2f}")
         print(f"Official - MC mean: {summary.compared_log['delta_vs_mc_mean']:.2f}")
-    print(f"Output: {output_dir}")
+    print(f"Output: {display_path(output_dir)}")
     return 0
 
 

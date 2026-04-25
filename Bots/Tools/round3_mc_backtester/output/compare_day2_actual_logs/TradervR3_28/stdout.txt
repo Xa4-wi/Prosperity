@@ -1,0 +1,11 @@
+Bot: /Users/xavierwinkelmann/Prosperity/Bots/Round3/TradervR3_28.py
+Dataset: /Users/xavierwinkelmann/Prosperity/Data/ROUND_3
+Calibrated from logs: 28
+Days: [2]
+Simulations: 6
+Mean total PnL: -3821.58
+Median total PnL: 5864.00
+P05 / P95: -25422.50 / 6132.00
+Official total: 10577.38
+Official - MC mean: 14398.96
+Output: /Users/xavierwinkelmann/Prosperity/Bots/Tools/round3_mc_backtester/output/compare_day2_actual_logs/TradervR3_28

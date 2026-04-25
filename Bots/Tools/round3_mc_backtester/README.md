@@ -45,7 +45,7 @@ That means it is most useful for:
 From the repo root:
 
 ```bash
-python3 Bots/Tools/xw_round3_mc_backtester/run_backtest.py \
+python3 Bots/Tools/round3_mc_backtester/run_backtest.py \
   Bots/Round3/TradervR3_45.py \
   --days 0 1 2 \
   --sims 64 \
@@ -55,7 +55,7 @@ python3 Bots/Tools/xw_round3_mc_backtester/run_backtest.py \
 Compare directly against an official log:
 
 ```bash
-python3 Bots/Tools/xw_round3_mc_backtester/run_backtest.py \
+python3 Bots/Tools/round3_mc_backtester/run_backtest.py \
   Bots/Round3/TradervR3_45.py \
   --days 0 1 2 \
   --sims 64 \
@@ -66,7 +66,7 @@ python3 Bots/Tools/xw_round3_mc_backtester/run_backtest.py \
 Use a thinner replay for faster iteration:
 
 ```bash
-python3 Bots/Tools/xw_round3_mc_backtester/run_backtest.py \
+python3 Bots/Tools/round3_mc_backtester/run_backtest.py \
   Bots/Round3/TradervR3_45.py \
   --days 0 1 2 \
   --tick-step 5 \
@@ -83,7 +83,7 @@ Each run writes:
 
 to a timestamped folder under:
 
-- `Bots/Tools/xw_round3_mc_backtester/output`
+- `Bots/Tools/round3_mc_backtester/output`
 
 ## Suggested Workflow
 

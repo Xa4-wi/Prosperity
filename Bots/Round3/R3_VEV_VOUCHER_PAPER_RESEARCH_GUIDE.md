@@ -549,6 +549,29 @@ Use this exact order:
 
 This sequence matters because it lets us attribute gains correctly.
 
+Current branch-status read:
+
+- `R3_46` quote cleaning was effectively inert on the current Round 3 quotes.
+- `R3_47` single-slice SVI was the only branch in this family that actually improved the real portal log.
+- `R3_48` low-strike pair-first overlay looked good locally, but was inert on the real portal log.
+- `R3_49` is the first branch that directly bundles the strongest repo-derived ideas on top of the real-log-improved `R3_47` base:
+  - hybrid IV fair
+  - bid/ask smile bands
+  - hedge-feasible sizing
+  - buffered / dynamic `VELVET` hedge
+- `R3_50` adds a route-aware mode machine on top of `R3_49`:
+  - `DISCOVERY`
+  - `RV_ACTIVE`
+  - `STRIP_SHOCK`
+  - `HARVEST`
+  The goal is to reproduce the observed good PnL route shape without overtrading the strip all day.
+
+So the live research trunk for the connected `VELVET + voucher` family should currently be:
+
+- `R3_47` as the best real-log paper branch so far
+- `R3_49` as the best pure paper-ideas branch
+- `R3_50` as the next route-aware branch to validate on the portal
+
 ---
 
 ## 10. Acceptance criteria for the branch family

@@ -74,6 +74,24 @@ def _parse_float(value: str) -> Optional[float]:
     return float(value)
 
 
+def _display_path(path: Path | str) -> str:
+    candidate = Path(path)
+    try:
+        return str(candidate.resolve().relative_to(REPO_ROOT))
+    except Exception:
+        return str(path)
+
+
+def _open_detected_dict_reader(path: Path) -> tuple[object, csv.DictReader]:
+    handle = path.open(newline="")
+    header = handle.readline()
+    delimiter = ";"
+    if header.count(",") > header.count(";"):
+        delimiter = ","
+    handle.seek(0)
+    return handle, csv.DictReader(handle, delimiter=delimiter)
+
+
 @dataclass
 class BookSnapshot:
     day: int
@@ -295,8 +313,8 @@ def load_round3_market_data(dataset_dir: Path, days: Optional[Sequence[int]] = N
         day = int(match.group(1))
         if wanted_days is not None and day not in wanted_days:
             continue
-        with path.open(newline="") as handle:
-            reader = csv.DictReader(handle, delimiter=";")
+        handle, reader = _open_detected_dict_reader(path)
+        with handle:
             for row in reader:
                 timestamp = int(row["timestamp"])
                 product = row["product"]
@@ -330,8 +348,8 @@ def load_round3_market_data(dataset_dir: Path, days: Optional[Sequence[int]] = N
         day = int(match.group(1))
         if wanted_days is not None and day not in wanted_days:
             continue
-        with path.open(newline="") as handle:
-            reader = csv.DictReader(handle)
+        handle, reader = _open_detected_dict_reader(path)
+        with handle:
             for row in reader:
                 timestamp = int(row["timestamp"])
                 product = row["symbol"]
@@ -365,7 +383,7 @@ def load_round3_market_data(dataset_dir: Path, days: Optional[Sequence[int]] = N
         ticks_by_day[day] = day_ticks
 
     return Round3MarketData(
-        dataset=str(dataset_dir),
+        dataset=_display_path(dataset_dir),
         tick_step=tick_step,
         products=sorted(products),
         ticks_by_day=ticks_by_day,
@@ -525,7 +543,7 @@ class MonteCarloBacktester:
         if compare_log is not None and compare_log.exists():
             log_summary = parse_official_log(compare_log)
             compared_log = {
-                "path": str(compare_log),
+                "path": _display_path(compare_log),
                 "total_pnl": log_summary.total_pnl,
                 "pnl_by_product": log_summary.pnl_by_product,
                 "delta_vs_mc_mean": log_summary.total_pnl - mean_total,

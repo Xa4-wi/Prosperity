@@ -1,0 +1,320 @@
+{
+  "bot": "TradervR3_28.py",
+  "dataset": "Data/ROUND_3",
+  "days": [
+    2
+  ],
+  "simulations": 4,
+  "tick_step": 10,
+  "carry_state": false,
+  "mean_total": 13284.5,
+  "median_total": 11363.75,
+  "stdev_total": 19513.8328084208,
+  "p05_total": -6042.5,
+  "p95_total": 28763.0,
+  "per_product_stats": {
+    "HYDROGEL_PACK": {
+      "mean": -8776.5,
+      "median": -10910.5,
+      "stdev": 19488.87149760088,
+      "p05": -28107.0,
+      "p95": 6113.0
+    },
+    "VELVETFRUIT_EXTRACT": {
+      "mean": 10203.0,
+      "median": 10236.0,
+      "stdev": 126.38829059687451,
+      "p05": 9999.0,
+      "p95": 10259.0
+    },
+    "VEV_4000": {
+      "mean": -1578.5,
+      "median": -1599.0,
+      "stdev": 81.21807064933272,
+      "p05": -1658.0,
+      "p95": -1550.5
+    },
+    "VEV_4500": {
+      "mean": -5271.5,
+      "median": -5316.5,
+      "stdev": 169.97426275763047,
+      "p05": -5447.0,
+      "p95": -5245.0
+    },
+    "VEV_5000": {
+      "mean": 15294.75,
+      "median": 15265.0,
+      "stdev": 191.42671574260476,
+      "p05": 15063.0,
+      "p95": 15321.0
+    },
+    "VEV_5100": {
+      "mean": 3413.25,
+      "median": 3308.5,
+      "stdev": 462.70096984985884,
+      "p05": 2891.0,
+      "p95": 3423.0
+    },
+    "VEV_5200": {
+      "mean": 0.0,
+      "median": 0.0,
+      "stdev": 0.0,
+      "p05": 0.0,
+      "p95": 0.0
+    },
+    "VEV_5300": {
+      "mean": 0.0,
+      "median": 0.0,
+      "stdev": 0.0,
+      "p05": 0.0,
+      "p95": 0.0
+    },
+    "VEV_5400": {
+      "mean": 0.0,
+      "median": 0.0,
+      "stdev": 0.0,
+      "p05": 0.0,
+      "p95": 0.0
+    },
+    "VEV_5500": {
+      "mean": 0.0,
+      "median": 0.0,
+      "stdev": 0.0,
+      "p05": 0.0,
+      "p95": 0.0
+    },
+    "VEV_6000": {
+      "mean": 0.0,
+      "median": 0.0,
+      "stdev": 0.0,
+      "p05": 0.0,
+      "p95": 0.0
+    },
+    "VEV_6500": {
+      "mean": 0.0,
+      "median": 0.0,
+      "stdev": 0.0,
+      "p05": 0.0,
+      "p95": 0.0
+    }
+  },
+  "fill_profile": {
+    "counts": {
+      "VELVETFRUIT_EXTRACT": {
+        "aggressive_cross": 31357,
+        "passive_inside": 9283
+      },
+      "VEV_5100": {
+        "aggressive_cross": 4159,
+        "passive_inside": 51
+      },
+      "VEV_5200": {
+        "aggressive_cross": 10399,
+        "passive_inside": 20
+      },
+      "VEV_5400": {
+        "aggressive_cross": 1800
+      },
+      "VEV_5500": {
+        "aggressive_cross": 1800
+      },
+      "VEV_5300": {
+        "aggressive_cross": 9717
+      },
+      "HYDROGEL_PACK": {
+        "aggressive_cross": 33684,
+        "passive_inside": 1841
+      },
+      "VEV_4000": {
+        "passive_inside": 278,
+        "aggressive_cross": 883
+      },
+      "VEV_4500": {
+        "passive_inside": 248,
+        "aggressive_cross": 1092
+      },
+      "VEV_5000": {
+        "passive_inside": 353,
+        "aggressive_cross": 1419
+      }
+    },
+    "median_sizes": {
+      "VELVETFRUIT_EXTRACT": {
+        "aggressive_cross": 16,
+        "passive_inside": 8
+      },
+      "VEV_5100": {
+        "aggressive_cross": 9,
+        "passive_inside": 1
+      },
+      "VEV_5200": {
+        "aggressive_cross": 10,
+        "passive_inside": 1
+      },
+      "VEV_5400": {
+        "aggressive_cross": 10
+      },
+      "VEV_5500": {
+        "aggressive_cross": 10
+      },
+      "VEV_5300": {
+        "aggressive_cross": 10
+      },
+      "HYDROGEL_PACK": {
+        "aggressive_cross": 13,
+        "passive_inside": 3
+      },
+      "VEV_4000": {
+        "passive_inside": 1,
+        "aggressive_cross": 3
+      },
+      "VEV_4500": {
+        "passive_inside": 1,
+        "aggressive_cross": 3
+      },
+      "VEV_5000": {
+        "passive_inside": 2,
+        "aggressive_cross": 7
+      }
+    }
+  },
+  "compared_log": null,
+  "paths": [
+    {
+      "seed": 28,
+      "total_pnl": -6035.5,
+      "pnl_by_product": {
+        "HYDROGEL_PACK": -27934.0,
+        "VELVETFRUIT_EXTRACT": 10213.0,
+        "VEV_4000": -1647.5,
+        "VEV_4500": -5447.0,
+        "VEV_5000": 15586.0,
+        "VEV_5100": 3194.0,
+        "VEV_5200": 0.0,
+        "VEV_5300": 0.0,
+        "VEV_5400": 0.0,
+        "VEV_5500": 0.0,
+        "VEV_6000": 0.0,
+        "VEV_6500": 0.0
+      },
+      "final_positions": {
+        "HYDROGEL_PACK": -93,
+        "VELVETFRUIT_EXTRACT": -200,
+        "VEV_4000": -99,
+        "VEV_4500": -300,
+        "VEV_5000": 0,
+        "VEV_5100": 0,
+        "VEV_5200": 0,
+        "VEV_5300": 0,
+        "VEV_5400": 0,
+        "VEV_5500": 0,
+        "VEV_6000": 0,
+        "VEV_6500": 0
+      },
+      "own_trade_count": 854,
+      "max_drawdown": 31351.0
+    },
+    {
+      "seed": 29,
+      "total_pnl": 28763.0,
+      "pnl_by_product": {
+        "HYDROGEL_PACK": 6113.0,
+        "VELVETFRUIT_EXTRACT": 9999.0,
+        "VEV_4000": -1458.0,
+        "VEV_4500": -5245.0,
+        "VEV_5000": 15209.0,
+        "VEV_5100": 4145.0,
+        "VEV_5200": 0.0,
+        "VEV_5300": 0.0,
+        "VEV_5400": 0.0,
+        "VEV_5500": 0.0,
+        "VEV_6000": 0.0,
+        "VEV_6500": 0.0
+      },
+      "final_positions": {
+        "HYDROGEL_PACK": -40,
+        "VELVETFRUIT_EXTRACT": -200,
+        "VEV_4000": -94,
+        "VEV_4500": -300,
+        "VEV_5000": 0,
+        "VEV_5100": 0,
+        "VEV_5200": 0,
+        "VEV_5300": 0,
+        "VEV_5400": 0,
+        "VEV_5500": 0,
+        "VEV_6000": 0,
+        "VEV_6500": 0
+      },
+      "own_trade_count": 765,
+      "max_drawdown": 23159.5
+    },
+    {
+      "seed": 30,
+      "total_pnl": -6042.5,
+      "pnl_by_product": {
+        "HYDROGEL_PACK": -28107.0,
+        "VELVETFRUIT_EXTRACT": 10259.0,
+        "VEV_4000": -1550.5,
+        "VEV_4500": -5388.0,
+        "VEV_5000": 15321.0,
+        "VEV_5100": 3423.0,
+        "VEV_5200": 0.0,
+        "VEV_5300": 0.0,
+        "VEV_5400": 0.0,
+        "VEV_5500": 0.0,
+        "VEV_6000": 0.0,
+        "VEV_6500": 0.0
+      },
+      "final_positions": {
+        "HYDROGEL_PACK": -143,
+        "VELVETFRUIT_EXTRACT": -200,
+        "VEV_4000": -99,
+        "VEV_4500": -300,
+        "VEV_5000": 0,
+        "VEV_5100": 2,
+        "VEV_5200": 0,
+        "VEV_5300": 0,
+        "VEV_5400": 0,
+        "VEV_5500": 0,
+        "VEV_6000": 0,
+        "VEV_6500": 0
+      },
+      "own_trade_count": 934,
+      "max_drawdown": 39306.5
+    },
+    {
+      "seed": 31,
+      "total_pnl": 36453.0,
+      "pnl_by_product": {
+        "HYDROGEL_PACK": 14822.0,
+        "VELVETFRUIT_EXTRACT": 10341.0,
+        "VEV_4000": -1658.0,
+        "VEV_4500": -5006.0,
+        "VEV_5000": 15063.0,
+        "VEV_5100": 2891.0,
+        "VEV_5200": 0.0,
+        "VEV_5300": 0.0,
+        "VEV_5400": 0.0,
+        "VEV_5500": 0.0,
+        "VEV_6000": 0.0,
+        "VEV_6500": 0.0
+      },
+      "final_positions": {
+        "HYDROGEL_PACK": -137,
+        "VELVETFRUIT_EXTRACT": -200,
+        "VEV_4000": -94,
+        "VEV_4500": -300,
+        "VEV_5000": 0,
+        "VEV_5100": 0,
+        "VEV_5200": 0,
+        "VEV_5300": 0,
+        "VEV_5400": 0,
+        "VEV_5500": 0,
+        "VEV_6000": 0,
+        "VEV_6500": 0
+      },
+      "own_trade_count": 698,
+      "max_drawdown": 24355.0
+    }
+  ]
+}

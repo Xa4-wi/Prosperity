@@ -414,3 +414,68 @@ Do not select Round 3 bots from raw local total alone.
     - practical read:
       - the extra `VELVET` steering hurt more than the low-strike voucher help
       - next refinement should isolate low-strike voucher changes from `VELVET` target changes
+12. `R3_46` started the paper-driven voucher branch with quote cleaning / repair:
+    - monotonicity and convexity repair before IV inversion
+    - practical read:
+      - completely inert on the current Round 3 quotes
+      - the raw voucher slice is already clean enough under this simple repair layer
+13. `R3_47` tested single-slice SVI on top of the repaired quotes:
+    - replaced the weighted quadratic smile with an SVI total-variance fit plus quadratic fallback
+    - practical read from the local Monte Carlo scaffold:
+      - mathematically cleaner, economically worse on the current round
+      - helped the low-strike left wing somewhat
+      - hurt `VEV_5100` and reduced total performance
+      - keep as research reference, not as the live next branch
+14. `R3_48` tested a low-strike pair-first overlay on top of `R3_45`:
+    - kept the real-log-winning `VELVET` structure unchanged
+    - added soft pair bias / pair targets only for `VEV_4000`, `VEV_4500`, `VEV_5000`
+    - added low-pair diagnostics into `traderData`
+    - practical read from the local Monte Carlo scaffold:
+      - strong improvement versus `R3_45`
+      - the gain comes mostly from a much stronger `VEV_5000` lane
+      - this is the first voucher research branch after `R3_45` that looks directionally promising
+      - needs the next real portal log before promotion, because local results can still overstate low-strike alpha
+15. Real portal logs for the paper branches changed the read:
+    - `R3_45`: real winner before the paper-derived branches
+    - `R3_46`: identical to `R3_45` on the real log
+    - `R3_47`: the only real improvement in that family so far
+      - better `VELVET`
+      - much stronger `VEV_5000`
+      - offset by a weaker `VEV_5100`
+    - `R3_48`: effectively inert on the real log
+      - same result shape as `R3_45`
+      - local improvement did not show up on the portal
+16. `R3_49` is the next repo-derived branch built off `R3_47`:
+    - keeps the `R3_47` smile base
+    - adds hybrid IV fair:
+      - structural smile IV
+      - rolling local IV
+      - previous fair IV memory
+    - adds bid/ask IV bands and price bands
+      - use them as a no-trade / execution-aware fair zone
+    - adds hedge-feasible per-strike voucher caps
+      - size by strip hedge capacity, not raw exchange limit
+    - adds buffered / dynamic `VELVET` hedge ratio and deadband
+    - practical read before the next log:
+      - this is the highest-signal paper bundle so far
+      - if it helps, it should mainly improve `VELVET`, `VEV_4500`, `VEV_5000`, and execution quality
+17. `R3_50` adds an explicit voucher/Velvet mode-state layer on top of `R3_49`:
+    - `DISCOVERY`
+      - small probing
+      - wider thresholds
+      - smaller size
+    - `RV_ACTIVE`
+      - normal pair/residual trading
+      - moderate hedge
+    - `STRIP_SHOCK`
+      - stronger strip participation when residual structure is broad
+      - tighter hedge band
+      - slightly larger size
+    - `HARVEST`
+      - stricter re-entry
+      - lower size
+      - bias toward exit rather than rearming
+    - practical read before the next log:
+      - this is the first explicit attempt to match the observed “PnL route” shape
+      - key telemetry to watch is now in `strip_monitor`
+      - especially `mode`, `mode_age`, `progress`, `low_lane_avg_abs_resid`, and `low_lane_gap`

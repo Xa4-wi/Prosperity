@@ -45,6 +45,20 @@ What it contains:
 Start here:
 - [olivia_tool/README.md](Bots/Tools/olivia_tool/README.md)
 
+### Imported Prosperity backtester
+
+Location:
+- [imc_prosperity_4_backtester](Bots/Tools/imc_prosperity_4_backtester)
+
+What it contains:
+- Kevin Fu's Prosperity backtester cloned into our repo
+- a repo-local launcher that handles `PYTHONPATH`
+- an output folder for saved backtest logs
+
+Start here:
+- [imc_prosperity_4_backtester/README.md](Bots/Tools/imc_prosperity_4_backtester/README.md)
+- launcher: [run_repo_backtest.py](Bots/Tools/imc_prosperity_4_backtester/run_repo_backtest.py)
+
 ## Suggested layout for future tools
 
 ```text
