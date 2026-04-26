@@ -59,6 +59,21 @@ Start here:
 - [imc_prosperity_4_backtester/README.md](Bots/Tools/imc_prosperity_4_backtester/README.md)
 - launcher: [run_repo_backtest.py](Bots/Tools/imc_prosperity_4_backtester/run_repo_backtest.py)
 
+### Rust Prosperity backtester
+
+Location:
+- [prosperity_rust_backtester](Bots/Tools/prosperity_rust_backtester)
+
+What it contains:
+- the Rust Prosperity backtester cloned into this repo
+- upstream `Makefile` and CLI
+- a repo-local launcher that maps to our `Bots/Round3` traders and `Data/` folders
+
+Start here:
+- [prosperity_rust_backtester/README.md](Bots/Tools/prosperity_rust_backtester/README.md)
+- local usage guide: [prosperity_rust_backtester/README_PROSPERITY.md](Bots/Tools/prosperity_rust_backtester/README_PROSPERITY.md)
+- launcher: [prosperity_rust_backtester/run_repo_backtester.sh](Bots/Tools/prosperity_rust_backtester/run_repo_backtester.sh)
+
 ## Suggested layout for future tools
 
 ```text

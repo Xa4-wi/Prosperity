@@ -1,0 +1,19 @@
+/Users/xavierwinkelmann/Library/Python/3.9/lib/python/site-packages/numpy/lib/_function_base_impl.py:2922: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/Users/xavierwinkelmann/Library/Python/3.9/lib/python/site-packages/numpy/lib/_function_base_impl.py:2922: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+Wrote markdown report to /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/round4_capsule_initial/capsule_product_diagnosis_report.md
+Wrote JSON summary to /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/round4_capsule_initial/capsule_product_diagnosis_summary.json
+Wrote dashboard to /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/round4_capsule_initial/dashboard/index.html
+run_name=round4_capsule_initial
+root=Data/ROUND_4
+intel_md=/Users/xavierwinkelmann/Prosperity/Bots/Research/COMPETITIVE_INTEL.md
+report_md=/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/round4_capsule_initial/capsule_product_diagnosis_report.md
+summary_json=/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/round4_capsule_initial/capsule_product_diagnosis_summary.json
+dashboard_dir=/Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/round4_capsule_initial/dashboard
+
+>>> Diagnoser command
+/Library/Developer/CommandLineTools/usr/bin/python3 /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/capsule_product_diagnoser.py --root Data/ROUND_4 --intel-md /Users/xavierwinkelmann/Prosperity/Bots/Research/COMPETITIVE_INTEL.md --out-md /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/round4_capsule_initial/capsule_product_diagnosis_report.md --out-json /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/round4_capsule_initial/capsule_product_diagnosis_summary.json
+
+>>> Dashboard command
+/Library/Developer/CommandLineTools/usr/bin/python3 /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/build_dashboard.py --summary-json /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/round4_capsule_initial/capsule_product_diagnosis_summary.json --output-dir /Users/xavierwinkelmann/Prosperity/Bots/Tools/Product_Analysis/output/round4_capsule_initial/dashboard
