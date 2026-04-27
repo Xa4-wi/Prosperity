@@ -1,0 +1,7 @@
+stage,primary_metric,metric_value,mean_like,p05_like,p01_like,loss_prob_like,notes
+random150k_broad,score,42.17677702474664,262.5774664279857,-1078.3246653843223,-2100.233030718289,0.51,Broad random search winner
+random150k_refine_round2,score,39.73071541245957,260.7296668114719,-1053.2245246953287,-2421.0838516929934,0.5,Local discrete refine around broad winner
+random150k_mutation_round3,score,71.13444161681832,259.91803865242713,-901.2768100785552,-3366.5271668169325,0.474,Mutation search around broad winner
+random150k_final_reeval,avg_official_score,355.1588819555118,326.9860617224969,112.69128093205948,35.88547267006625,0.00436,Previous safer finalist after multi-seed reevaluation
+targeted_missing_puts_eval,avg_official_score,665.4286095291917,619.9795676087443,181.79616768178903,7.4143635658074425,0.009428571428571427,Targeted all-12-products family winner
+final_robustness_compare_300x100,final_score,705.3618919972847,625.6593802657399,265.6750391051495,116.53142845867548,0.0,Final A-E robustness comparison over 300 official-style runs

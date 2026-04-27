@@ -1,0 +1,57 @@
+Final Manual Trading Overview
+=============================
+
+Recommended Final Portfolio
+---------------------------
+
+AC: SELL 50
+AC_35_P: BUY 50
+AC_40_BP: SELL 50
+AC_40_P: BUY 50
+AC_45_KO: SELL 270
+AC_45_P: BUY 50
+AC_50_C: BUY 47
+AC_50_CO: SELL 14
+AC_50_C_2: BUY 38
+AC_50_P: BUY 50
+AC_50_P_2: BUY 40
+AC_60_C: BUY 30
+
+Final Winner Metrics
+--------------------
+
+final_score: 705.361892
+avg_official_mean: 625.659380
+avg_official_p05: 265.675039
+avg_official_p01: 116.531428
+avg_official_prob_loss: 0.000000
+
+Stage-by-Stage Best Results
+---------------------------
+
+                           stage     primary_metric  metric_value  mean_like     p05_like     p01_like  loss_prob_like
+                random150k_broad              score     42.176777 262.577466 -1078.324665 -2100.233031        0.510000
+        random150k_refine_round2              score     39.730715 260.729667 -1053.224525 -2421.083852        0.500000
+      random150k_mutation_round3              score     71.134442 259.918039  -901.276810 -3366.527167        0.474000
+         random150k_final_reeval avg_official_score    355.158882 326.986062   112.691281    35.885473        0.004360
+      targeted_missing_puts_eval avg_official_score    665.428610 619.979568   181.796168     7.414364        0.009429
+final_robustness_compare_300x100        final_score    705.361892 625.659380   265.675039   116.531428        0.000000
+
+Top 5 Final Candidates
+----------------------
+
+       name  final_score  avg_official_mean  avg_official_p05  avg_official_p01  avg_official_prob_loss
+Candidate_A   705.361892         625.659380        265.675039        116.531428                0.000000
+Candidate_C   653.641875         581.986914        238.849868        104.002993                0.000000
+Candidate_D   647.071316         576.492781        235.261784         94.296553                0.000000
+Candidate_E   643.622322         573.544280        233.593476         89.018954                0.000000
+Candidate_B   357.752058         335.751048         75.558920         -2.215243                0.013333
+
+Files In This Folder
+--------------------
+
+- recommended_orders.txt
+- results_overview.csv
+- top5_final_candidates.csv
+- top5_targeted_reeval.csv
+- copied json/csv/png/txt artifacts from the key runs

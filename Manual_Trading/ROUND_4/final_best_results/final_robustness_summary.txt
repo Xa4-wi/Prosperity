@@ -1,0 +1,24 @@
+Best portfolio found
+====================
+
+final_score: 705.3618919972847
+avg_official_mean: 625.6593802657399
+avg_official_std: 234.55529101472519
+avg_official_p05: 265.6750391051495
+avg_official_p01: 116.53142845867548
+avg_official_prob_loss: 0.0
+worst_official_score: 89.01780490670433
+
+Positions:
+AC: -50
+AC_35_P: 50
+AC_40_BP: -50
+AC_40_P: 50
+AC_45_KO: -270
+AC_45_P: 50
+AC_50_C: 47
+AC_50_CO: -14
+AC_50_C_2: 38
+AC_50_P: 50
+AC_50_P_2: 40
+AC_60_C: 30
