@@ -1,0 +1,25 @@
+{
+  "positions": {
+    "AC": -70,
+    "AC_35_P": 50,
+    "AC_40_BP": -50,
+    "AC_40_P": -50,
+    "AC_45_KO": -300,
+    "AC_45_P": -40,
+    "AC_50_C": 37,
+    "AC_50_CO": -18,
+    "AC_50_C_2": 46,
+    "AC_50_P": -10,
+    "AC_50_P_2": 48,
+    "AC_60_C": 22
+  },
+  "name": "Candidate_1_CurrentWinner",
+  "avg_official_mean": 211.3954795288492,
+  "avg_official_std": 68.58816159973658,
+  "avg_official_p05": 106.87216120770388,
+  "avg_official_p01": 57.15802336556434,
+  "avg_official_prob_loss": 0.0,
+  "worst_official_score": 27.460559722351274,
+  "rank_score_mean_p05": 243.45712789116035,
+  "rank_score_mean_worst": 219.63364744555457
+}
