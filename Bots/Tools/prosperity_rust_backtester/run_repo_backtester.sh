@@ -19,6 +19,7 @@ Dataset aliases:
   round1   | r1
   round2   | r2
   round3   | r3
+  round4   | r4
 
 Examples:
   Bots/Tools/prosperity_rust_backtester/run_repo_backtester.sh
@@ -65,6 +66,7 @@ resolve_dataset() {
         round1|r1) printf '%s\n' "${REPO_ROOT}/Data/ROUND_1" ;;
         round2|r2) printf '%s\n' "${REPO_ROOT}/Data/ROUND_2" ;;
         round3|r3) printf '%s\n' "${REPO_ROOT}/Data/ROUND_3" ;;
+        round4|r4) printf '%s\n' "${REPO_ROOT}/Data/ROUND_4" ;;
         /*) printf '%s\n' "$input" ;;
         *)
             if [ -e "${REPO_ROOT}/${input}" ]; then

@@ -1,0 +1,631 @@
+from __future__ import annotations
+
+import json
+import math
+from statistics import NormalDist
+from typing import Dict, List, Optional, Tuple
+
+try:
+    from datamodel import Order, OrderDepth, Trade, TradingState
+except ModuleNotFoundError:
+    from trader_factory.core.datamodel import Order, OrderDepth, Trade, TradingState
+
+# ---------------------------------------------------------------------------
+# v20 — clean rebuild
+#
+# Root cause of -313k HYDROGEL loss in all previous versions:
+#   anchor_score = (mid - anchor) / 35  →  positive when ABOVE anchor
+#   regime_score drives target LONG when above anchor
+#   but _underlying_fair with anchor_w pulls fair DOWN when above anchor
+#   → take fires SELL, clear fires BUY-BACK on every oscillation = pure churn
+#
+# Fix: remove ALL regime logic. Take/Clear/Make with no directional target.
+# The anchor_w in fair() still provides take edge for mean-reversion fills,
+# but nothing reverses those fills immediately afterwards.
+# ---------------------------------------------------------------------------
+
+_N = NormalDist()
+
+HYDROGEL = "HYDROGEL_PACK"
+VELVET = "VELVETFRUIT_EXTRACT"
+VOUCHER_STRIKES: Dict[str, int] = {
+    "VEV_4000": 4000,
+    "VEV_4500": 4500,
+    "VEV_5000": 5000,
+    "VEV_5100": 5100,
+    "VEV_5200": 5200,
+    "VEV_5300": 5300,
+    "VEV_5400": 5400,
+    "VEV_5500": 5500,
+    "VEV_6000": 6000,
+    "VEV_6500": 6500,
+}
+LIMITS: Dict[str, int] = {
+    HYDROGEL: 200,
+    VELVET: 200,
+    **{p: 300 for p in VOUCHER_STRIKES},
+}
+TTE_YEARS = 5.0 / 365.0
+
+# Per-product market-making config.
+# anchor_w > 0 creates a take edge toward the anchor (mean-reversion alpha).
+# soft_limit caps inventory — the clear step trims toward this, not toward 0.
+MM: Dict[str, dict] = {
+    HYDROGEL: {
+        "anchor":     10000.0,
+        "anchor_w":   0.15,    # mild pull — edge without large directional bet
+        "imb_w":      0.80,
+        "take_edge":  1.5,     # minimum edge to take aggressively
+        "take_max":   20,      # lots per take order
+        "soft_limit": 50,      # inventory cap before clearing
+        "clear_edge": 1.0,     # accept clear fills within 1 tick of fair
+        "clear_max":  25,
+        "quote_edge": 2.5,     # passive quote offset from reservation
+        "quote_size": 18,
+        "skew":       6.0,     # reservation skew per unit inventory ratio
+        "n_levels":   2,       # ladder levels per side
+        "level_gap":  3.0,     # ticks between ladder levels
+    },
+    VELVET: {
+        "anchor":     5250.0,
+        "anchor_w":   0.46,    # proven config — keep as-is
+        "imb_w":      0.85,
+        "take_edge":  1.2,
+        "take_max":   34,
+        "soft_limit": 100,
+        "clear_edge": 0.6,
+        "clear_max":  40,
+        "quote_edge": 1.5,
+        "quote_size": 30,
+        "skew":       5.0,
+        "n_levels":   1,
+        "level_gap":  0.0,
+    },
+}
+
+
+# ---------------------------------------------------------------------------
+# Utilities
+# ---------------------------------------------------------------------------
+
+def clamp(x: float, lo: float, hi: float) -> float:
+    return max(lo, min(hi, x))
+
+
+def load_memory(s: str) -> dict:
+    if not s:
+        return {}
+    try:
+        obj = json.loads(s)
+        return obj if isinstance(obj, dict) else {}
+    except Exception:
+        return {}
+
+
+def dump_memory(m: dict) -> str:
+    return json.dumps(m, separators=(",", ":"))
+
+
+class OrderManager:
+    def __init__(self, product: str, position: int, limit: int) -> None:
+        self.product = product
+        self.position = int(position)
+        self.limit = int(limit)
+        self.buy_cap = max(0, limit - position)
+        self.sell_cap = max(0, limit + position)
+        self._orders: List[Order] = []
+
+    def projected(self) -> int:
+        return self.position + sum(o.quantity for o in self._orders)
+
+    def buy(self, price: int, qty: int) -> None:
+        size = min(max(0, int(qty)), self.buy_cap)
+        if size > 0:
+            self._orders.append(Order(self.product, int(price), size))
+            self.buy_cap -= size
+
+    def sell(self, price: int, qty: int) -> None:
+        size = min(max(0, int(qty)), self.sell_cap)
+        if size > 0:
+            self._orders.append(Order(self.product, int(price), -size))
+            self.sell_cap -= size
+
+    def flush(self) -> List[Order]:
+        orders = self._orders
+        self._orders = []
+        return orders
+
+
+def best_bid(od: OrderDepth) -> Optional[int]:
+    return max(od.buy_orders) if od.buy_orders else None
+
+
+def best_ask(od: OrderDepth) -> Optional[int]:
+    return min(od.sell_orders) if od.sell_orders else None
+
+
+def raw_mid(od: OrderDepth) -> Optional[float]:
+    bb = best_bid(od)
+    ba = best_ask(od)
+    if bb is None or ba is None or bb >= ba:
+        return None
+    return 0.5 * (bb + ba)
+
+
+def top_bid_levels(od: OrderDepth, n: int = 3) -> List[Tuple[int, int]]:
+    return sorted(od.buy_orders.items(), reverse=True)[:n]
+
+
+def top_ask_levels(od: OrderDepth, n: int = 3) -> List[Tuple[int, int]]:
+    return sorted(od.sell_orders.items())[:n]
+
+
+def stable_mid(od: OrderDepth) -> Optional[float]:
+    bb = best_bid(od)
+    ba = best_ask(od)
+    if bb is None or ba is None or bb >= ba:
+        return raw_mid(od)
+    # Volume-weighted avg of top 3 levels each side
+    bid_levels = top_bid_levels(od, 3)
+    ask_levels = top_ask_levels(od, 3)
+    bvol = sum(v for _, v in bid_levels)
+    avol = sum(abs(v) for _, v in ask_levels)
+    if bvol <= 0 or avol <= 0:
+        return raw_mid(od)
+    bpx = sum(p * v for p, v in bid_levels) / bvol
+    apx = sum(p * abs(v) for p, v in ask_levels) / avol
+    if bpx >= apx:
+        return raw_mid(od)
+    return 0.5 * (bpx + apx)
+
+
+def micro_price(od: OrderDepth) -> Optional[float]:
+    bb = best_bid(od)
+    ba = best_ask(od)
+    if bb is None or ba is None or bb >= ba:
+        return raw_mid(od)
+    bv = od.buy_orders[bb]
+    av = abs(od.sell_orders[ba])
+    total = bv + av
+    if total <= 0:
+        return raw_mid(od)
+    return (ba * bv + bb * av) / total
+
+
+def book_imbalance(od: OrderDepth, levels: int = 2) -> float:
+    if not od.buy_orders or not od.sell_orders:
+        return 0.0
+    bl = top_bid_levels(od, levels)
+    al = top_ask_levels(od, levels)
+    bv = sum(v for _, v in bl)
+    av = sum(abs(v) for _, v in al)
+    total = bv + av
+    return (bv - av) / total if total > 0 else 0.0
+
+
+# ---------------------------------------------------------------------------
+# Black-Scholes
+# ---------------------------------------------------------------------------
+
+def norm_cdf(x: float) -> float:
+    return _N.cdf(x)
+
+
+def norm_pdf(x: float) -> float:
+    return math.exp(-0.5 * x * x) / math.sqrt(2.0 * math.pi)
+
+
+def bs_call(spot: float, strike: float, tte: float, sigma: float) -> float:
+    if spot <= 0 or strike <= 0:
+        return 0.0
+    if tte <= 0 or sigma <= 0:
+        return max(spot - strike, 0.0)
+    sq = math.sqrt(tte)
+    d1 = (math.log(spot / strike) + 0.5 * sigma * sigma * tte) / (sigma * sq)
+    d2 = d1 - sigma * sq
+    return spot * norm_cdf(d1) - strike * norm_cdf(d2)
+
+
+def bs_delta(spot: float, strike: float, tte: float, sigma: float) -> float:
+    if spot <= 0 or strike <= 0:
+        return 0.0
+    if tte <= 0 or sigma <= 0:
+        return 1.0 if spot > strike else 0.0
+    sq = math.sqrt(tte)
+    d1 = (math.log(spot / strike) + 0.5 * sigma * sigma * tte) / (sigma * sq)
+    return norm_cdf(d1)
+
+
+def implied_vol(price: float, spot: float, strike: float, tte: float, iters: int = 50) -> float:
+    intrinsic = max(spot - strike, 0.0)
+    if spot <= 0 or strike <= 0 or tte <= 0:
+        return 1e-6
+    if price <= intrinsic + 1e-6:
+        return 1e-6
+    lo, hi = 1e-6, 3.0
+    for _ in range(iters):
+        mid = 0.5 * (lo + hi)
+        if bs_call(spot, strike, tte, mid) < price:
+            lo = mid
+        else:
+            hi = mid
+    return 0.5 * (lo + hi)
+
+
+def fit_quadratic(
+    xs: List[float], ys: List[float], ws: List[float]
+) -> Tuple[float, float, float]:
+    if len(xs) < 3:
+        median = sorted(ys)[len(ys) // 2] if ys else 0.18
+        return 0.0, 0.0, float(median)
+    sw = sum(ws)
+    s1 = sum(w * x for x, w in zip(xs, ws))
+    s2 = sum(w * x * x for x, w in zip(xs, ws))
+    s3 = sum(w * x * x * x for x, w in zip(xs, ws))
+    s4 = sum(w * x * x * x * x for x, w in zip(xs, ws))
+    t0 = sum(w * y for y, w in zip(ys, ws))
+    t1 = sum(w * x * y for x, y, w in zip(xs, ys, ws))
+    t2 = sum(w * x * x * y for x, y, w in zip(xs, ys, ws))
+    mat = [[s4, s3, s2, t2], [s3, s2, s1, t1], [s2, s1, sw, t0]]
+    for col in range(3):
+        pivot = max(range(col, 3), key=lambda r: abs(mat[r][col]))
+        if abs(mat[pivot][col]) < 1e-12:
+            median = sorted(ys)[len(ys) // 2]
+            return 0.0, 0.0, float(median)
+        mat[col], mat[pivot] = mat[pivot], mat[col]
+        f = mat[col][col]
+        mat[col] = [v / f for v in mat[col]]
+        for r in range(3):
+            if r != col:
+                fac = mat[r][col]
+                mat[r] = [mat[r][j] - fac * mat[col][j] for j in range(4)]
+    return float(mat[0][3]), float(mat[1][3]), float(mat[2][3])
+
+
+# ---------------------------------------------------------------------------
+# Trader
+# ---------------------------------------------------------------------------
+
+class Trader:
+
+    def _fair(self, product: str, od: OrderDepth) -> float:
+        cfg = MM[product]
+        anchor = cfg["anchor"]
+        stable = stable_mid(od)
+        micro = micro_price(od)
+        bb = best_bid(od)
+        ba = best_ask(od)
+        spread = float((ba - bb) if bb is not None and ba is not None else 2.0)
+
+        stable_c = stable if stable is not None else anchor
+        micro_c = micro if micro is not None else stable_c
+        fair = cfg["anchor_w"] * anchor + (1.0 - cfg["anchor_w"]) * 0.5 * (stable_c + micro_c)
+        fair += cfg["imb_w"] * book_imbalance(od) * max(1.0, 0.5 * spread)
+        return fair
+
+    def _trade_mm(self, product: str, state: TradingState, fair: float) -> List[Order]:
+        """Take → Clear → Ladder-Make.
+
+        No regime, no directional target. The anchor_w in fair() creates take
+        edge when price deviates from anchor. The ladder posts seeds at
+        multiple levels so deep moves fill more lots passively.
+        """
+        od = state.order_depths[product]
+        cfg = MM[product]
+        limit = LIMITS[product]
+        pos = int(state.position.get(product, 0))
+        mgr = OrderManager(product, pos, limit)
+
+        bb = best_bid(od)
+        ba = best_ask(od)
+        spread = float((ba - bb) if bb is not None and ba is not None else 2.0)
+        late_factor = 0.0
+        if product == HYDROGEL:
+            late_factor = clamp((float(state.timestamp) - 88000.0) / 12000.0, 0.0, 1.0)
+        elif product == VELVET:
+            late_factor = clamp((float(state.timestamp) - 93000.0) / 7000.0, 0.0, 1.0)
+        min_soft_limit = 28 if product == HYDROGEL else 75
+        soft_limit = cfg["soft_limit"]
+        if late_factor > 0.0:
+            trim_ratio = 0.30 if product == HYDROGEL else 0.18
+            soft_limit = max(min_soft_limit, int(round(cfg["soft_limit"] * (1.0 - trim_ratio * late_factor))))
+        clear_edge = cfg["clear_edge"] + (0.45 if product == HYDROGEL else 0.20) * late_factor
+        clear_max = int(round(cfg["clear_max"] * (1.0 + (0.20 if product == HYDROGEL else 0.10) * late_factor)))
+        quote_size_scale = 1.0 - (0.15 if product == HYDROGEL else 0.08) * late_factor
+
+        # Take
+        for ask, vol in sorted(od.sell_orders.items()):
+            if fair - ask >= cfg["take_edge"]:
+                mgr.buy(ask, min(-vol, cfg["take_max"]))
+            else:
+                break
+        for bid, vol in sorted(od.buy_orders.items(), reverse=True):
+            if bid - fair >= cfg["take_edge"]:
+                mgr.sell(bid, min(vol, cfg["take_max"]))
+            else:
+                break
+
+        # Clear toward a smaller late-session soft_limit.
+        proj = mgr.projected()
+        if proj > soft_limit and bb is not None and bb >= fair - clear_edge:
+            mgr.sell(bb, min(proj - soft_limit, clear_max))
+        elif proj < -soft_limit and ba is not None and ba <= fair + clear_edge:
+            mgr.buy(ba, min(-soft_limit - proj, clear_max))
+
+        # Ladder seeds: n_levels passive quotes per side at increasing depth
+        proj = mgr.projected()
+        inv_ratio = proj / float(limit)
+        reservation = fair - cfg["skew"] * (1.0 + (0.35 if product == HYDROGEL else 0.15) * late_factor) * inv_ratio
+        base_edge = cfg["quote_edge"] + max(0.0, 0.1 * (spread - 4.0))
+
+        for lvl in range(int(cfg["n_levels"])):
+            offset = lvl * cfg["level_gap"]
+            size_scale = 0.70 ** lvl
+            buy_px = math.floor(reservation - base_edge - offset)
+            sell_px = math.ceil(reservation + base_edge + offset)
+
+            if bb is not None and ba is not None and bb < ba:
+                buy_px = min(buy_px, ba - 1)
+                sell_px = max(sell_px, bb + 1)
+
+            qty = max(3, int(round(cfg["quote_size"] * quote_size_scale * size_scale)))
+            if mgr.buy_cap > 0 and (ba is None or buy_px < ba):
+                mgr.buy(buy_px, qty)
+            if mgr.sell_cap > 0 and (bb is None or sell_px > bb):
+                mgr.sell(sell_px, qty)
+
+        return mgr.flush()
+
+    def _build_vol_surface(
+        self, state: TradingState, velvet_fair: float
+    ) -> Dict[str, float]:
+        """Quadratic fit to market IVs → fitted sigma per strike."""
+        ms: List[float] = []
+        ivs: List[float] = []
+        ws: List[float] = []
+        for product, strike in VOUCHER_STRIKES.items():
+            od = state.order_depths.get(product)
+            if od is None:
+                continue
+            mid = raw_mid(od)
+            if mid is None or mid <= 0.0:
+                continue
+            guarded = max(float(mid), max(velvet_fair - strike, 0.0) + 1e-3)
+            iv = implied_vol(guarded, velvet_fair, strike, TTE_YEARS)
+            if not (1e-6 < iv < 3.0):
+                continue
+            m = math.log(strike / velvet_fair) / math.sqrt(TTE_YEARS)
+            bb = best_bid(od)
+            ba = best_ask(od)
+            spread = float((ba - bb) if bb is not None and ba is not None else 4.0)
+            liq = 0.0
+            if bb is not None:
+                liq += float(max(0, od.buy_orders.get(bb, 0)))
+            if ba is not None:
+                liq += float(abs(od.sell_orders.get(ba, 0)))
+            w = clamp((math.log1p(liq) + 0.5) / max(spread, 0.5), 0.3, 4.0)
+            ms.append(m)
+            ivs.append(iv)
+            ws.append(w)
+
+        if len(ivs) >= 3:
+            sorted_iv = sorted(ivs)
+            med = sorted_iv[len(sorted_iv) // 2]
+            clipped = [clamp(iv, med - 0.20, med + 0.20) for iv in ivs]
+            coeffs = fit_quadratic(ms, clipped, ws)
+        elif ivs:
+            med = sorted(ivs)[len(ivs) // 2]
+            coeffs = (0.0, 0.0, float(med))
+        else:
+            coeffs = (0.0, 0.0, 0.18)
+
+        a, b, c = coeffs
+        sigmas: Dict[str, float] = {}
+        for product, strike in VOUCHER_STRIKES.items():
+            m = math.log(strike / velvet_fair) / math.sqrt(TTE_YEARS)
+            sigma = clamp(a * m * m + b * m + c, 0.01, 3.0)
+            sigmas[product] = sigma
+        return sigmas
+
+    def _trade_voucher(
+        self,
+        product: str,
+        state: TradingState,
+        velvet_fair: float,
+        sigma: float,
+        strip_delta: float,
+    ) -> List[Order]:
+        """Simple BS fair + Take/Clear/Make for one voucher strike."""
+        od = state.order_depths[product]
+        strike = VOUCHER_STRIKES[product]
+        limit = LIMITS[product]
+        pos = int(state.position.get(product, 0))
+        mgr = OrderManager(product, pos, limit)
+
+        fair = bs_call(velvet_fair, strike, TTE_YEARS, sigma)
+        if fair < 0.5:
+            return mgr.flush()  # skip effectively worthless OTM options
+
+        delta = bs_delta(velvet_fair, strike, TTE_YEARS, sigma)
+        bb = best_bid(od)
+        ba = best_ask(od)
+        spread = float((ba - bb) if bb is not None and ba is not None else 2.0)
+
+        take_edge = max(0.6, 0.30 * spread)
+        clear_edge = max(0.3, 0.12 * spread)
+        quote_edge = max(0.9, 0.40 * spread)
+        if strike <= 5000:
+            soft_limit = 80
+            take_max = 15
+        elif strike == 5100:
+            soft_limit = 80
+            take_max = 15
+        elif strike == 5200:
+            soft_limit = 36
+            take_max = 8
+        elif strike == 5300:
+            soft_limit = 28
+            take_max = 6
+        elif strike == 5400:
+            soft_limit = 14
+            take_max = 4
+        elif strike == 5500:
+            soft_limit = 10
+            take_max = 3
+        else:
+            soft_limit = 6
+            take_max = 2
+
+        # iv_residual: positive = market is RICH vs fitted smile → sell
+        mid_market = raw_mid(od)
+        if mid_market is not None:
+            guarded = max(float(mid_market), max(velvet_fair - strike, 0.0) + 1e-3)
+            market_iv = implied_vol(guarded, velvet_fair, strike, TTE_YEARS)
+            iv_residual = market_iv - sigma  # >0 means market is richer than smile
+        else:
+            iv_residual = 0.0
+
+        # Threshold: only trade when residual is meaningful.
+        # Use symmetric threshold so both cheap and rich signals are treated equally.
+        resid_threshold = 0.015
+        if strike >= 5400:
+            resid_threshold = 0.040
+        elif strike >= 5200:
+            resid_threshold = 0.020
+
+        buy_signal = iv_residual < -resid_threshold   # market is CHEAP vs smile
+        sell_signal = iv_residual > resid_threshold    # market is RICH vs smile
+
+        # Delta pressure: if strip is long delta, bias toward selling calls
+        delta_pressure = clamp(strip_delta / 120.0, -1.5, 1.5)
+        if delta_pressure > 0.8:
+            buy_signal = False
+        if delta_pressure < -0.8:
+            sell_signal = False
+
+        # Take
+        for ask, vol in sorted(od.sell_orders.items()):
+            edge = fair - ask
+            if edge >= take_edge and buy_signal and pos < soft_limit:
+                mgr.buy(ask, min(-vol, take_max))
+            else:
+                break
+        for bid, vol in sorted(od.buy_orders.items(), reverse=True):
+            edge = bid - fair
+            if edge >= take_edge and sell_signal and pos > -soft_limit:
+                mgr.sell(bid, min(vol, take_max))
+            else:
+                break
+
+        # Clear
+        proj = mgr.projected()
+        if proj > soft_limit and bb is not None and bb >= fair - clear_edge:
+            mgr.sell(bb, min(proj - soft_limit, 30))
+        elif proj < -soft_limit and ba is not None and ba <= fair + clear_edge:
+            mgr.buy(ba, min(-soft_limit - proj, 30))
+
+        # Make
+        proj = mgr.projected()
+        inv_ratio = proj / float(limit)
+        inv_penalty = (0.015 * max(20.0, fair) + 1.5) * inv_ratio
+        reservation = fair - inv_penalty
+
+        buy_px = math.floor(reservation - quote_edge)
+        sell_px = math.ceil(reservation + quote_edge)
+        if bb is not None and ba is not None and bb < ba:
+            if spread >= 2:
+                buy_px = max(buy_px, bb + 1)
+                sell_px = min(sell_px, ba - 1)
+            else:
+                buy_px = min(buy_px, bb)
+                sell_px = max(sell_px, ba)
+            buy_px = min(buy_px, ba - 1)
+            sell_px = max(sell_px, bb + 1)
+
+        base_quote = 8
+        if strike >= 5400:
+            base_quote = 3
+        elif strike >= 5200:
+            base_quote = 5
+        qty = max(2 if strike >= 5400 else 3, int(round(base_quote * max(0.2, 1.0 - abs(inv_ratio)))))
+
+        can_bid = mgr.buy_cap > 0 and pos < soft_limit and (buy_signal or pos < 0)
+        can_ask = mgr.sell_cap > 0 and pos > -soft_limit and (sell_signal or pos > 0)
+
+        if can_bid and (ba is None or buy_px < ba):
+            mgr.buy(buy_px, qty)
+        if can_ask and (bb is None or sell_px > bb):
+            mgr.sell(sell_px, qty)
+
+        return mgr.flush()
+
+    def _velvet_overlay(self, state: TradingState, memory: dict) -> float:
+        """Detect anonymous bot (Olivia pattern) in VELVET trades → small fair shift."""
+        ov = memory.setdefault(
+            "velvet_overlay",
+            {"day_low": 1e18, "day_high": -1e18, "signal": 0.0, "age": 999},
+        )
+        saw = False
+        for trade in sorted(state.market_trades.get(VELVET, []), key=lambda t: t.timestamp):
+            qty = abs(int(trade.quantity))
+            px = float(trade.price)
+            if px < float(ov["day_low"]):
+                ov["day_low"] = px
+            if px > float(ov["day_high"]):
+                ov["day_high"] = px
+            if 10 <= qty <= 11 and px < float(ov["day_low"]) + 1e-6:
+                ov["signal"] = min(1.5, float(ov["signal"]) + 1.0)
+                ov["age"] = 0
+                saw = True
+        if not saw:
+            ov["age"] = int(ov["age"]) + 1
+            ov["signal"] = float(ov["signal"]) * 0.96
+        return 0.75 * max(0.0, min(1.0, float(ov["signal"])))
+
+    def _reset_day(self, memory: dict, timestamp: int) -> None:
+        last = memory.get("last_timestamp")
+        if last is not None and timestamp < last:
+            memory.pop("velvet_overlay", None)
+        memory["last_timestamp"] = timestamp
+
+    def run(self, state: TradingState):
+        memory = load_memory(state.traderData)
+        self._reset_day(memory, state.timestamp)
+        result: Dict[str, List[Order]] = {}
+
+        # HYDROGEL — pure market making, no regime
+        if HYDROGEL in state.order_depths:
+            try:
+                hydro_fair = self._fair(HYDROGEL, state.order_depths[HYDROGEL])
+                result[HYDROGEL] = self._trade_mm(HYDROGEL, state, hydro_fair)
+            except Exception as exc:
+                memory.setdefault("errors", {})["hydrogel"] = type(exc).__name__
+
+        # VELVET — anchor market making + Olivia detector overlay
+        velvet_fair: Optional[float] = None
+        if VELVET in state.order_depths:
+            try:
+                overlay_bias = self._velvet_overlay(state, memory)
+                velvet_fair = self._fair(VELVET, state.order_depths[VELVET]) + overlay_bias
+                result[VELVET] = self._trade_mm(VELVET, state, velvet_fair)
+            except Exception as exc:
+                memory.setdefault("errors", {})["velvet"] = type(exc).__name__
+
+        # Vouchers — BS fair + take/make using fitted vol smile
+        if velvet_fair is not None:
+            try:
+                sigmas = self._build_vol_surface(state, velvet_fair)
+                # Compute strip delta for delta-pressure guard
+                strip_delta = sum(
+                    int(state.position.get(p, 0)) * bs_delta(velvet_fair, k, TTE_YEARS, sigmas.get(p, 0.18))
+                    for p, k in VOUCHER_STRIKES.items()
+                )
+                for product in VOUCHER_STRIKES:
+                    if product in state.order_depths:
+                        result[product] = self._trade_voucher(
+                            product, state, velvet_fair, sigmas[product], strip_delta
+                        )
+            except Exception as exc:
+                memory.setdefault("errors", {})["vouchers"] = type(exc).__name__
+
+        return result, 0, dump_memory(memory)

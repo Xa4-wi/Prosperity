@@ -14,6 +14,7 @@ In this repo, the important local paths are:
   - [Data/ROUND_1](/Users/xavierwinkelmann/Prosperity/Data/ROUND_1)
   - [Data/ROUND_2](/Users/xavierwinkelmann/Prosperity/Data/ROUND_2)
   - [Data/ROUND_3](/Users/xavierwinkelmann/Prosperity/Data/ROUND_3)
+  - [Data/ROUND_4](/Users/xavierwinkelmann/Prosperity/Data/ROUND_4)
 
 ## One-time setup
 
@@ -66,6 +67,12 @@ Run Round 2:
 
 ```bash
 Bots/Tools/prosperity_rust_backtester/run_repo_backtester.sh Bots/Round3/TradervR3_87.py round2
+```
+
+Run Round 4:
+
+```bash
+Bots/Tools/prosperity_rust_backtester/run_repo_backtester.sh Bots/Round4/TradervR4_1.py round4
 ```
 
 Run the tutorial data:
