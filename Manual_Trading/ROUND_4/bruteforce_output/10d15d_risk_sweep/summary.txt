@@ -1,0 +1,23 @@
+10/15 Risk Sweep Summary
+========================
+
+Best portfolio:
+AC: -70
+AC_35_P: 50
+AC_40_BP: -50
+AC_40_P: -50
+AC_45_KO: -300
+AC_45_P: -40
+AC_50_C: 37
+AC_50_CO: -18
+AC_50_C_2: 46
+AC_50_P: -10
+AC_50_P_2: 48
+AC_60_C: 22
+
+final_score: 236.55774932661149
+avg_official_mean: 206.69739266775144
+avg_official_p05: 100.0900777517557
+avg_official_p01: 66.89412565185343
+avg_official_prob_loss: 0.0033333333333333335
+worst_official_score: -3.1745546596451533
