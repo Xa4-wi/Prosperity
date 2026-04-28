@@ -1,0 +1,4 @@
+counterparty,side,events,qty,avg_qty,avg_price
+Mark 22,BUY,75,546,7.28,5247.48
+Mark 49,BUY,89,963,10.820224719101123,5250.887640449439
+Mark 55,BUY,1,1,1.0,5241.0
